@@ -1,0 +1,18 @@
+/* Mobile H5 layout overrides */
+@media (max-width: 768px) {
+  html, body, #root { width: 100%; max-width: 100%; overflow-x: hidden; }
+  body { background: #fff !important; }
+  * { box-sizing: border-box; }
+  header, nav, .site-header, .top-nav { width: 100% !important; min-width: 0 !important; }
+  nav, .top-nav { display: flex !important; gap: 0.25rem; overflow-x: auto; white-space: nowrap; padding: 0.5rem 1rem !important; background: #fff !important; border: 0 !important; scrollbar-width: none; }
+  nav::-webkit-scrollbar, .top-nav::-webkit-scrollbar { display: none; }
+  nav a, .top-nav a { flex: 0 0 auto; padding: 0.7rem 0.9rem !important; }
+  main, section, .container, .page-container { width: 100% !important; max-width: 100% !important; min-width: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .hero, .hero-section, .hero-content { display: flex !important; flex-direction: column !important; gap: 1.5rem !important; }
+  .hero h1, .hero-title { font-size: clamp(2.25rem, 11vw, 4rem) !important; line-height: 1.08 !important; }
+  .hero-image, .hero-card { width: 100% !important; max-width: 100% !important; }
+  input, .search-input, .search-box { width: 100% !important; min-width: 0 !important; height: 3.25rem !important; border: 2px solid #3f8f78 !important; border-radius: 0.75rem !important; background: #fff !important; }
+  .grid, .cards-grid, .company-grid, .notes-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
+  .card, .company-card, .note-card { width: 100% !important; min-width: 0 !important; background: #fff !important; border-color: #dce8e3 !important; border-radius: 0.75rem !important; }
+  img { max-width: 100%; height: auto; }
+}

@@ -1,0 +1,369 @@
+/* Final color pass: removes the former sand/desert palette across every view. */
+:root { --ink: #182522; --paper: #ffffff; }
+body, main { background: #fff !important; color: #182522 !important; }
+
+.nav, .nav::before, .nav::after,
+.home-theme, .network-hero, .network-contacts, .analysis-hero, .analysis-section,
+.matrix-section, .matrix-callout, .talent-hero, .talent-section, .talent-admin,
+.talent-callout, .business-services, .business-links, .business-resources,
+.business-contact, .contact, .proof, .section, .intro, footer { background: #fff !important; color: #182522 !important; }
+
+/* The header sits outside the home view; keep its H5 strip pure white too. */
+header.nav { background-color: #fff !important; background-image: none !important; }
+
+.eyebrow, .today-label, .analysis-card-top, .business-resource-title b,
+.company-card footer, .matrix-callout b, .talent-note, .company-entity-note { color: #17614f !important; }
+.muted, .lead, .network-copy > p, .analysis-hero > p, .talent-hero > p,
+.business-link-grid p, .business-resource-list p, .business-grid p,
+.analysis-list p, .company-entity-note, .listing-contact, .talent-note { color: #62706b !important; }
+
+.section-top, .analysis-head, .matrix-head, .talent-toolbar, .network-contacts,
+.business-link-head, .business-resource-head, .business-resource-list article,
+.company-card header, .company-card footer, footer, .intro { border-color: #dce5e0 !important; }
+
+.analysis-search, .matrix-search, .filters, .network-qr, .business-qr,
+.hero-visitors, .visitor-strip, .talent-toolbar select, .talent-form input,
+.talent-form select, .talent-form textarea { background: #f5f8f6 !important; border-color: #dce5e0 !important; color: #182522 !important; }
+
+.analysis-list article, .company-card, .job-card, .talent-card, .talent-empty,
+.matrix-empty, .analysis-empty, .business-link-grid article, .business-grid article,
+.proof-grid article, .note, .featured-link, .featured-link-details { background: #fff !important; border-color: #dce5e0 !important; color: #182522 !important; }
+.analysis-list article:hover, .company-card:hover, .job-card:hover, .talent-card:hover,
+.business-link-grid article:hover, .business-grid article:hover, .note:hover,
+.proof-grid article:hover { border-color: #9ccdbd !important; box-shadow: 0 12px 26px rgba(22, 53, 42, .08) !important; }
+
+.product-tags span, .analysis-list i, .job-meta span, .job-meta i, .talent-tags i,
+.business-grid i, .business-resource-list i, .matrix-legend span { background: #eef7f2 !important; border-color: #bfe1d1 !important; color: #17614f !important; }
+.voice, .live, .game, .match, .tool, .live-0, .voice-0, .game-0, .match-0, .tool-0,
+.product-tags .live-1, .product-tags .voice-1, .product-tags .game-1,
+.product-tags .match-1, .product-tags .tool-1 { color: #17614f !important; }
+
+.primary, .nav-cta, .publish-talent, .talent-form-actions button[type="submit"] { background: #182522 !important; border-color: #182522 !important; color: #fff !important; border-radius: 8px !important; }
+.primary:hover, .nav-cta:hover, .publish-talent:hover, .talent-form-actions button[type="submit"]:hover { background: #17614f !important; border-color: #17614f !important; }
+.text-button, .section-top a, .note a, .analysis-more, .email-link { color: #17614f !important; border-color: #9ccdbd !important; }
+.text-button:hover, .section-top a:hover, .note a:hover, .analysis-more:hover, .email-link:hover { color: #0f4e3f !important; border-color: #25866c !important; }
+.boss-direct-badge {
+  background: linear-gradient(135deg, #fff0bd 0%, #e8c467 48%, #f8df94 100%) !important;
+  color: #182522 !important;
+  border-color: #d6ae45 !important;
+}
+.visitor-pulse { background: #25866c !important; }
+
+/* Component-level hard reset. These rules sit last so no former warm/sand
+   token can leak through component-specific selectors in globals.css. */
+.matrix-section .matrix-head h2,
+.analysis-hero h1, .analysis-section h1,
+.talent-hero h1, .talent-section h1,
+.business-services h1, .business-links h1, .business-resources h1,
+.business-contact h1, .company-card h3, .analysis-list h2,
+.job-card h2, .job-card h3, .job-card h4,
+.business-link-grid h2, .business-grid h2, .business-resource-list h2 {
+  color: #182522 !important;
+}
+
+.matrix-section .matrix-head h2 em,
+.analysis-hero h1 em, .analysis-section h1 em,
+.talent-hero h1 em, .talent-section h1 em,
+.business-services h1 em, .business-links h1 em, .business-resources h1 em,
+.business-contact h1 em { color: #25866c !important; }
+
+.matrix-head > p, .matrix-head > p *, .analysis-search > span,
+.analysis-search > b, .matrix-search > span, .matrix-search > b,
+.filters label, .filters > span, .talent-switch button,
+.job-card p, .job-card .listing-contact, .company-card .company-entity-note,
+.business-link-grid p, .business-grid p, .business-resource-list p {
+  color: #62706b !important;
+}
+
+.matrix-search, .analysis-search, .filters {
+  background: #f5f8f6 !important;
+  border-color: #dce5e0 !important;
+  box-shadow: none !important;
+}
+.matrix-search input, .analysis-search input,
+.filters select, .talent-form input, .talent-form select, .talent-form textarea {
+  background: #ffffff !important;
+  border-color: #dce5e0 !important;
+  color: #182522 !important;
+  box-shadow: none !important;
+}
+
+/* Talent cards need a comfortable reading scale for longer descriptions. */
+.job-card h2 { font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif !important; font-size: 30px !important; }
+.job-card h3 { font-size: 22px !important; font-weight: 400 !important; }
+.job-card p { font-size: 14px !important; line-height: 1.75 !important; }
+.job-card .job-meta span, .job-card .job-meta i { font-size: 16px !important; }
+.job-grid, .talent-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+@media (max-width: 720px) { .job-grid, .talent-grid { grid-template-columns: 1fr !important; } }
+.talent-section .publish-talent, .talent-section .talent-empty .primary, .talent-callout .primary { display: inline-flex !important; }
+.talent-admin + .talent-section .publish-talent { display: inline-flex !important; }
+.matrix-search input::placeholder, .analysis-search input::placeholder,
+.talent-form input::placeholder, .talent-form textarea::placeholder { color: #8a9892 !important; }
+
+.matrix-section .company-title > span,
+.matrix-section .company-title > b, .matrix-section .company-title > b small,
+.talent-switch button span { color: #17614f !important; }
+.talent-switch button.selected { color: #182522 !important; border-color: #25866c !important; }
+.talent-switch button.selected span { background: #e1f3ea !important; color: #17614f !important; }
+
+.job-card, .company-card, .analysis-list article, .business-link-grid article,
+.business-grid article, .business-resource-list article { background: #ffffff !important; }
+.job-card .job-meta span, .job-card .job-meta i {
+  background: #eef7f2 !important;
+  color: #17614f !important;
+  border-color: #c9e8d9 !important;
+}
+.job-card .job-description, .job-card .listing-contact { color: #62706b !important; }
+
+.matrix-section .product-tags i,
+.matrix-section .matrix-legend span,
+.business-link-grid i, .business-grid i, .business-resource-list i {
+  background: #eef7f2 !important;
+  color: #17614f !important;
+  border-color: #bfe1d1 !important;
+  box-shadow: none !important;
+}
+.company-card footer button, .company-card footer span { color: #17614f !important; }
+
+/* Remove ornamental dividers. Cards and form controls keep only their useful
+   outer outlines; content is no longer visually cut into horizontal bands. */
+.matrix-search, .analysis-search, .filters { background: #ffffff !important; }
+.company-title, .company-card footer, .company-card header,
+.listing-contact, .listing-admin-actions, .job-detail-contact,
+.proof-grid ul, .intro, .section-top, .analysis-head, .matrix-head,
+.talent-toolbar, .business-link-head, .business-resource-head,
+.business-resource-list article, .network-contacts, .network-qr,
+.signal, .signal-list article, .contact, footer,
+.home-theme .visitor-strip, .home-theme .visitor-strip > div {
+  border-top: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  border-left: 0 !important;
+}
+.home-theme .visitor-strip { background: #ffffff !important; box-shadow: none !important; }
+.home-theme .proof-grid ul { border-top: 0 !important; padding-top: 10px !important; }
+hr { display: none !important; }
+
+/* Intentional card hierarchy: restore borders only where they make data and
+   resource groups easier to scan. */
+.home-theme .hero-actions .text-button { display: none !important; }
+
+.featured-link, .featured-link-main, .featured-link-details,
+.business-link-grid .featured-link { background: #ffffff !important; }
+.featured-link-details { border-left: 1px solid #dce5e0 !important; }
+
+.business-resource-list {
+  gap: 14px !important;
+}
+.business-resource-list article {
+  min-height: 188px;
+  padding: 22px !important;
+  background: #ffffff !important;
+  border: 1px solid #dce5e0 !important;
+  border-radius: 12px;
+}
+.business-resource-list article:hover {
+  border-color: #9ccdbd !important;
+  box-shadow: 0 12px 26px rgba(22, 53, 42, .08) !important;
+}
+
+.home-theme .visitor-strip {
+  border: 1px solid #dce5e0 !important;
+  border-radius: 12px;
+}
+.home-theme .visitor-strip > div {
+  border-left: 1px solid #dce5e0 !important;
+}
+
+/* Highlighted conversion areas use the light UI kit's mint surfaces. */
+.talent-callout {
+  background: #eaf7f1 !important;
+  border: 1px solid #cfe8dc !important;
+  border-radius: 16px !important;
+  padding: 52px 56px !important;
+}
+.talent-callout > div:last-child {
+  background: rgba(255, 255, 255, .78) !important;
+  border: 1px solid #d8ebe1 !important;
+  border-radius: 12px !important;
+  padding: 26px 30px !important;
+}
+.talent-switch button span {
+  background: #e7f5ee !important;
+  color: #17614f !important;
+  border: 0 !important;
+}
+
+.business-contact {
+  background: #eaf7f1 !important;
+  border: 1px solid #cfe8dc !important;
+  border-radius: 16px !important;
+  padding: 54px 56px !important;
+}
+.business-contact .business-qr {
+  background: #ffffff !important;
+  border: 1px solid #cfe8dc !important;
+  border-radius: 12px !important;
+  padding: 18px 22px !important;
+}
+.contact {
+  background: #eff8f4 !important;
+  border: 1px solid #d4e9de !important;
+  border-radius: 16px !important;
+  padding: 46px 54px !important;
+}
+.contact .qr {
+  background: #ffffff !important;
+  border: 1px solid #cfe8dc !important;
+  border-radius: 12px !important;
+  padding: 18px 22px !important;
+}
+
+@media (max-width: 720px) {
+  .talent-callout, .business-contact, .contact { padding: 30px 22px !important; }
+  .talent-callout > div:last-child { padding: 22px !important; }
+}
+
+/* Keep the talent-market handoff compact: the filters should follow the
+   introduction as one continuous task flow. */
+.talent-hero { padding-bottom: 28px !important; }
+.talent-section { padding-top: 26px !important; }
+@media (max-width: 720px) {
+  .talent-hero { padding-bottom: 20px !important; }
+  .talent-section { padding-top: 18px !important; }
+}
+
+/* Search uses one precise focus target rather than a double outer frame. */
+.analysis-search, .matrix-search {
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+.analysis-search input, .matrix-search input {
+  min-height: 56px !important;
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+  border: 1px solid #25866c !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+}
+.analysis-search input:focus, .matrix-search input:focus {
+  border-color: #25866c !important;
+  box-shadow: 0 0 0 3px rgba(37, 134, 108, .14) !important;
+  outline: none !important;
+}
+
+/* Keep the atlas filters visually separate from the search control. */
+.matrix-atlas-head { margin-bottom: 48px !important; }
+.matrix-search { margin-bottom: 24px !important; }
+.analysis-head { margin-bottom: 48px !important; }
+@media (max-width: 720px) {
+  .matrix-atlas-head { margin-bottom: 30px !important; }
+  .analysis-head { margin-bottom: 30px !important; }
+}
+
+/* Atlas contribution uses the same green-and-white UI kit as the rest of the site. */
+.matrix-atlas-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  text-align: right;
+}
+.matrix-atlas-actions > p { margin: 0; }
+.matrix-contribute-button {
+  appearance: none;
+  border: 0;
+  border-radius: 10px;
+  padding: 13px 20px;
+  background: #25866c;
+  color: #fff;
+  font: inherit;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+.matrix-contribute-button:hover { background: #176c55; box-shadow: 0 8px 20px rgba(37, 134, 108, .18); transform: translateY(-1px); }
+.matrix-contribute-button:focus-visible { outline: 3px solid rgba(37, 134, 108, .28); outline-offset: 3px; }
+.matrix-callout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, .92fr);
+  align-items: center;
+  gap: 44px;
+  margin-top: 48px !important;
+  padding: 42px 48px !important;
+  border: 1px solid #c8e5d7 !important;
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, #effaf4 0%, #dff4e9 100%) !important;
+}
+.matrix-callout > div:last-child { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+.matrix-callout > div:last-child p { margin: 0; }
+.matrix-submit-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(12, 37, 29, .45);
+}
+.matrix-submit-dialog {
+  width: min(100%, 540px);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  display: grid;
+  gap: 16px;
+  padding: 30px;
+  border: 1px solid #c8e5d7;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(11, 40, 30, .22);
+}
+.matrix-submit-top { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; }
+.matrix-submit-top h2, .matrix-submit-dialog p { margin: 0; }
+.matrix-submit-close { appearance: none; border: 0; background: transparent; color: #5e716a; font-size: 28px; line-height: 1; cursor: pointer; }
+.matrix-submit-dialog label { display: grid; gap: 8px; color: #183a30; font-weight: 700; }
+.matrix-submit-dialog input, .matrix-submit-dialog textarea { width: 100%; box-sizing: border-box; border: 1px solid #b9ddce; border-radius: 9px; padding: 12px 13px; color: #17251f; background: #fff; font: inherit; }
+.matrix-submit-dialog textarea { min-height: 112px; resize: vertical; }
+.matrix-submit-dialog input:focus, .matrix-submit-dialog textarea:focus { outline: 0; border-color: #25866c; box-shadow: 0 0 0 3px rgba(37, 134, 108, .13); }
+.matrix-submit-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.matrix-submit-actions button { border-radius: 9px; padding: 11px 15px; font: inherit; font-weight: 750; cursor: pointer; }
+.matrix-submit-actions button:first-child { border: 1px solid #c8ded5; background: #fff; color: #34554a; }
+.matrix-submit-success { padding: 12px 14px; border-radius: 9px; background: #ecf9f2; color: #176c55; }
+.matrix-submit-error { color: #b42318; }
+
+/* The owner sees incoming atlas suggestions after signing in through the avatar. */
+.atlas-admin {
+  margin-top: 40px !important;
+  padding: 28px !important;
+  border: 1px solid #c8e5d7 !important;
+  border-radius: 16px !important;
+  background: #f4fbf7 !important;
+}
+.atlas-admin-head { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; }
+.atlas-admin-head h2, .atlas-admin-head p { margin: 0; }
+.atlas-admin-head > div { display: grid; gap: 8px; }
+.atlas-admin-head > span { flex: none; padding: 8px 11px; border-radius: 999px; background: #dff4e9; color: #176c55; font-weight: 800; }
+.atlas-admin-message { margin: 20px 0 0; color: #557268; }
+.atlas-admin-message.error { color: #b42318; }
+.atlas-submission-list { display: grid; gap: 10px; margin-top: 20px; }
+.atlas-submission-list article { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 16px; border: 1px solid #d7e9e0; border-radius: 12px; background: #fff; }
+.atlas-submission-list strong { color: #17251f; font-size: 17px; }
+.atlas-submission-list p { margin: 5px 0; color: #557268; }
+.atlas-submission-list small { color: #73877f; }
+.atlas-submission-list article > div:last-child { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+.atlas-submission-list span { padding: 5px 8px; border-radius: 999px; background: #fff2cf; color: #73530f; font-size: 13px; font-weight: 750; }
+.atlas-submission-list span.reviewed { background: #dff4e9; color: #176c55; }
+.atlas-submission-list button { border: 1px solid #b9ddce; border-radius: 8px; padding: 8px 10px; background: #fff; color: #176c55; font: inherit; font-size: 13px; font-weight: 750; cursor: pointer; }
+.atlas-submission-list .quiet-danger { border-color: #f1c5c1; color: #b42318; }
+@media (max-width: 720px) {
+  .matrix-search { margin-bottom: 18px !important; }
+  .matrix-atlas-actions { align-items: flex-start; text-align: left; }
+  .matrix-callout { grid-template-columns: 1fr; gap: 24px; padding: 28px 24px !important; }
+  .matrix-submit-dialog { padding: 24px 20px; }
+  .atlas-admin { padding: 22px !important; }
+  .atlas-admin-head, .atlas-submission-list article { align-items: flex-start; flex-direction: column; }
+  .atlas-submission-list article > div:last-child { justify-content: flex-start; }
+}

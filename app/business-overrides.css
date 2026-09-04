@@ -1,0 +1,115 @@
+.business-resource-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 42px;
+  align-items: end;
+  padding-top: 27px;
+  margin-bottom: 28px;
+}
+
+.business-resource-head h2 {
+  display: block;
+  font-size: 31px;
+  letter-spacing: -0.06em;
+}
+
+.business-resource-head > div > p:not(.eyebrow) {
+  max-width: 620px;
+  margin: 16px 0 0;
+  color: #586762;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.business-resource-head > p {
+  max-width: 385px;
+  margin: 0 0 2px;
+  color: #69736e;
+  font-size: 13px;
+  line-height: 1.65;
+  text-align: right;
+}
+
+@media (max-width: 720px) {
+  .business-resource-head {
+    display: block;
+    padding-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .business-resource-head h2 {
+    font-size: 27px;
+  }
+
+  .business-resource-head > div > p:not(.eyebrow) {
+    margin-top: 12px;
+    font-size: 14px;
+  }
+
+  .business-resource-head > p {
+    max-width: 100%;
+    margin-top: 10px;
+    text-align: left;
+    font-size: 12px;
+  }
+}
+
+.hero-visitors {
+  width: min(100%, 360px);
+  align-self: center;
+  justify-self: end;
+  padding: 22px 24px;
+  background: rgba(255, 253, 249, 0.62);
+  border: 1px solid #d4c9b8;
+  border-left: 3px solid #af8d57;
+}
+
+.hero-visitors > p {
+  margin: 0 0 16px;
+  color: #83745a;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.hero-visitors .profile-visitors {
+  margin: 0;
+  padding-top: 0;
+  border-top: 0;
+  grid-template-columns: minmax(0, 1fr) 70px 70px;
+  gap: 10px;
+}
+
+.hero-visitors .profile-visitors > span {
+  align-self: center;
+  font-size: 11px;
+}
+
+.hero-visitors .profile-visitors > div {
+  min-width: 0;
+}
+
+.hero-visitors .profile-visitors > div + div {
+  padding-left: 12px;
+}
+
+.hero-visitors .profile-visitors b {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.hero-visitors .profile-visitors small {
+  margin-top: 4px;
+  font-size: 10px;
+}
+
+@media (max-width: 720px) {
+  .hero-visitors {
+    align-self: stretch;
+    width: auto;
+    padding: 16px 18px;
+  }
+
+  .hero-visitors .profile-visitors { grid-template-columns: minmax(0, 1fr) 64px 64px; }
+}

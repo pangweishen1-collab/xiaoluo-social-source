@@ -1,0 +1,92 @@
+/* Shared light UI system for non-home views. */
+:root {
+  --app-ink: #182522;
+  --app-muted: #62706b;
+  --app-line: #dce5e0;
+  --app-soft: #f5f8f6;
+  --app-mint: #e8f5ee;
+  --app-jade: #25866c;
+  --app-jade-dark: #17614f;
+}
+
+main { background: #fff; }
+button, input, select, textarea { border-radius: 8px; }
+button, a { transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--app-jade); outline-offset: 3px; }
+
+.network-hero, .analysis-hero, .matrix-section, .talent-hero, .business-services { background: #fff; }
+.network-hero, .analysis-hero, .talent-hero { padding-top: 82px; padding-bottom: 66px; }
+.network-hero h1, .analysis-hero h1, .talent-hero h1, .matrix-head h1 { color: var(--app-ink); letter-spacing: -.07em; }
+.network-hero h1 strong, .analysis-hero h1 em, .talent-hero h1 em, .matrix-head h1 em { color: var(--app-jade); font-style: normal; }
+.network-copy > p:not(.eyebrow), .analysis-hero > p:not(.eyebrow), .talent-hero > p:not(.eyebrow) { color: var(--app-muted); }
+.network-qr, .network-contacts, .matrix-callout, .talent-callout, .business-contact { border-color: var(--app-line); }
+.network-qr, .business-qr { background: var(--app-soft); border-radius: 12px; }
+.network-qr img, .business-qr img { border-color: var(--app-line); border-radius: 8px; }
+
+.analysis-section, .matrix-section, .talent-section { padding-top: 64px; padding-bottom: 90px; }
+.analysis-head, .matrix-head, .section-top, .talent-toolbar { border-color: var(--app-line); }
+.analysis-search, .matrix-search, .filters { background: var(--app-soft); border-color: var(--app-line); border-radius: 10px; }
+.analysis-search input, .matrix-search input { color: var(--app-ink); }
+.analysis-list article, .company-card, .job-card, .talent-card, .talent-empty, .matrix-empty, .analysis-empty { background: #fff !important; border-color: var(--app-line) !important; border-radius: 12px; box-shadow: none !important; }
+.analysis-list article:hover, .company-card:hover, .job-card:hover, .talent-card:hover { transform: translateY(-3px); border-color: #9ccdbd !important; box-shadow: 0 12px 26px rgba(22, 53, 42, .08) !important; }
+.analysis-card-top, .company-entity-note, .listing-contact, .talent-note { color: var(--app-muted); }
+.analysis-list i, .product-tags span, .talent-tags i, .job-meta i { background: var(--app-soft); border-radius: 6px; color: var(--app-jade-dark); }
+.analysis-more { color: var(--app-jade-dark); }
+
+.matrix-legend span, .product-tags span { border-radius: 6px; }
+.matrix-legend { border-color: var(--app-line); }
+.company-card { overflow: hidden; }
+.company-card header, .company-card footer { border-color: var(--app-line); }
+.company-card header { background: #fff; }
+.company-title { color: var(--app-ink); }
+.company-logo-image { border-radius: 8px; }
+.company-card footer { background: var(--app-soft); }
+
+.talent-switch { border-color: var(--app-line); }
+.talent-switch button { border-radius: 8px 8px 0 0; }
+.talent-switch button.active { color: var(--app-jade-dark); border-color: var(--app-jade); }
+.talent-toolbar select, .talent-form input, .talent-form select, .talent-form textarea { background: #fff; border-color: var(--app-line); color: var(--app-ink); }
+.talent-toolbar select:focus, .talent-form input:focus, .talent-form select:focus, .talent-form textarea:focus { border-color: var(--app-jade); }
+.publish-talent, .talent-form-actions button[type="submit"] { background: var(--app-ink); border-color: var(--app-ink); border-radius: 8px; }
+.publish-talent:hover, .talent-form-actions button[type="submit"]:hover { background: var(--app-jade-dark); border-color: var(--app-jade-dark); transform: translateY(-2px); }
+.boss-direct-badge { border-radius: 6px; box-shadow: none; }
+
+.business-link-head, .business-resource-head, .business-resource-list article { border-color: var(--app-line); }
+.business-link-grid article, .business-grid article { background: #fff !important; border-color: var(--app-line) !important; border-radius: 12px; box-shadow: none; }
+.business-link-grid article:hover, .business-grid article:hover { border-color: #9ccdbd !important; transform: translateY(-3px); box-shadow: 0 12px 26px rgba(22, 53, 42, .08); }
+.featured-link, .featured-link-details, .business-contact { background: var(--app-soft) !important; }
+.business-link-grid a, .email-link { border-radius: 8px; }
+.business-link-grid a:hover, .email-link:hover { background: var(--app-jade-dark); border-color: var(--app-jade-dark); color: #fff; }
+.business-grid i, .business-resource-list i { color: var(--app-jade-dark); }
+
+.admin-login-modal, .talent-modal { border-color: var(--app-line); border-radius: 14px; box-shadow: 0 20px 54px rgba(22, 53, 42, .16); }
+
+/* Latest notes use the original card grid on every screen size. */
+.home-theme .notes.notes-list { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 18px !important; }
+.home-theme .note.note-list-item {
+  display: flex !important;
+  flex-direction: column;
+  gap: 0 !important;
+  padding: 14px !important;
+  background: #fff !important;
+}
+.home-theme .note.note-list-item .note-cover-link { width: 100%; margin: 0 !important; }
+.home-theme .note.note-list-item .note-cover { width: 100% !important; margin: 0 !important; }
+.home-theme .note.note-list-item .note-content { min-width: 0; padding: 17px 4px 4px !important; }
+
+@media (max-width: 720px) {
+  .home-theme .note.note-list-item {
+    display: flex !important;
+    padding: 12px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .network-hero, .analysis-hero, .talent-hero { padding-top: 54px; padding-bottom: 44px; }
+  .analysis-section, .matrix-section, .talent-section { padding-top: 42px; padding-bottom: 64px; }
+  .analysis-list article, .company-card, .job-card, .talent-card { border-radius: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button, a, .analysis-list article, .company-card, .job-card, .talent-card { transition-duration: .01ms !important; }
+}

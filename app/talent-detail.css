@@ -1,0 +1,2 @@
+.job-detail-image{display:block;width:100%;max-width:100%;height:auto;max-height:none;object-fit:contain;margin:0 0 20px;border:1px solid #dce5e0;background:#f7f9f8}
+@media(max-width:720px){.job-detail-image{margin-bottom:16px}}

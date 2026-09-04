@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.next/
+.wrangler/
+.netlify/
+.env
+.env.*
+!.env.example
