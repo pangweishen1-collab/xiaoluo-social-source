@@ -267,6 +267,20 @@ test("site design tokens provide one reusable visual source", async () => {
   assert.ok(layout.indexOf('import "../tokens.css"') < layout.indexOf('import "./globals.css"'));
 });
 
+test("legacy page palettes delegate to semantic color tokens", async () => {
+  const [home, app, reset] = await Promise.all([
+    readFile(new URL("../app/home-light.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/app-light.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(home, /--home-jade:\s*var\(--color-brand\)/);
+  assert.match(home, /--home-ink:\s*var\(--color-text\)/);
+  assert.match(app, /--app-jade:\s*var\(--color-brand\)/);
+  assert.match(app, /--app-line:\s*var\(--color-border\)/);
+  assert.match(reset, /--ink:\s*var\(--color-text\)/);
+  assert.match(reset, /--paper:\s*var\(--color-surface\)/);
+});
+
 test("community button opens an accessible QR-code dialog", async () => {
   const [page, css] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),

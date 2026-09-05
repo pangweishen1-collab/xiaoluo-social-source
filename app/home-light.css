@@ -1,12 +1,12 @@
 /* Home light system: paper-white canvas, jade interaction accent, and one shared card treatment. */
 :root {
-  --home-ink: #182522;
-  --home-muted: #62706b;
-  --home-line: #dce5e0;
-  --home-soft: #f5f8f6;
-  --home-mint: #e8f5ee;
-  --home-jade: #25866c;
-  --home-jade-dark: #17614f;
+  --home-ink: var(--color-text);
+  --home-muted: var(--color-muted);
+  --home-line: var(--color-border);
+  --home-soft: var(--color-surface-subtle);
+  --home-mint: var(--color-brand-soft);
+  --home-jade: var(--color-brand);
+  --home-jade-dark: var(--color-brand-strong);
 }
 
 body { background: #fff; color: var(--home-ink); }

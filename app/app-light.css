@@ -1,12 +1,12 @@
 /* Shared light UI system for non-home views. */
 :root {
-  --app-ink: #182522;
-  --app-muted: #62706b;
-  --app-line: #dce5e0;
-  --app-soft: #f5f8f6;
-  --app-mint: #e8f5ee;
-  --app-jade: #25866c;
-  --app-jade-dark: #17614f;
+  --app-ink: var(--color-text);
+  --app-muted: var(--color-muted);
+  --app-line: var(--color-border);
+  --app-soft: var(--color-surface-subtle);
+  --app-mint: var(--color-brand-soft);
+  --app-jade: var(--color-brand);
+  --app-jade-dark: var(--color-brand-strong);
 }
 
 main { background: #fff; }
@@ -89,4 +89,21 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 
 @media (prefers-reduced-motion: reduce) {
   button, a, .analysis-list article, .company-card, .job-card, .talent-card { transition-duration: .01ms !important; }
+}
+
+.community-fab{position:fixed;right:24px;bottom:24px;z-index:40;display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:#17614f;color:#fff;box-shadow:0 10px 28px rgba(22,53,42,.22)}
+.community-fab svg{width:25px;height:25px;fill:currentColor}
+.community-fab:hover{background:#0f4e3f;transform:translateY(-2px)}
+.community-fab:focus-visible{outline:3px solid #9ccdbd;outline-offset:3px}
+.community-modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(24,37,34,.58)}
+.community-modal section{position:relative;width:min(100%,440px);padding:30px;background:#fff;border:1px solid var(--app-line);border-radius:14px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.24)}
+.community-modal section>button{position:absolute;top:12px;right:14px;width:36px;height:36px;color:var(--app-muted);font-size:26px;line-height:1}
+.community-modal h2{margin:12px 38px 22px;font-size:22px;line-height:1.4;letter-spacing:-.03em}
+.community-modal img{display:block;width:min(100%,330px);height:auto;margin:auto;border-radius:10px}
+.community-modal p{margin:16px 0 0;color:var(--app-muted);font-size:13px}
+
+@media(max-width:720px){
+  .community-fab{right:16px;bottom:16px;width:50px;height:50px}
+  .community-modal section{padding:26px 18px 22px}
+  .community-modal h2{margin:14px 32px 18px;font-size:19px}
 }
