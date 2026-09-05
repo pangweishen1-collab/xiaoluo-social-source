@@ -4,6 +4,19 @@ import { useEffect, useState } from "react";
 
 const MAX_TALENT_IMAGE_BYTES = 3 * 1024 * 1024;
 const ANALYSIS_PAGE_SIZE = 10;
+let articlesRequest: Promise<{ items?: Array<Record<string, unknown>> }> | null = null;
+let talentItemsRequest: Promise<{ items?: Array<Record<string, unknown>> }> | null = null;
+
+const loadArticles = () => articlesRequest ??= fetch("/api/articles", { credentials: "same-origin", cache: "no-store" })
+  .then(async (response) => response.ok ? response.json() : Promise.reject(new Error("公司分析暂时无法读取。")))
+  .catch((error) => { articlesRequest = null; throw error; });
+const loadTalentItems = () => talentItemsRequest ??= fetch("/api/talent", { credentials: "same-origin", cache: "no-store" })
+  .then(async (response) => response.ok ? response.json() : Promise.reject(new Error("人才市场暂时无法同步，请稍后重试。")))
+  .catch((error) => { talentItemsRequest = null; throw error; });
+const preloadPublicData = () => {
+  void loadArticles().catch(() => undefined);
+  void loadTalentItems().catch(() => undefined);
+};
 
 async function compressTalentImage(file: File) {
   if (!/^image\/(png|jpe?g|webp)$/i.test(file.type)) throw new Error("请选择 PNG、JPG 或 WebP 图片。");
@@ -147,13 +160,23 @@ export default function Home() {
   const [now, setNow] = useState<Date | null>(null);
   const [admin, setAdmin] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [communityOpen, setCommunityOpen] = useState(false);
 
   useEffect(() => {
     setNow(new Date());
     fetch("/api/admin/session", { credentials: "same-origin", cache: "no-store" }).then((response) => response.ok ? response.json() : { authenticated: false }).then((data) => setAdmin(Boolean(data.authenticated))).catch(() => undefined);
     const view = new URLSearchParams(window.location.search).get("view");
     if (view === "analysis" || view === "matrix" || view === "talent" || view === "business") setTab(view);
+    const idle = "requestIdleCallback" in window ? window.requestIdleCallback(preloadPublicData) : window.setTimeout(preloadPublicData, 200);
+    return () => "cancelIdleCallback" in window ? window.cancelIdleCallback(idle) : window.clearTimeout(idle);
   }, []);
+
+  useEffect(() => {
+    if (!communityOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setCommunityOpen(false); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [communityOpen]);
 
   const logout = async () => { await fetch("/api/admin/session", { method: "DELETE", credentials: "same-origin" }); setAdmin(false); };
 
@@ -163,15 +186,17 @@ export default function Home() {
         <div className="brand"><button className="brand-home" onClick={() => setTab("home")} aria-label="回到首页"><span>小骆 <small>语聊出海观察</small></span></button><button className="avatar-login" onClick={() => setLoginOpen(true)} aria-label="打开人才市场管理"><img src="/xiaohongshu-avatar.webp" alt="" /></button></div>
         <nav aria-label="主导航" style={{ backgroundColor: "#fff" }}>
           <button className={tab === "home" ? "active" : ""} onClick={() => setTab("home")}>资讯与我</button>
-          <button className={tab === "analysis" ? "active" : ""} onClick={() => setTab("analysis")}>公司分析</button>
+          <button className={tab === "analysis" ? "active" : ""} onPointerEnter={preloadPublicData} onFocus={preloadPublicData} onClick={() => setTab("analysis")}>公司分析</button>
           <button className={tab === "matrix" ? "active" : ""} onClick={() => setTab("matrix")}>出海矩阵</button>
-          <button className={tab === "talent" ? "active" : ""} onClick={() => setTab("talent")}>人才市场</button>
+          <button className={tab === "talent" ? "active" : ""} onPointerEnter={preloadPublicData} onFocus={preloadPublicData} onClick={() => setTab("talent")}>人才市场</button>
           <button className={tab === "business" ? "active" : ""} onClick={() => setTab("business")}>商务合作</button>
         </nav>
       </header>
 
       {tab === "home" ? <HomeView now={now} /> : tab === "analysis" ? <CompanyAnalysisView admin={admin} /> : tab === "matrix" ? <MatrixView /> : tab === "talent" ? <TalentView admin={admin} onLogout={logout} /> : <BusinessView />}
       {loginOpen && <AdminLogin onClose={() => setLoginOpen(false)} onSuccess={() => { setAdmin(true); setLoginOpen(false); setTab("talent"); }} />}
+      <button className="community-fab" type="button" onClick={() => setCommunityOpen(true)} aria-label="打开语聊出海交流群二维码"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 1 0-3.46-6A5 5 0 1 0 8 12c-3.31 0-6 2-6 4.5V19h11v-2.5c0-1.22-.52-2.32-1.38-3.17A7.4 7.4 0 0 1 16 12c3.31 0 6 2 6 4.5V19h-7v-2.5c0-1.25-.42-2.41-1.14-3.4A5.9 5.9 0 0 0 11.5 12 5 5 0 0 0 16 11Z" /></svg></button>
+      {communityOpen && <div className="community-modal" role="dialog" aria-modal="true" aria-labelledby="community-dialog-title" onClick={(event) => { if (event.target === event.currentTarget) setCommunityOpen(false); }}><section><button type="button" autoFocus onClick={() => setCommunityOpen(false)} aria-label="关闭社群二维码">×</button><h2 id="community-dialog-title">群聊：小骆 🐫 语聊出海交流 2 群</h2><img src="/community-qr.jpg" alt="小骆语聊出海交流 2 群二维码" /><p>该二维码 9 月 11 日前有效</p></section></div>}
     </main>
   );
 }
@@ -241,14 +266,14 @@ function CompanyAnalysisView({ admin }: { admin: boolean }) {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState<Array<{ slug: string; title: string; company: string; category: string; summary: string; tags: string[]; publishedAt: string }>>([]);
-  useEffect(() => { fetch("/api/articles", { credentials: "same-origin", cache: "no-store" }).then(async (response) => response.ok ? setArticles((await response.json()).items || []) : undefined).catch(() => undefined); }, []);
+  useEffect(() => { loadArticles().then((data) => setArticles((data.items || []) as typeof articles)).catch(() => undefined); }, []);
   const normalizedQuery = query.trim().toLowerCase();
   const shownAnalyses = articles.filter((item) => !normalizedQuery || [item.company, item.title, item.summary, ...item.tags].join(" ").toLowerCase().includes(normalizedQuery));
   const pageCount = Math.max(1, Math.ceil(shownAnalyses.length / ANALYSIS_PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageAnalyses = shownAnalyses.slice((currentPage - 1) * ANALYSIS_PAGE_SIZE, currentPage * ANALYSIS_PAGE_SIZE);
   return <>
-    <section className="analysis-section shell"><div className="analysis-head"><div><p className="eyebrow">RESEARCH ARCHIVE</p><h2>最新公司分析</h2></div><div className="analysis-head-actions"><p>持续更新 · 不以转载替代核验</p>{admin && <a className="primary analysis-publish-link" href="/admin">发布文章 →</a>}</div></div><label className="analysis-search"><span>搜索公司、产品或关键词</span><input value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="例如：欢聚、Yalla、语聊、商业化" aria-label="搜索公司分析" /><b>{shownAnalyses.length} 篇</b></label><div className="analysis-list">{pageAnalyses.map((item) => <article key={item.slug}><a className="analysis-card-link" href={`/analysis/${item.slug}`}><div className="analysis-card-top"><span>{item.category} · {item.company}</span><span>by 小骆 · {new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium" }).format(new Date(item.publishedAt))}</span></div><h2>{item.title}</h2><p>{item.summary}</p><div>{item.tags.map((tag) => <i key={tag}>{tag}</i>)}</div><span className="analysis-more">阅读全文 →</span></a></article>)}</div>{pageCount > 1 && <nav className="analysis-pagination" aria-label="公司分析分页"><button type="button" onClick={() => setPage(currentPage - 1)} disabled={currentPage === 1}>上一页</button>{Array.from({ length: pageCount }, (_, index) => index + 1).map((pageNumber) => <button type="button" key={pageNumber} className={pageNumber === currentPage ? "is-active" : undefined} aria-current={pageNumber === currentPage ? "page" : undefined} onClick={() => setPage(pageNumber)}>{pageNumber}</button>)}<button type="button" onClick={() => setPage(currentPage + 1)} disabled={currentPage === pageCount}>下一页</button></nav>}{shownAnalyses.length === 0 && <div className="analysis-empty">{articles.length ? "没有匹配内容，换一个关键词试试。" : "还没有已发布的公司分析。"}</div>}</section>
+    <section className="analysis-section shell"><div className="analysis-head"><div><p className="eyebrow">RESEARCH ARCHIVE</p><h2>最新公司分析</h2></div><div className="analysis-head-actions"><p>持续更新 · 不以转载替代核验</p>{admin && <a className="primary analysis-publish-link" href="/admin">发布文章 →</a>}</div></div><label className="analysis-search"><input value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="例如：欢聚、Yalla、语聊、商业化" aria-label="搜索公司分析" /><b>{shownAnalyses.length} 篇</b></label><div className="analysis-list">{pageAnalyses.map((item) => <article key={item.slug}><a className="analysis-card-link" href={`/analysis/${item.slug}`}><div className="analysis-card-top"><span>{item.category} · {item.company}</span><span>by 小骆 · {new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium" }).format(new Date(item.publishedAt))}</span></div><h2>{item.title}</h2><p>{item.summary}</p><div>{item.tags.map((tag) => <i key={tag}>{tag}</i>)}</div><span className="analysis-more">阅读全文 →</span></a></article>)}</div>{pageCount > 1 && <nav className="analysis-pagination" aria-label="公司分析分页"><button type="button" onClick={() => setPage(currentPage - 1)} disabled={currentPage === 1}>上一页</button>{Array.from({ length: pageCount }, (_, index) => index + 1).map((pageNumber) => <button type="button" key={pageNumber} className={pageNumber === currentPage ? "is-active" : undefined} aria-current={pageNumber === currentPage ? "page" : undefined} onClick={() => setPage(pageNumber)}>{pageNumber}</button>)}<button type="button" onClick={() => setPage(currentPage + 1)} disabled={currentPage === pageCount}>下一页</button></nav>}{shownAnalyses.length === 0 && <div className="analysis-empty">{articles.length ? "没有匹配内容，换一个关键词试试。" : "还没有已发布的公司分析。"}</div>}</section>
     <footer className="shell"><span>© 2026 小骆 / COMPANY RESEARCH</span><button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>回到顶部 ↑</button></footer>
   </>;
 }
@@ -354,14 +379,14 @@ function TalentView({ admin, onLogout }: { admin: boolean; onLogout: () => Promi
     };
     const load = async () => {
       try {
-        let data = await request("GET");
+        let data = await loadTalentItems();
         let items = Array.isArray(data.items) ? data.items : [];
         if (!items.length) {
           const legacyJobs = readLegacy("xiaoluo-talent-jobs-v2");
           const legacyPeople = readLegacy("xiaoluo-talent-people-v2");
           if (legacyJobs.length || legacyPeople.length) {
             await Promise.all([...legacyJobs.map((item: typeof jobListings[number]) => request("POST", { ...item, kind: "jobs" })), ...legacyPeople.map((item: typeof talentProfiles[number]) => request("POST", { ...item, kind: "people" }))]);
-            data = await request("GET"); items = Array.isArray(data.items) ? data.items : [];
+            talentItemsRequest = null; data = await loadTalentItems(); items = Array.isArray(data.items) ? data.items : [];
           }
         }
         if (!active) return;

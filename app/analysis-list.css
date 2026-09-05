@@ -1,9 +1,9 @@
 /* Company analysis archive: a compact, editorial reading rhythm. */
 .analysis-search{grid-template-columns:minmax(0,1fr) auto}
-.analysis-list{display:grid;gap:42px}
+.analysis-list{display:grid;gap:var(--space-section)}
 .analysis-list article{padding:30px 32px}
 .analysis-card-link{display:block;text-decoration:none}
-.analysis-card-top{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:16px;font-size:13px;line-height:1.5}
+.analysis-card-top{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:var(--space-content);font-size:13px;line-height:1.5}
 .analysis-list h2{margin:0;font-size:28px;line-height:1.32;letter-spacing:-.045em}
 .analysis-list p{margin:20px 0 18px;font-size:16px;line-height:1.8;letter-spacing:.005em}
 .analysis-list article> .analysis-card-link > div:last-of-type{display:flex;flex-wrap:wrap;gap:7px;margin:0}
@@ -12,7 +12,7 @@
 
 @media(max-width:720px){
   .analysis-search{grid-template-columns:minmax(0,1fr) auto}
-  .analysis-list{gap:24px}
+  .analysis-list{gap:var(--space-component)}
   .analysis-list article{padding:23px 20px}
   .analysis-card-top{gap:5px 12px;margin-bottom:13px;font-size:12px}
   .analysis-list h2{font-size:23px;line-height:1.36}

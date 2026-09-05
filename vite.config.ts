@@ -14,6 +14,21 @@ const { d1, r2 } = hostingConfig;
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const isNetlifyBuild = process.env.NITRO_PRESET === "netlify";
+const useRemoteArticleData = process.env.XIAOLUO_REMOTE_ARTICLES === "1";
+
+const localServer = {
+  ...(isCodexSeatbeltSandbox ? { watch: { useFsEvents: false, usePolling: true } } : {}),
+  ...(useRemoteArticleData
+    ? {
+        proxy: {
+          "/api/articles": {
+            target: "https://xiaoluo-social.pages.dev",
+            changeOrigin: true,
+          },
+        },
+      }
+    : {}),
+};
 
 const localBindingConfig = {
   main: "./worker/index.ts",
@@ -46,9 +61,7 @@ export default defineConfig(async () => {
 
   if (isNetlifyBuild) {
     return {
-      server: isCodexSeatbeltSandbox
-        ? { watch: { useFsEvents: false, usePolling: true } }
-        : undefined,
+      server: localServer,
       plugins: [vinext(), sites(), nitro()],
     };
   }
@@ -57,9 +70,7 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
-    server: isCodexSeatbeltSandbox
-      ? { watch: { useFsEvents: false, usePolling: true } }
-      : undefined,
+    server: localServer,
     plugins: [
       vinext(),
       sites(),

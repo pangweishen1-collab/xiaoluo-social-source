@@ -240,14 +240,17 @@ test("article reader links to adjacent analyses around its return-to-top control
 });
 
 test("company-analysis list keeps a readable editorial rhythm", async () => {
-  const [page, css] = await Promise.all([
+  const [page, css, tokens] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/analysis-list.css", import.meta.url), "utf8"),
+    readFile(new URL("../tokens.css", import.meta.url), "utf8"),
   ]);
 
   assert.doesNotMatch(page, /<span>搜索公司、产品或关键词<\/span>/);
-  assert.match(css, /\.analysis-list\{display:grid;gap:42px/);
-  assert.match(css, /@media\(max-width:720px\)\{[\s\S]*\.analysis-list\{gap:24px/);
+  assert.match(css, /\.analysis-list\{display:grid;gap:var\(--space-section\)/);
+  assert.match(css, /@media\(max-width:720px\)\{[\s\S]*\.analysis-list\{gap:var\(--space-component\)/);
+  assert.match(tokens, /--space-section:\s*40px/);
+  assert.match(tokens, /--space-component:\s*24px/);
   assert.match(css, /\.analysis-list article\{padding:30px 32px/);
   assert.match(css, /\.analysis-list h2\{[^}]*line-height:1\.32/);
   assert.match(css, /\.analysis-list p\{[^}]*line-height:1\.8/);
@@ -262,7 +265,8 @@ test("site design tokens provide one reusable visual source", async () => {
     "color-brand", "color-brand-strong", "color-brand-soft", "color-text",
     "color-muted", "color-border", "color-surface", "color-surface-subtle",
     "space-tight", "space-content", "space-component", "space-section",
-    "radius-control", "radius-card",
+    "radius-control", "radius-card", "font-sans", "motion-duration",
+    "motion-lift", "shadow-card-hover",
   ]) assert.match(tokens, new RegExp(`--${name}:`));
   assert.ok(layout.indexOf('import "../tokens.css"') < layout.indexOf('import "./globals.css"'));
 });
@@ -285,6 +289,41 @@ test("active styles no longer hard-code the retired green palette", async () => 
   const files = ["globals.css", "business-overrides.css", "home-light.css", "app-light.css", "color-reset.css", "analysis-list.css", "practical-tools.css", "matrix-title.css", "talent-detail.css"];
   const css = (await Promise.all(files.map((file) => readFile(new URL(`../app/${file}`, import.meta.url), "utf8")))).join("\n");
   assert.doesNotMatch(css, /#25866c|#17614f|#e8f5ee/i);
+});
+
+test("shared components consume semantic spacing and radius tokens", async () => {
+  const [analysis, app, reset] = await Promise.all([
+    readFile(new URL("../app/analysis-list.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/app-light.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(analysis, /\.analysis-list\{[^}]*gap:var\(--space-section\)/);
+  assert.match(app, /\.community-modal section\{[^}]*border-radius:var\(--radius-card\)/);
+  assert.match(reset, /\.analysis-search input[^}]*border-radius:\s*var\(--radius-control\)/);
+});
+
+test("public pages share one sans-serif typeface and one card interaction", async () => {
+  const [page, globals, tools] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/practical-tools.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(page, /<span>搜索公司或产品<\/span>/);
+  assert.match(globals, /font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif/);
+  const app = await readFile(new URL("../app/app-light.css", import.meta.url), "utf8");
+  assert.match(app, /body, body \* \{ font-family: var\(--font-sans\) !important; \}/);
+  assert.match(tools, /\.practical-tool-card\{[^}]*border-radius:var\(--radius-card\)/);
+  assert.doesNotMatch(tools, /border-color:#6fa18e|background:#f3f8f5|box-shadow:0 12px 22px/);
+  assert.match(tools, /\.practical-tool-card:hover\{[^}]*border-color:var\(--color-brand\)[^}]*transform:var\(--motion-lift\)[^}]*box-shadow:var\(--shadow-card-hover\)/);
+  assert.match(app, /\.analysis-list article:hover[^}]*transform: var\(--motion-lift\)[^}]*box-shadow: var\(--shadow-card-hover\)/);
+});
+
+test("slow public data starts loading before its destination tab is opened", async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  assert.match(page, /const preloadPublicData = \(\) =>/);
+  assert.match(page, /void loadArticles\(\)/);
+  assert.match(page, /void loadTalentItems\(\)/);
+  assert.match(page, /requestIdleCallback/);
 });
 
 test("community button opens an accessible QR-code dialog", async () => {

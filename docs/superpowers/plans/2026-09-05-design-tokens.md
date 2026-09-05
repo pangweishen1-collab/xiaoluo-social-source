@@ -70,9 +70,9 @@ Create `tokens.css` with the approved OKLCH colors and exact spacing/radius scal
 ```css
 /* Hallmark · pre-emit critique: P5 H4 E5 S5 R5 V4 */
 :root {
-  --color-brand: oklch(52% 0.14 257);
-  --color-brand-strong: oklch(40% 0.12 257);
-  --color-brand-soft: oklch(96% 0.025 257);
+  --color-brand: #25866c;
+  --color-brand-strong: #17614f;
+  --color-brand-soft: #e8f5ee;
   --color-text: oklch(25% 0.018 245);
   --color-muted: oklch(50% 0.018 245);
   --color-border: oklch(90% 0.012 245);
@@ -84,6 +84,10 @@ Create `tokens.css` with the approved OKLCH colors and exact spacing/radius scal
   --space-section: 40px;
   --radius-control: 8px;
   --radius-card: 12px;
+  --font-sans: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --motion-duration: .2s;
+  --motion-lift: translateY(-3px);
+  --shadow-card-hover: 0 12px 26px color-mix(in oklch, var(--color-brand-strong) 8%, transparent);
 }
 ```
 
