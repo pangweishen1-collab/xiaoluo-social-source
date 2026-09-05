@@ -239,6 +239,49 @@ test("article reader links to adjacent analyses around its return-to-top control
   assert.match(reader, /article-adjacent-link/);
 });
 
+test("company-analysis list keeps a readable editorial rhythm", async () => {
+  const [page, css] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/analysis-list.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.doesNotMatch(page, /<span>搜索公司、产品或关键词<\/span>/);
+  assert.match(css, /\.analysis-list\{display:grid;gap:42px/);
+  assert.match(css, /@media\(max-width:720px\)\{[\s\S]*\.analysis-list\{gap:24px/);
+  assert.match(css, /\.analysis-list article\{padding:30px 32px/);
+  assert.match(css, /\.analysis-list h2\{[^}]*line-height:1\.32/);
+  assert.match(css, /\.analysis-list p\{[^}]*line-height:1\.8/);
+});
+
+test("site design tokens provide one reusable visual source", async () => {
+  const [tokens, layout] = await Promise.all([
+    readFile(new URL("../tokens.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+  ]);
+  for (const name of [
+    "color-brand", "color-brand-strong", "color-brand-soft", "color-text",
+    "color-muted", "color-border", "color-surface", "color-surface-subtle",
+    "space-tight", "space-content", "space-component", "space-section",
+    "radius-control", "radius-card",
+  ]) assert.match(tokens, new RegExp(`--${name}:`));
+  assert.ok(layout.indexOf('import "../tokens.css"') < layout.indexOf('import "./globals.css"'));
+});
+
+test("community button opens an accessible QR-code dialog", async () => {
+  const [page, css] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/app-light.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /className="community-fab"/);
+  assert.match(page, /群聊：小骆 🐫 语聊出海交流 2 群/);
+  assert.match(page, /src="\/community-qr\.jpg"/);
+  assert.match(page, /event\.key === "Escape"/);
+  assert.match(page, /event\.target === event\.currentTarget/);
+  assert.match(css, /\.community-fab\{position:fixed/);
+  assert.match(css, /\.community-modal\{position:fixed/);
+});
+
 test("article editor separates company information from the Markdown body", async () => {
   const [admin, css] = await Promise.all([
     readFile(new URL("../app/admin/page.tsx", import.meta.url), "utf8"),

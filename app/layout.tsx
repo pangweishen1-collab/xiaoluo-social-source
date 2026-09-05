@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "../tokens.css";
 import "./globals.css";
 import "./business-overrides.css";
 import "./home-light.css";
@@ -7,6 +8,7 @@ import "./color-reset.css";
 import "./matrix-title.css";
 import "./talent-detail.css";
 import "./practical-tools.css";
+import "./analysis-list.css";
 
 export const metadata: Metadata = {
   title: "小骆｜社交产品资讯与资源网络",

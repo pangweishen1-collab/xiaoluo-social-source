@@ -1,0 +1,20 @@
+/* Hallmark · genre: editorial · macrostructure: Ecosystem Index · theme: custom · enrichment: none · nav: N9 · footer: Ft2
+ * vibe: "professional, restrained, trustworthy, editorial" · axes: light / system-native / cool
+ * pre-emit critique: P5 H4 E5 S5 R5 V4
+ */
+:root {
+  --color-brand: oklch(52% 0.14 257);
+  --color-brand-strong: oklch(40% 0.12 257);
+  --color-brand-soft: oklch(96% 0.025 257);
+  --color-text: oklch(25% 0.018 245);
+  --color-muted: oklch(50% 0.018 245);
+  --color-border: oklch(90% 0.012 245);
+  --color-surface: oklch(99% 0.004 245);
+  --color-surface-subtle: oklch(97% 0.008 245);
+  --space-tight: 8px;
+  --space-content: 16px;
+  --space-component: 24px;
+  --space-section: 40px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+}
