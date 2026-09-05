@@ -91,7 +91,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   button, a, .analysis-list article, .company-card, .job-card, .talent-card { transition-duration: .01ms !important; }
 }
 
-.community-fab{position:fixed;right:24px;bottom:24px;z-index:40;display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:#17614f;color:#fff;box-shadow:0 10px 28px rgba(22,53,42,.22)}
+.community-fab{position:fixed;right:24px;bottom:24px;z-index:40;display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:var(--color-brand-strong);color:#fff;box-shadow:0 10px 28px rgba(22,53,42,.22)}
 .community-fab svg{width:25px;height:25px;fill:currentColor}
 .community-fab:hover{background:#0f4e3f;transform:translateY(-2px)}
 .community-fab:focus-visible{outline:3px solid #9ccdbd;outline-offset:3px}

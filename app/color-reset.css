@@ -12,7 +12,7 @@ body, main { background: #fff !important; color: #182522 !important; }
 header.nav { background-color: #fff !important; background-image: none !important; }
 
 .eyebrow, .today-label, .analysis-card-top, .business-resource-title b,
-.company-card footer, .matrix-callout b, .talent-note, .company-entity-note { color: #17614f !important; }
+.company-card footer, .matrix-callout b, .talent-note, .company-entity-note { color: var(--color-brand-strong) !important; }
 .muted, .lead, .network-copy > p, .analysis-hero > p, .talent-hero > p,
 .business-link-grid p, .business-resource-list p, .business-grid p,
 .analysis-list p, .company-entity-note, .listing-contact, .talent-note { color: #62706b !important; }
@@ -33,21 +33,21 @@ header.nav { background-color: #fff !important; background-image: none !importan
 .proof-grid article:hover { border-color: #9ccdbd !important; box-shadow: 0 12px 26px rgba(22, 53, 42, .08) !important; }
 
 .product-tags span, .analysis-list i, .job-meta span, .job-meta i, .talent-tags i,
-.business-grid i, .business-resource-list i, .matrix-legend span { background: #eef7f2 !important; border-color: #bfe1d1 !important; color: #17614f !important; }
+.business-grid i, .business-resource-list i, .matrix-legend span { background: #eef7f2 !important; border-color: #bfe1d1 !important; color: var(--color-brand-strong) !important; }
 .voice, .live, .game, .match, .tool, .live-0, .voice-0, .game-0, .match-0, .tool-0,
 .product-tags .live-1, .product-tags .voice-1, .product-tags .game-1,
-.product-tags .match-1, .product-tags .tool-1 { color: #17614f !important; }
+.product-tags .match-1, .product-tags .tool-1 { color: var(--color-brand-strong) !important; }
 
 .primary, .nav-cta, .publish-talent, .talent-form-actions button[type="submit"] { background: #182522 !important; border-color: #182522 !important; color: #fff !important; border-radius: 8px !important; }
-.primary:hover, .nav-cta:hover, .publish-talent:hover, .talent-form-actions button[type="submit"]:hover { background: #17614f !important; border-color: #17614f !important; }
-.text-button, .section-top a, .note a, .analysis-more, .email-link { color: #17614f !important; border-color: #9ccdbd !important; }
-.text-button:hover, .section-top a:hover, .note a:hover, .analysis-more:hover, .email-link:hover { color: #0f4e3f !important; border-color: #25866c !important; }
+.primary:hover, .nav-cta:hover, .publish-talent:hover, .talent-form-actions button[type="submit"]:hover { background: var(--color-brand-strong) !important; border-color: var(--color-brand-strong) !important; }
+.text-button, .section-top a, .note a, .analysis-more, .email-link { color: var(--color-brand-strong) !important; border-color: #9ccdbd !important; }
+.text-button:hover, .section-top a:hover, .note a:hover, .analysis-more:hover, .email-link:hover { color: #0f4e3f !important; border-color: var(--color-brand) !important; }
 .boss-direct-badge {
   background: linear-gradient(135deg, #fff0bd 0%, #e8c467 48%, #f8df94 100%) !important;
   color: #182522 !important;
   border-color: #d6ae45 !important;
 }
-.visitor-pulse { background: #25866c !important; }
+.visitor-pulse { background: var(--color-brand) !important; }
 
 /* Component-level hard reset. These rules sit last so no former warm/sand
    token can leak through component-specific selectors in globals.css. */
@@ -65,7 +65,7 @@ header.nav { background-color: #fff !important; background-image: none !importan
 .analysis-hero h1 em, .analysis-section h1 em,
 .talent-hero h1 em, .talent-section h1 em,
 .business-services h1 em, .business-links h1 em, .business-resources h1 em,
-.business-contact h1 em { color: #25866c !important; }
+.business-contact h1 em { color: var(--color-brand) !important; }
 
 .matrix-head > p, .matrix-head > p *, .analysis-search > span,
 .analysis-search > b, .matrix-search > span, .matrix-search > b,
@@ -102,15 +102,15 @@ header.nav { background-color: #fff !important; background-image: none !importan
 
 .matrix-section .company-title > span,
 .matrix-section .company-title > b, .matrix-section .company-title > b small,
-.talent-switch button span { color: #17614f !important; }
-.talent-switch button.selected { color: #182522 !important; border-color: #25866c !important; }
-.talent-switch button.selected span { background: #e1f3ea !important; color: #17614f !important; }
+.talent-switch button span { color: var(--color-brand-strong) !important; }
+.talent-switch button.selected { color: #182522 !important; border-color: var(--color-brand) !important; }
+.talent-switch button.selected span { background: #e1f3ea !important; color: var(--color-brand-strong) !important; }
 
 .job-card, .company-card, .analysis-list article, .business-link-grid article,
 .business-grid article, .business-resource-list article { background: #ffffff !important; }
 .job-card .job-meta span, .job-card .job-meta i {
   background: #eef7f2 !important;
-  color: #17614f !important;
+  color: var(--color-brand-strong) !important;
   border-color: #c9e8d9 !important;
 }
 .job-card .job-description, .job-card .listing-contact { color: #62706b !important; }
@@ -119,11 +119,11 @@ header.nav { background-color: #fff !important; background-image: none !importan
 .matrix-section .matrix-legend span,
 .business-link-grid i, .business-grid i, .business-resource-list i {
   background: #eef7f2 !important;
-  color: #17614f !important;
+  color: var(--color-brand-strong) !important;
   border-color: #bfe1d1 !important;
   box-shadow: none !important;
 }
-.company-card footer button, .company-card footer span { color: #17614f !important; }
+.company-card footer button, .company-card footer span { color: var(--color-brand-strong) !important; }
 
 /* Remove ornamental dividers. Cards and form controls keep only their useful
    outer outlines; content is no longer visually cut into horizontal bands. */
@@ -190,7 +190,7 @@ hr { display: none !important; }
 }
 .talent-switch button span {
   background: #e7f5ee !important;
-  color: #17614f !important;
+  color: var(--color-brand-strong) !important;
   border: 0 !important;
 }
 
@@ -244,12 +244,12 @@ hr { display: none !important; }
   min-height: 56px !important;
   padding-top: 14px !important;
   padding-bottom: 14px !important;
-  border: 1px solid #25866c !important;
+  border: 1px solid var(--color-brand) !important;
   border-radius: 10px !important;
   background: #ffffff !important;
 }
 .analysis-search input:focus, .matrix-search input:focus {
-  border-color: #25866c !important;
+  border-color: var(--color-brand) !important;
   box-shadow: 0 0 0 3px rgba(37, 134, 108, .14) !important;
   outline: none !important;
 }
@@ -277,7 +277,7 @@ hr { display: none !important; }
   border: 0;
   border-radius: 10px;
   padding: 13px 20px;
-  background: #25866c;
+  background: var(--color-brand);
   color: #fff;
   font: inherit;
   font-weight: 800;
@@ -327,7 +327,7 @@ hr { display: none !important; }
 .matrix-submit-dialog label { display: grid; gap: 8px; color: #183a30; font-weight: 700; }
 .matrix-submit-dialog input, .matrix-submit-dialog textarea { width: 100%; box-sizing: border-box; border: 1px solid #b9ddce; border-radius: 9px; padding: 12px 13px; color: #17251f; background: #fff; font: inherit; }
 .matrix-submit-dialog textarea { min-height: 112px; resize: vertical; }
-.matrix-submit-dialog input:focus, .matrix-submit-dialog textarea:focus { outline: 0; border-color: #25866c; box-shadow: 0 0 0 3px rgba(37, 134, 108, .13); }
+.matrix-submit-dialog input:focus, .matrix-submit-dialog textarea:focus { outline: 0; border-color: var(--color-brand); box-shadow: 0 0 0 3px rgba(37, 134, 108, .13); }
 .matrix-submit-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .matrix-submit-actions button { border-radius: 9px; padding: 11px 15px; font: inherit; font-weight: 750; cursor: pointer; }
 .matrix-submit-actions button:first-child { border: 1px solid #c8ded5; background: #fff; color: #34554a; }

@@ -281,6 +281,12 @@ test("legacy page palettes delegate to semantic color tokens", async () => {
   assert.match(reset, /--paper:\s*var\(--color-surface\)/);
 });
 
+test("active styles no longer hard-code the retired green palette", async () => {
+  const files = ["globals.css", "business-overrides.css", "home-light.css", "app-light.css", "color-reset.css", "analysis-list.css", "practical-tools.css", "matrix-title.css", "talent-detail.css"];
+  const css = (await Promise.all(files.map((file) => readFile(new URL(`../app/${file}`, import.meta.url), "utf8")))).join("\n");
+  assert.doesNotMatch(css, /#25866c|#17614f|#e8f5ee/i);
+});
+
 test("community button opens an accessible QR-code dialog", async () => {
   const [page, css] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
