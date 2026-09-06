@@ -1,15 +1,19 @@
 /* Final color pass: removes the former sand/desert palette across every view. */
-:root { --ink: var(--color-text); --paper: var(--color-surface); }
-body, main { background: var(--color-surface) !important; color: var(--color-text) !important; }
+:root { --ink: var(--color-text); --paper: var(--color-page); }
+body, main { background: var(--color-page) !important; color: var(--color-text) !important; }
+.article-admin-shell, .article-admin-layout, .article-admin-sidebar,
+.article-admin-content, .article-reader-shell, .article-nav-bar {
+  background: var(--color-page) !important;
+}
 
 .nav, .nav::before, .nav::after,
 .home-theme, .network-hero, .network-contacts, .analysis-hero, .analysis-section,
 .matrix-section, .matrix-callout, .talent-hero, .talent-section, .talent-admin,
 .talent-callout, .business-services, .business-links, .business-resources,
-.business-contact, .contact, .proof, .section, .intro, footer { background: var(--color-surface) !important; color: var(--color-text) !important; }
+.business-contact, .contact, .proof, .section, .intro, footer { background: var(--color-page) !important; color: var(--color-text) !important; }
 
 /* The header sits outside the home view; keep its H5 strip pure white too. */
-header.nav { background-color: var(--color-surface) !important; background-image: none !important; }
+header.nav { background-color: var(--color-page) !important; background-image: none !important; }
 
 .eyebrow, .today-label, .analysis-card-top, .business-resource-title b,
 .company-card footer, .matrix-callout b, .talent-note, .company-entity-note { color: var(--color-brand-strong) !important; }
@@ -27,10 +31,10 @@ header.nav { background-color: var(--color-surface) !important; background-image
 
 .analysis-list article, .company-card, .job-card, .talent-card, .talent-empty,
 .matrix-empty, .analysis-empty, .business-link-grid article, .business-grid article,
-.proof-grid article, .note, .featured-link, .featured-link-details { background: var(--color-surface) !important; border-color: var(--color-border) !important; color: var(--color-text) !important; }
+.proof-grid article, .note, .featured-link, .featured-link-details { background: var(--color-page) !important; border-color: var(--color-border) !important; color: var(--color-text) !important; }
 .analysis-list article:hover, .company-card:hover, .job-card:hover, .talent-card:hover,
 .business-link-grid article:hover, .business-grid article:hover, .note:hover,
-.proof-grid article:hover { border-color: var(--color-brand) !important; transform: var(--motion-lift); box-shadow: var(--shadow-card-hover) !important; }
+.proof-grid article:hover { background: var(--color-surface) !important; border-color: var(--color-brand) !important; transform: var(--motion-lift); box-shadow: var(--shadow-card-hover) !important; }
 
 .product-tags span, .analysis-list i, .job-meta span, .job-meta i, .talent-tags i,
 .business-grid i, .business-resource-list i, .matrix-legend span { background: var(--color-brand-soft) !important; border-color: var(--color-border) !important; color: var(--color-brand-strong) !important; }
@@ -38,7 +42,7 @@ header.nav { background-color: var(--color-surface) !important; background-image
 .product-tags .live-1, .product-tags .voice-1, .product-tags .game-1,
 .product-tags .match-1, .product-tags .tool-1 { color: var(--color-brand-strong) !important; }
 
-.primary, .nav-cta, .publish-talent, .talent-form-actions button[type="submit"] { background: var(--color-text) !important; border-color: var(--color-text) !important; color: var(--color-surface) !important; border-radius: var(--radius-control) !important; }
+.primary, .nav-cta, .publish-talent, .talent-form-actions button[type="submit"] { background: var(--color-brand) !important; border-color: var(--color-brand) !important; color: var(--color-surface) !important; border-radius: var(--radius-control) !important; }
 .primary:hover, .nav-cta:hover, .publish-talent:hover, .talent-form-actions button[type="submit"]:hover { background: var(--color-brand-strong) !important; border-color: var(--color-brand-strong) !important; }
 .text-button, .section-top a, .note a, .analysis-more, .email-link { color: var(--color-brand-strong) !important; border-color: var(--color-brand) !important; }
 .text-button:hover, .section-top a:hover, .note a:hover, .analysis-more:hover, .email-link:hover { color: var(--color-brand-strong) !important; border-color: var(--color-brand) !important; }
@@ -67,6 +71,48 @@ header.nav { background-color: var(--color-surface) !important; background-image
 .business-services h1 em, .business-links h1 em, .business-resources h1 em,
 .business-contact h1 em { color: var(--color-brand) !important; }
 
+/* One restrained type scale across public views. */
+.home-theme .hero h1, .network-hero h1, .analysis-hero h1, .matrix-hero h1,
+.matrix-atlas-head h2, .talent-hero h1, .business-hero h1 {
+  font-size: var(--font-size-display) !important;
+  line-height: var(--line-height-display) !important;
+}
+.section h2, .analysis-head h2, .matrix-head h2, .business-resource-head h2,
+.network-contacts h2, .talent-callout h2, .business-contact h2,
+.practical-tools .section-top h2 {
+  font-size: var(--font-size-section) !important;
+  line-height: var(--line-height-section) !important;
+}
+.home-theme .note.note-list-item .note-content h3,
+.analysis-list h2, .company-title h3, .job-card h2, .talent-card h2,
+.business-link-grid h3, .business-grid h3, .business-resource-title h3,
+.practical-tool-card h3 {
+  font-size: var(--font-size-card) !important;
+  line-height: var(--line-height-card) !important;
+}
+.article-reader-header h1 {
+  font-size: var(--font-size-article-title) !important;
+  line-height: var(--line-height-article-title) !important;
+}
+
+@media (max-width: 720px) {
+  .home-theme .hero h1, .network-hero h1, .analysis-hero h1, .matrix-hero h1,
+  .matrix-atlas-head h2, .talent-hero h1, .business-hero h1 {
+    font-size: var(--font-size-display-mobile) !important;
+  }
+  .section h2, .analysis-head h2, .matrix-head h2, .business-resource-head h2,
+  .network-contacts h2, .talent-callout h2, .business-contact h2,
+  .practical-tools .section-top h2 {
+    font-size: var(--font-size-section-mobile) !important;
+  }
+  .analysis-list h2, .company-title h3, .job-card h2, .talent-card h2,
+  .business-link-grid h3, .business-grid h3, .business-resource-title h3,
+  .practical-tool-card h3 {
+    font-size: var(--font-size-card-mobile) !important;
+  }
+  .article-reader-header h1 { font-size: var(--font-size-article-title-mobile) !important; }
+}
+
 .matrix-head > p, .matrix-head > p *, .analysis-search > span,
 .analysis-search > b, .matrix-search > span, .matrix-search > b,
 .filters label, .filters > span, .talent-switch button,
@@ -89,7 +135,7 @@ header.nav { background-color: var(--color-surface) !important; background-image
 }
 
 /* Talent cards need a comfortable reading scale for longer descriptions. */
-.job-card h2 { font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif !important; font-size: 30px !important; }
+.job-card h2 { font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif !important; }
 .job-card h3 { font-size: 22px !important; font-weight: 400 !important; }
 .job-card p { font-size: 14px !important; line-height: 1.75 !important; }
 .job-card .job-meta span, .job-card .job-meta i { font-size: 16px !important; }
@@ -99,6 +145,8 @@ header.nav { background-color: var(--color-surface) !important; background-image
 .talent-admin + .talent-section .publish-talent { display: inline-flex !important; }
 .matrix-search input::placeholder, .analysis-search input::placeholder,
 .talent-form input::placeholder, .talent-form textarea::placeholder { color: #8a9892 !important; }
+.home-theme .visitor-summary > p { color: var(--color-muted) !important; }
+.atlas-submission-list span { color: var(--color-text) !important; }
 
 .matrix-section .company-title > span,
 .matrix-section .company-title > b, .matrix-section .company-title > b small,
@@ -107,7 +155,7 @@ header.nav { background-color: var(--color-surface) !important; background-image
 .talent-switch button.selected span { background: var(--color-brand-soft) !important; color: var(--color-brand-strong) !important; }
 
 .job-card, .company-card, .analysis-list article, .business-link-grid article,
-.business-grid article, .business-resource-list article { background: var(--color-surface) !important; }
+.business-grid article, .business-resource-list article { background: var(--color-page) !important; }
 .job-card .job-meta span, .job-card .job-meta i {
   background: var(--color-brand-soft) !important;
   color: var(--color-brand-strong) !important;
@@ -140,7 +188,7 @@ header.nav { background-color: var(--color-surface) !important; background-image
   border-bottom: 0 !important;
   border-left: 0 !important;
 }
-.home-theme .visitor-strip { background: var(--color-surface) !important; box-shadow: none !important; }
+.home-theme .visitor-strip { background: var(--color-page) !important; box-shadow: none !important; }
 .home-theme .proof-grid ul { border-top: 0 !important; padding-top: 10px !important; }
 hr { display: none !important; }
 
@@ -149,7 +197,7 @@ hr { display: none !important; }
 .home-theme .hero-actions .text-button { display: none !important; }
 
 .featured-link, .featured-link-main, .featured-link-details,
-.business-link-grid .featured-link { background: var(--color-surface) !important; }
+.business-link-grid .featured-link { background: var(--color-page) !important; }
 .featured-link-details { border-left: 1px solid var(--color-border) !important; }
 
 .business-resource-list {
@@ -158,11 +206,12 @@ hr { display: none !important; }
 .business-resource-list article {
   min-height: 188px;
   padding: 22px !important;
-  background: var(--color-surface) !important;
+  background: var(--color-page) !important;
   border: 1px solid var(--color-border) !important;
   border-radius: var(--radius-card);
 }
 .business-resource-list article:hover {
+  background: var(--color-surface) !important;
   border-color: var(--color-brand) !important;
   transform: var(--motion-lift);
   box-shadow: var(--shadow-card-hover) !important;
@@ -172,7 +221,7 @@ hr { display: none !important; }
   border: 1px solid var(--color-border) !important;
   border-radius: var(--radius-card);
 }
-.home-theme .visitor-strip > div {
+.home-theme .visitor-strip > div + div {
   border-left: 1px solid var(--color-border) !important;
 }
 
@@ -295,12 +344,15 @@ hr { display: none !important; }
   gap: 44px;
   margin-top: 48px !important;
   padding: 42px 48px !important;
-  border: 1px solid #c8e5d7 !important;
+  border: 1px solid var(--color-highlight-border) !important;
   border-radius: var(--radius-card) !important;
-  background: linear-gradient(135deg, #effaf4 0%, #dff4e9 100%) !important;
+  background: var(--color-highlight) !important;
+  color: var(--color-text) !important;
 }
+.matrix-callout h2 { color: var(--color-text) !important; }
+.matrix-callout .eyebrow { color: var(--color-brand-strong) !important; }
 .matrix-callout > div:last-child { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
-.matrix-callout > div:last-child p { margin: 0; }
+.matrix-callout > div:last-child p { margin: 0; color: var(--color-muted) !important; }
 .matrix-submit-modal {
   position: fixed;
   inset: 0;
@@ -355,7 +407,7 @@ hr { display: none !important; }
 .atlas-submission-list p { margin: 5px 0; color: #557268; }
 .atlas-submission-list small { color: #73877f; }
 .atlas-submission-list article > div:last-child { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
-.atlas-submission-list span { padding: 5px 8px; border-radius: 999px; background: #fff2cf; color: #73530f; font-size: 13px; font-weight: 750; }
+.atlas-submission-list span { padding: 5px 8px; border-radius: 999px; background: #fff2cf; color: var(--color-surface-subtle); font-size: 13px; font-weight: 750; }
 .atlas-submission-list span.reviewed { background: #dff4e9; color: var(--color-brand-strong); }
 .atlas-submission-list button { border: 1px solid #b9ddce; border-radius: var(--radius-control); padding: 8px 10px; background: var(--color-surface); color: var(--color-brand-strong); font: inherit; font-size: 13px; font-weight: 750; cursor: pointer; }
 .atlas-submission-list .quiet-danger { border-color: #f1c5c1; color: #b42318; }

@@ -9,7 +9,7 @@
   --home-jade-dark: var(--color-brand-strong);
 }
 
-body { background: #fff; color: var(--home-ink); }
+body { background: var(--color-page); color: var(--home-ink); }
 
 .nav {
   min-height: 72px;
@@ -23,7 +23,7 @@ body { background: #fff; color: var(--home-ink); }
 .brand-home span { color: var(--home-ink); }
 .brand-home small { color: var(--home-muted); }
 
-.home-theme { background: #fff; overflow: clip; }
+.home-theme { background: var(--color-page); overflow: clip; }
 .home-theme .hero { min-height: 0; padding: 56px 0 48px !important; grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr) !important; gap: clamp(32px, 4vw, 64px) !important; }
 .home-theme .today { display: grid; justify-items: start; gap: 8px; color: #708078 !important; font-size: 13px !important; }
 .home-theme .today-label { color: var(--home-jade-dark); }
@@ -53,11 +53,10 @@ body { background: #fff; color: var(--home-ink); }
 .home-theme .hero-visual:hover img { transform: scale(1.025); }
 .home-theme .hero-visual span { position: absolute; right: 18px; bottom: 17px; z-index: 2; padding: 7px 10px; border-radius: var(--radius-control); background: rgba(255,255,255,.9); color: var(--home-jade-dark); font-size: 10px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; }
 
-.home-theme .visitor-strip { display: grid; grid-template-columns: minmax(0, 1fr) repeat(5, minmax(112px, 150px)); gap: 0; align-items: center; margin-top: -18px; padding: 22px 28px; background: #fff; border: 1px solid var(--home-line); border-radius: var(--radius-card); }
-.home-theme .visitor-strip > p { margin: 0; color: var(--home-muted); font-size: 13px; font-weight: 600; }
-.home-theme .visitor-strip .visitor-pulse { width: 7px; height: 7px; margin-right: 8px; background: var(--home-jade); }
-.home-theme .visitor-strip > div { display: grid; gap: 3px; padding-left: 24px; border-left: 1px solid var(--home-line); }
-.home-theme .visitor-strip b { color: var(--home-ink); font: 400 30px/1 "Ebrima", Arial, sans-serif; letter-spacing: -.04em; }
+.home-theme .visitor-strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; align-items: center; margin-top: -18px; padding: 22px 28px; background: var(--color-page); border: 1px solid var(--home-line); border-radius: var(--radius-card); }
+.home-theme .visitor-strip > div { display: grid; gap: 5px; padding: 0 18px; text-align: center; }
+.home-theme .visitor-strip > div + div { border-left: 1px solid var(--home-line); }
+.home-theme .visitor-strip b { color: var(--home-ink); font: 400 26px/1 "Ebrima", Arial, sans-serif; letter-spacing: -.04em; }
 .home-theme .visitor-strip span { color: var(--home-muted); font-size: 11px; }
 
 .home-theme .intro { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(230px, .65fr); gap: 48px; align-items: end; padding: 38px 0; border-top: 1px solid var(--home-line); border-bottom: 1px solid var(--home-line); }
@@ -72,7 +71,7 @@ body { background: #fff; color: var(--home-ink); }
 .home-theme .section-top a { color: var(--home-jade-dark); text-decoration-color: var(--color-brand); }
 
 .home-theme .notes.notes-list { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-.home-theme .note.note-list-item { display: flex !important; flex-direction: column; min-width: 0; padding: 14px !important; background: #fff !important; border: 1px solid var(--home-line) !important; border-radius: var(--radius-card); box-shadow: none !important; transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease; }
+.home-theme .note.note-list-item { display: flex !important; flex-direction: column; min-width: 0; padding: 14px !important; background: var(--color-page) !important; border: 1px solid var(--home-line) !important; border-radius: var(--radius-card); box-shadow: none !important; transition: transform .24s ease, border-color .24s ease, background-color .24s ease, box-shadow .24s ease; }
 .home-theme .note.note-list-item:hover { transform: var(--motion-lift); border-color: var(--color-brand) !important; box-shadow: var(--shadow-card-hover) !important; }
 .home-theme .note-cover-link { display: block; overflow: hidden; border-radius: var(--radius-control); background: var(--home-soft); }
 .home-theme .note-cover { width: 100%; aspect-ratio: 3 / 4; margin: 0 !important; border: 0 !important; object-fit: cover !important; background: var(--home-soft); transition: transform .35s ease; }
@@ -88,7 +87,7 @@ body { background: #fff; color: var(--home-ink); }
 .home-theme .proof-heading h2 em { color: var(--home-jade); font-style: normal; }
 .home-theme .proof-heading > p:last-child { color: var(--home-muted); line-height: 1.75; }
 .home-theme .proof-grid { gap: 12px; }
-.home-theme .proof-grid article { background: #fff !important; border: 1px solid var(--home-line) !important; border-radius: var(--radius-control); box-shadow: none !important; }
+.home-theme .proof-grid article { background: var(--color-page) !important; border: 1px solid var(--home-line) !important; border-radius: var(--radius-control); box-shadow: none !important; }
 .home-theme .proof-grid article:hover { border-color: var(--color-brand) !important; }
 .home-theme .proof-grid article > span { color: var(--home-jade); }
 .home-theme .proof-grid li::marker { color: var(--home-jade); }
@@ -108,9 +107,10 @@ body { background: #fff; color: var(--home-ink); }
   .home-theme .lead { font-size: 16px !important; }
   .home-theme .hero-visual { justify-self: stretch; width: 100%; }
   .home-theme .hero-visual img { aspect-ratio: 16 / 9; }
-  .home-theme .visitor-strip { grid-template-columns: minmax(0, 1fr) repeat(5, 60px); margin-top: 0; padding: 17px; border-radius: var(--radius-control); }
-  .home-theme .visitor-strip > div { padding-left: 13px; }
-  .home-theme .visitor-strip b { font-size: 24px; }
+  .home-theme .visitor-strip { grid-template-columns: repeat(5, minmax(0, 1fr)); margin-top: 0; padding: 15px 8px; border-radius: var(--radius-control); }
+  .home-theme .visitor-strip > div { padding: 0 5px; }
+  .home-theme .visitor-strip b { font-size: 20px; }
+  .home-theme .visitor-strip span { font-size: 10px; }
   .home-theme .intro { grid-template-columns: 1fr; gap: 24px; padding: 30px 0; }
   .home-theme .intro > p { font-size: 26px; }
   .home-theme .section { padding: 58px 0; }

@@ -31,7 +31,7 @@ test("server-renders the Xiaoluo public homepage", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>小骆｜社交产品资讯与资源网络<\/title>/);
-  assert.match(html, /资讯与我[\s\S]*公司分析[\s\S]*出海矩阵[\s\S]*人才市场[\s\S]*商务合作/);
+  assert.match(html, /首页[\s\S]*公司分析[\s\S]*出海矩阵[\s\S]*人才市场[\s\S]*商务合作/);
   assert.match(html, /聚焦中东社交与海外语聊/);
   assert.match(html, /先收藏再看！中国出海泛娱乐社交产品版图/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site|codex-preview/);
@@ -67,11 +67,12 @@ test("talent publishing accepts a compressed WebP image under 3 MB", async () =>
     readFile(new URL("../worker/index.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /input\.accept = "image\/png,image\/jpeg,image\/webp"/);
-  assert.match(page, /image\/webp/);
-  assert.match(page, /3 \* 1024 \* 1024/);
+  assert.match(page, /input\.accept = IMAGE_UPLOAD_RULES\.accept/);
+  assert.match(page, /IMAGE_UPLOAD_RULES\.outputMimeType/);
+  assert.match(page, /IMAGE_UPLOAD_RULES\.maxBytes/);
   assert.match(worker, /image_key/);
   assert.match(worker, /env\.MEDIA\.put/);
+  assert.match(worker, /webpBytesFromDataUrl/);
   assert.match(worker, /SELECT image_key FROM talent_listings WHERE id = \?/);
 });
 
@@ -145,6 +146,9 @@ test("home page places the practical tools list below recent notes with a site l
   assert.match(page, /https:\/\/immersivetranslate\.com\/zh-Hans\//);
   assert.match(page, /https:\/\/immersivetranslate\.com\/_next\/static\/media\/logo\.761c1cd1\.png/);
   assert.match(page, /推荐人：盖伦/);
+  assert.match(page, /https:\/\/vibe-hub\.org\/topics\/product/);
+  assert.match(page, /VibeHub 产品术语/);
+  assert.match(page, /推荐人：小骆/);
   assert.match(css, /\.practical-tool-card/);
 });
 
@@ -200,7 +204,7 @@ test("article reader uses a full-width reading layout without a recommendation r
   assert.match(css, /\.article-reader-shell\{min-height:100vh;background:#f5f8f6;padding:0 20px 96px/);
   assert.match(css, /\.article-reader-header\{max-width:none/);
   assert.match(css, /\.article-reader-content\{max-width:none/);
-  assert.match(css, /\.article-reader-header h1\{[^}]*font-size:40px/);
+  assert.match(css, /\.article-reader-header h1\{[^}]*font-size:34px/);
 });
 
 test("article reader retains the site navigation with company analysis selected", async () => {
@@ -210,11 +214,11 @@ test("article reader retains the site navigation with company analysis selected"
   ]);
 
   assert.match(reader, /article-site-nav/);
-  assert.match(reader, /资讯与我/);
+  assert.match(reader, /首页/);
   assert.match(reader, /公司分析/);
   assert.match(reader, /className="active"/);
   assert.match(reader, /\?view=matrix/);
-  assert.match(page, /view === "analysis" \|\| view === "matrix" \|\| view === "talent" \|\| view === "business"/);
+  assert.doesNotMatch(page, /new URLSearchParams\(window\.location\.search\)/);
 });
 
 test("article reader keeps the site navigation visible and offers a return-to-top control", async () => {
@@ -237,6 +241,19 @@ test("article reader links to adjacent analyses around its return-to-top control
   assert.match(reader, /上一篇/);
   assert.match(reader, /下一篇/);
   assert.match(reader, /article-adjacent-link/);
+});
+
+test("article cards prepare their route and body before navigation", async () => {
+  const [page, reader] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/analysis/[slug]/reader.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(page, /prefetchArticleRoute\(item\.slug\)/);
+  assert.match(page, /prefetchArticle\(item\.slug, item\.updatedAt\)/);
+  assert.match(page, /onPointerEnter=\{\(\) => warmArticle\(item\)\}/);
+  assert.match(page, /onTouchStart=\{\(\) => warmArticle\(item\)\}/);
+  assert.match(reader, /useState<Article \| null>\(null\)/);
+  assert.match(reader, /const cached = readCachedArticle\(slug\)/);
 });
 
 test("company-analysis list keeps a readable editorial rhythm", async () => {
@@ -263,12 +280,57 @@ test("site design tokens provide one reusable visual source", async () => {
   ]);
   for (const name of [
     "color-brand", "color-brand-strong", "color-brand-soft", "color-text",
-    "color-muted", "color-border", "color-surface", "color-surface-subtle",
+    "color-muted", "color-border", "color-page", "color-surface", "color-surface-subtle",
     "space-tight", "space-content", "space-component", "space-section",
     "radius-control", "radius-card", "font-sans", "motion-duration",
     "motion-lift", "shadow-card-hover",
   ]) assert.match(tokens, new RegExp(`--${name}:`));
   assert.ok(layout.indexOf('import "../tokens.css"') < layout.indexOf('import "./globals.css"'));
+});
+
+test("public UI retires the brown palette and uses reusable heading rhythm tokens", async () => {
+  const cssFiles = [
+    "globals.css", "business-overrides.css", "home-light.css", "app-light.css",
+    "color-reset.css", "practical-tools.css", "analysis-list.css", "talent-detail.css",
+    "_sites-preview/preview.css",
+  ];
+  const [tokens, reset, ...styles] = await Promise.all([
+    readFile(new URL("../tokens.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
+    ...cssFiles.map((file) => readFile(new URL(`../app/${file}`, import.meta.url), "utf8")),
+  ]);
+
+  for (const [name, value] of [
+    ["line-height-display", "1.12"],
+    ["line-height-section", "1.2"],
+    ["line-height-card", "1.35"],
+    ["line-height-article-title", "1.22"],
+  ]) assert.match(tokens, new RegExp(`--${name}:\\s*${value}`));
+
+  assert.match(reset, /font-size: var\(--font-size-display\)[^}]*line-height: var\(--line-height-display\)/s);
+  assert.match(reset, /font-size: var\(--font-size-card\)[^}]*line-height: var\(--line-height-card\)/s);
+  assert.match(reset, /article-reader-header h1[^}]*line-height: var\(--line-height-article-title\)/s);
+
+  const retiredBrown = /#(?:867047|887452|927147|a27d45|81765f|827155|8a7654|877451|b29f80|917c5b|7e6848|897852|83745a|80785f|8a8068|7a6b52|a2692f|a56930|c6b8a3|bdb09b|bcae98|c7bba7|d8cfbf|d3cabd|a99b86|c9baa5|c8baa5|bba982|d2c7b5|fffdf8|fffefa|f7f3eb|f4efe6|ebe5da|e8e1d5|efeae0|e9e3d8|e8e5dc|ded5c6|dfcfc3|d3c4a8|f1ece3|e4ddd0|b18a4d|a67f45|a26d58|cdbfa9|d4c9b8|af8d57|d4bf8c|f5f1e8|f2ece0|f0eadf|efeadf|ece9e5|e7e4df|e5d1a3|e4cd95|e2ddd2|dedbd6|d5ccbd|c9c4b9|b18b59|a48d68|9a958b|7c6848|755127|73530f|6c735f|443324)\b/i;
+  for (const [index, css] of styles.entries()) {
+    assert.doesNotMatch(css, retiredBrown, `${cssFiles[index]} still contains a retired brown UI color`);
+  }
+});
+
+test("the public shell refreshes to 首页 on a white canvas with white card hover", async () => {
+  const [page, tokens, reset, tools] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../tokens.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/practical-tools.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(page, />首页<\/button>/);
+  assert.doesNotMatch(page, /new URLSearchParams\(window\.location\.search\)/);
+  assert.match(tokens, /--color-page:\s*#fff(?:fff)?/i);
+  assert.match(reset, /body, main \{ background: var\(--color-page\) !important/);
+  assert.match(reset, /\.analysis-list article:hover[^}]*background: var\(--color-surface\) !important/);
+  assert.match(tools, /\.practical-tool-card\{[^}]*background:var\(--color-page\)/);
+  assert.match(tools, /\.practical-tool-card:hover\{[^}]*background:var\(--color-surface\)/);
 });
 
 test("legacy page palettes delegate to semantic color tokens", async () => {
@@ -282,7 +344,7 @@ test("legacy page palettes delegate to semantic color tokens", async () => {
   assert.match(app, /--app-jade:\s*var\(--color-brand\)/);
   assert.match(app, /--app-line:\s*var\(--color-border\)/);
   assert.match(reset, /--ink:\s*var\(--color-text\)/);
-  assert.match(reset, /--paper:\s*var\(--color-surface\)/);
+  assert.match(reset, /--paper:\s*var\(--color-page\)/);
 });
 
 test("active styles no longer hard-code the retired green palette", async () => {
@@ -318,6 +380,22 @@ test("public pages share one sans-serif typeface and one card interaction", asyn
   assert.match(app, /\.analysis-list article:hover[^}]*transform: var\(--motion-lift\)[^}]*box-shadow: var\(--shadow-card-hover\)/);
 });
 
+test("public typography and primary actions use the compact token scale", async () => {
+  const [tokens, reset] = await Promise.all([
+    readFile(new URL("../tokens.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(tokens, /--font-size-display:\s*48px/);
+  assert.match(tokens, /--font-size-section:\s*36px/);
+  assert.match(tokens, /--font-size-card:\s*24px/);
+  assert.match(tokens, /--font-size-article-title:\s*34px/);
+  assert.match(tokens, /--font-size-article-title-mobile:\s*30px/);
+  assert.match(reset, /\.primary[^}]*background: var\(--color-brand\) !important/);
+  assert.match(reset, /\.primary:hover[^}]*background: var\(--color-brand-strong\) !important/);
+  assert.match(reset, /\.article-reader-header h1[^}]*font-size: var\(--font-size-article-title\) !important/);
+  assert.match(reset, /@media \(max-width: 720px\)[\s\S]*\.article-reader-header h1[^}]*font-size: var\(--font-size-article-title-mobile\) !important/);
+});
+
 test("slow public data starts loading before its destination tab is opened", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   assert.match(page, /const preloadPublicData = \(\) =>/);
@@ -339,6 +417,24 @@ test("community button opens an accessible QR-code dialog", async () => {
   assert.match(page, /event\.target === event\.currentTarget/);
   assert.match(css, /\.community-fab\{position:fixed/);
   assert.match(css, /\.community-modal\{position:fixed/);
+});
+
+test("community dialog follows the tokenized editorial modal layout", async () => {
+  const [page, css] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/app-light.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /className="community-modal-header"/);
+  assert.match(page, /交流群\s*<span>\/\s*COMMUNITY<\/span>/);
+  assert.match(page, /className="community-qr-card"/);
+  assert.match(page, /className="community-save"[^>]*href="\/community-qr\.jpg"[^>]*download/);
+  assert.match(css, /\.community-modal\{[^}]*backdrop-filter:blur\(8px\)/);
+  assert.match(css, /\.community-modal section\{[^}]*width:min\(100%,720px\)[^}]*border-radius:var\(--radius-card\)/);
+  assert.match(css, /\.community-modal-header\{[^}]*padding:var\(--space-component\)/);
+  assert.match(css, /\.community-qr-card\{[^}]*border:1px solid var\(--color-border\)[^}]*border-radius:var\(--radius-card\)/);
+  assert.match(css, /\.community-save\{[^}]*background:var\(--color-brand\)/);
+  assert.match(css, /@media\(max-width:720px\)\{[\s\S]*\.community-modal-body\{padding:var\(--space-content\)/);
 });
 
 test("article editor separates company information from the Markdown body", async () => {
@@ -385,9 +481,34 @@ test("article reader renders GPT-style Markdown tables and inline formatting", a
 
 test("article reader uses a calmer scale for body section headings", async () => {
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-  assert.match(css, /\.article-reader-content h2\{margin:56px 0 18px;font-size:28px/);
-  assert.match(css, /\.article-reader-content h3\{font-size:20px/);
-  assert.match(css, /\.article-reader-header \.article-summary\{font-size:16px/);
+  assert.match(css, /\.article-reader-content\{[^}]*font-size:16px/);
+  assert.match(css, /\.article-reader-content h2\{margin:48px 0 16px;font-size:24px/);
+  assert.match(css, /\.article-reader-content h3\{[^}]*font-size:18px/);
+  assert.match(css, /\.article-reader-header \.article-summary\{font-size:15px/);
+});
+
+test("article reader hydrates from identical server and client state", async () => {
+  const reader = await readFile(new URL("../app/analysis/[slug]/reader.tsx", import.meta.url), "utf8");
+  assert.match(reader, /useState<Article \| null>\(null\)/);
+  assert.match(reader, /const cached = readCachedArticle\(slug\)/);
+  assert.doesNotMatch(reader, /useState<Article \| null>\(\(\) => readCachedArticle/);
+});
+
+test("selection and highlighted panels use semantic color tokens", async () => {
+  const [tokens, app, reset] = await Promise.all([
+    readFile(new URL("../tokens.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/app-light.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(tokens, /--color-selection-bg:/);
+  assert.match(tokens, /--color-selection-text:/);
+  assert.match(tokens, /--color-highlight:/);
+  assert.match(tokens, /--color-highlight-border:/);
+  assert.match(app, /::selection\s*\{[^}]*background:\s*var\(--color-selection-bg\)[^}]*color:\s*var\(--color-selection-text\)/s);
+  assert.match(reset, /\.matrix-callout\s*\{[^}]*background:\s*var\(--color-highlight\) !important/s);
+  assert.match(reset, /\.matrix-callout h2\s*\{[^}]*color:\s*var\(--color-text\) !important/s);
+  assert.match(reset, /\.matrix-callout \.eyebrow\s*\{[^}]*color:\s*var\(--color-brand-strong\) !important/s);
+  assert.match(reset, /\.matrix-callout > div:last-child p\s*\{[^}]*color:\s*var\(--color-muted\) !important/s);
 });
 
 test("article backend checks the existing site management session before article credentials", async () => {
@@ -486,6 +607,22 @@ test("home shows three desktop notes and switches to a compact mobile media list
   assert.match(page, /notes\.slice\(0, 3\)\.map/);
   assert.match(css, /\.home-theme \.notes\.notes-list\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/);
   assert.match(css, /\.home-theme \.note\.note-list-item\{display:grid!important;grid-template-columns:112px minmax\(0,1fr\)!important/);
+});
+
+test("homepage metrics use five equal compact columns without a leading label", async () => {
+  const [page, home, reset] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/home-light.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
+  ]);
+
+  const strip = page.match(/<section className="visitor-strip shell"[\s\S]*?<\/section>/)?.[0] ?? "";
+  assert.doesNotMatch(strip, /本站与账号数据|visitor-pulse/);
+  assert.match(home, /\.home-theme \.visitor-strip \{[^}]*grid-template-columns: repeat\(5, minmax\(0, 1fr\)\)/);
+  assert.match(home, /\.home-theme \.visitor-strip > div \{[^}]*text-align: center/);
+  assert.match(home, /\.home-theme \.visitor-strip b \{[^}]*font: 400 26px\/1/);
+  assert.match(home, /@media \(max-width: 720px\)[\s\S]*\.home-theme \.visitor-strip b \{ font-size: 20px; \}/);
+  assert.match(reset, /\.home-theme \.visitor-strip > div \+ div \{[^}]*border-left: 1px solid var\(--color-border\)/);
 });
 
 test("talent publishing shows its error inside the modal and retains the returned image URL", async () => {

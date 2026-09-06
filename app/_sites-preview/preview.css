@@ -1,7 +1,7 @@
 .sites-skeleton-preview {
   --sites-skeleton-background: #fbfaf8;
   --sites-skeleton-foreground: #18181b;
-  --sites-skeleton-border: #e7e4df;
+  --sites-skeleton-border: var(--color-border);
 
   position: fixed;
   isolation: isolate;
@@ -90,7 +90,7 @@
 .sites-skeleton-sidebar {
   min-width: 0;
   padding: 4px clamp(18px, 2vw, 30px) 0 0;
-  border-right: 1px solid #ece9e5;
+  border-right: 1px solid var(--color-border);
 }
 
 .sites-skeleton-sidebar-heading {
@@ -195,7 +195,7 @@
   max-width: 620px;
   margin-inline: auto;
   padding: 20px 22px;
-  border: 1px solid #dedbd6;
+  border: 1px solid var(--color-border);
   border-radius: 18px;
   background: rgb(255 255 255 / 0.97);
   box-shadow:

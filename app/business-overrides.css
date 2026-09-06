@@ -60,13 +60,13 @@
   justify-self: end;
   padding: 22px 24px;
   background: rgba(255, 253, 249, 0.62);
-  border: 1px solid #d4c9b8;
-  border-left: 3px solid #af8d57;
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-brand-strong);
 }
 
 .hero-visitors > p {
   margin: 0 0 16px;
-  color: #83745a;
+  color: var(--color-brand-strong);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.5px;

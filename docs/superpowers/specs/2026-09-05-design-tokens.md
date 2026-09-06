@@ -25,8 +25,13 @@
   --color-text: oklch(25% 0.018 245);
   --color-muted: oklch(50% 0.018 245);
   --color-border: oklch(90% 0.012 245);
-  --color-surface: oklch(99% 0.004 245);
+  --color-page: #ffffff;
+  --color-surface: #ffffff;
   --color-surface-subtle: oklch(97% 0.008 245);
+  --color-highlight: #eaf7f1;
+  --color-highlight-border: #cfe8dc;
+  --color-selection-bg: #cfe8dc;
+  --color-selection-text: #17614f;
 
   /* Spacing */
   --space-tight: 8px;
@@ -40,6 +45,18 @@
 
   /* Typography */
   --font-sans: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-size-display: 48px;
+  --font-size-display-mobile: 38px;
+  --font-size-section: 36px;
+  --font-size-section-mobile: 30px;
+  --font-size-card: 24px;
+  --font-size-card-mobile: 21px;
+  --font-size-article-title: 34px;
+  --font-size-article-title-mobile: 30px;
+  --line-height-display: 1.12;
+  --line-height-section: 1.2;
+  --line-height-card: 1.35;
+  --line-height-article-title: 1.22;
 
   /* Card interaction */
   --motion-duration: .2s;
@@ -64,7 +81,8 @@
 
 - 主要按钮、文字链接、活动导航和输入框焦点使用 `--color-brand`。
 - 强调文字及按钮悬停使用 `--color-brand-strong`。
-- 选中态和弱提示背景使用 `--color-brand-soft`。
+- 浏览器文字选中态使用 `--color-selection-bg` 与 `--color-selection-text`，保证反差清晰。
+- 大面积高亮区块使用 `--color-highlight` 和 `--color-highlight-border`，小型弱提示背景使用 `--color-brand-soft`。
 - 标题与正文使用 `--color-text`，辅助信息使用 `--color-muted`。
 - 分隔线和卡片描边使用 `--color-border`。
 - 页面与卡片使用两个 surface 令牌，不新增没有语义的一次性色彩令牌。

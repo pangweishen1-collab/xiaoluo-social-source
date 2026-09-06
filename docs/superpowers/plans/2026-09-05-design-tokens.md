@@ -76,7 +76,8 @@ Create `tokens.css` with the approved OKLCH colors and exact spacing/radius scal
   --color-text: oklch(25% 0.018 245);
   --color-muted: oklch(50% 0.018 245);
   --color-border: oklch(90% 0.012 245);
-  --color-surface: oklch(99% 0.004 245);
+  --color-page: #ffffff;
+  --color-surface: #ffffff;
   --color-surface-subtle: oklch(97% 0.008 245);
   --space-tight: 8px;
   --space-content: 16px;
@@ -85,6 +86,18 @@ Create `tokens.css` with the approved OKLCH colors and exact spacing/radius scal
   --radius-control: 8px;
   --radius-card: 12px;
   --font-sans: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-size-display: 48px;
+  --font-size-display-mobile: 38px;
+  --font-size-section: 36px;
+  --font-size-section-mobile: 30px;
+  --font-size-card: 24px;
+  --font-size-card-mobile: 21px;
+  --font-size-article-title: 40px;
+  --font-size-article-title-mobile: 34px;
+  --line-height-display: 1.12;
+  --line-height-section: 1.2;
+  --line-height-card: 1.35;
+  --line-height-article-title: 1.22;
   --motion-duration: .2s;
   --motion-lift: translateY(-3px);
   --shadow-card-hover: 0 12px 26px color-mix(in oklch, var(--color-brand-strong) 8%, transparent);

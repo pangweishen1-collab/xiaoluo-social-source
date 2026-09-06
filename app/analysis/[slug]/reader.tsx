@@ -1,11 +1,12 @@
 "use client";
 
 import { type ReactNode, useEffect, useState } from "react";
+import { prefetchArticle, readCachedArticle } from "../../article-cache.mjs";
 
 type Article = { title: string; company: string; category: string; summary: string; tags: string[]; body: string; publishedAt: string };
 type ArticleIndexItem = { slug: string; title: string; publishedAt: string };
 function BackToAnalysis() { return <a className="article-back" href="/?view=analysis">← 返回公司分析</a>; }
-function SiteNavigation() { return <div className="article-nav-bar"><header className="nav shell article-site-nav"><div className="brand"><a className="brand-home" href="/" aria-label="回到首页"><span>小骆 <small>语聊出海观察</small></span></a><a className="avatar-login" href="/?view=talent" aria-label="前往人才市场"><img src="/xiaohongshu-avatar.webp" alt="" /></a></div><nav aria-label="主导航"><a href="/">资讯与我</a><a className="active" href="/?view=analysis">公司分析</a><a href="/?view=matrix">出海矩阵</a><a href="/?view=talent">人才市场</a><a href="/?view=business">商务合作</a></nav></header></div>; }
+function SiteNavigation() { return <div className="article-nav-bar"><header className="nav shell article-site-nav"><div className="brand"><a className="brand-home" href="/" aria-label="回到首页"><span>小骆 <small>语聊出海观察</small></span></a><a className="avatar-login" href="/?view=talent" aria-label="前往人才市场"><img src="/xiaohongshu-avatar.webp" alt="" /></a></div><nav aria-label="主导航"><a href="/">首页</a><a className="active" href="/?view=analysis">公司分析</a><a href="/?view=matrix">出海矩阵</a><a href="/?view=talent">人才市场</a><a href="/?view=business">商务合作</a></nav></header></div>; }
 function ReturnToTop() { return <div className="article-return-top"><button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>返回顶部 ↑</button></div>; }
 function ArticleFooter({ previous, next }: { previous: ArticleIndexItem | null; next: ArticleIndexItem | null }) { return <nav className="article-footer-navigation" aria-label="文章翻页"><div>{previous ? <a className="article-adjacent-link" href={`/analysis/${previous.slug}`}>← 上一篇</a> : <span>← 上一篇</span>}</div><ReturnToTop /><div>{next ? <a className="article-adjacent-link" href={`/analysis/${next.slug}`}>下一篇 →</a> : <span>下一篇 →</span>}</div></nav>; }
 const cells = (line: string) => line.trim().replace(/^\||\|$/g, "").split("|").map((item) => item.trim());
@@ -37,11 +38,17 @@ function renderMarkdown(body: string) {
 }
 
 export default function ArticleReader() {
+  const slug = typeof location === "undefined" ? "" : location.pathname.split("/").pop() || "";
   const [article, setArticle] = useState<Article | null>(null); const [articles, setArticles] = useState<ArticleIndexItem[]>([]); const [missing, setMissing] = useState(false);
-  useEffect(() => { fetch(`/api/articles/${location.pathname.split("/").pop()}`, { credentials: "same-origin" }).then(async (response) => response.ok ? setArticle((await response.json()).item) : setMissing(true)).catch(() => setMissing(true)); }, []);
+  useEffect(() => {
+    if (!slug) return;
+    const cached = readCachedArticle(slug);
+    if (cached) { setArticle(cached); return; }
+    prefetchArticle(slug).then((item) => item ? setArticle(item) : setMissing(true)).catch(() => setMissing(true));
+  }, [slug]);
   useEffect(() => { fetch("/api/articles", { credentials: "same-origin", cache: "no-store" }).then(async (response) => response.ok ? setArticles(((await response.json()).items || []).sort((a: ArticleIndexItem, b: ArticleIndexItem) => +new Date(b.publishedAt) - +new Date(a.publishedAt))) : undefined).catch(() => undefined); }, []);
   if (missing) return <main className="article-reader-shell"><SiteNavigation /><section className="article-reader-card shell"><BackToAnalysis /><h1>文章不存在</h1><p>这篇分析可能已被删除，或链接有误。</p></section></main>;
   if (!article) return <main className="article-reader-shell"><SiteNavigation /><section className="article-reader-card shell article-reader-loading"><p className="eyebrow">RESEARCH ARCHIVE</p><p>正在读取文章…</p></section></main>;
-  const articleIndex = articles.findIndex((item) => item.slug === location.pathname.split("/").pop()); const previous = articleIndex >= 0 ? articles[articleIndex + 1] || null : null; const next = articleIndex > 0 ? articles[articleIndex - 1] || null : null;
+  const articleIndex = articles.findIndex((item) => item.slug === slug); const previous = articleIndex >= 0 ? articles[articleIndex + 1] || null : null; const next = articleIndex > 0 ? articles[articleIndex - 1] || null : null;
   return <main className="article-reader-shell"><SiteNavigation /><article className="article-reader-card shell"><header className="article-reader-header"><BackToAnalysis /><p className="eyebrow">{article.category} · {article.company}</p><h1>{article.title}</h1><div className="article-reader-meta"><time>{new Intl.DateTimeFormat("zh-CN", { dateStyle: "long" }).format(new Date(article.publishedAt))}</time><span>小骆研究档案</span></div><p className="article-summary">{article.summary}</p><div className="article-tags">{article.tags.map((tag) => <i key={tag}>{tag}</i>)}</div></header><div className="article-reader-content">{renderMarkdown(article.body)}</div><ArticleFooter previous={previous} next={next} /></article></main>;
 }

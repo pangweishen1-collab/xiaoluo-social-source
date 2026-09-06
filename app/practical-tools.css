@@ -2,7 +2,7 @@
 .practical-tools .section-top{margin-bottom:28px}
 .practical-tools .section-top h2{font-size:44px;letter-spacing:-.06em;line-height:1;margin:0}
 .practical-tools-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-content)}
-.practical-tool-card{min-height:220px;box-sizing:border-box;padding:var(--space-component);border:1px solid var(--color-border);border-radius:var(--radius-card);background:#fff;color:var(--ink);text-decoration:none;display:flex;flex-direction:column;align-items:flex-start;transition:transform var(--motion-duration) ease,border-color var(--motion-duration) ease,box-shadow var(--motion-duration) ease}
+.practical-tool-card{min-height:220px;box-sizing:border-box;padding:var(--space-component);border:1px solid var(--color-border);border-radius:var(--radius-card);background:var(--color-page);color:var(--ink);text-decoration:none;display:flex;flex-direction:column;align-items:flex-start;transition:transform var(--motion-duration) ease,border-color var(--motion-duration) ease,background-color var(--motion-duration) ease,box-shadow var(--motion-duration) ease}
 .practical-tool-logo{width:44px;height:44px;object-fit:contain;border-radius:var(--radius-control);border:1px solid var(--color-border);background:var(--color-surface-subtle);padding:5px;margin-bottom:var(--space-component)}
 .practical-tool-card span{font-size:11px;letter-spacing:1px;color:var(--color-brand-strong)}
 .practical-tool-card h3{margin:var(--space-tight) 0;font-size:25px;letter-spacing:-.05em}
@@ -10,5 +10,5 @@
 .practical-tool-footer{margin-top:auto;padding-top:var(--space-content);width:100%;display:flex;justify-content:space-between;align-items:center;gap:var(--space-content)}
 .practical-tool-card small{font-size:12px;color:var(--color-muted)}
 .practical-tool-card b{font-size:13px;color:var(--color-brand-strong)}
-@media(hover:hover) and (pointer:fine){.practical-tool-card:hover{border-color:var(--color-brand);background:#fff;transform:var(--motion-lift);box-shadow:var(--shadow-card-hover)}}
+@media(hover:hover) and (pointer:fine){.practical-tool-card:hover{border-color:var(--color-brand);background:var(--color-surface);transform:var(--motion-lift);box-shadow:var(--shadow-card-hover)}}
 @media(max-width:720px){.practical-tools{padding:0 0 65px}.practical-tools .section-top{margin-bottom:18px}.practical-tools .section-top h2{font-size:34px}.practical-tools-list{grid-template-columns:1fr;gap:10px}.practical-tool-card{min-height:0;padding:20px}.practical-tool-logo{width:38px;height:38px;margin-bottom:17px}.practical-tool-card h3{font-size:22px}}

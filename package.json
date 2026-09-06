@@ -11,7 +11,7 @@
     "build": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build",
     "postbuild": "esbuild dist/server/index.js --bundle --format=esm --platform=browser --target=es2022 --external:node:* --outfile=dist/client/_worker.js",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
-    "test": "vinext build && esbuild dist/server/index.js --bundle --format=esm --platform=browser --target=es2022 --external:node:* --outfile=dist/client/_worker.js && node --test tests/rendered-html.test.mjs",
+    "test": "vinext build && esbuild dist/server/index.js --bundle --format=esm --platform=browser --target=es2022 --external:node:* --outfile=dist/client/_worker.js && node --test tests/*.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .netlify",
     "db:generate": "drizzle-kit generate"
   },

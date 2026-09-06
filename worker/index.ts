@@ -2,6 +2,7 @@
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 import { handleArticleApi } from "./articles";
+import { IMAGE_UPLOAD_RULES, webpBytesFromDataUrl } from "../shared/image-upload.mjs";
 
 interface Env {
   ASSETS: Fetcher;
@@ -176,12 +177,9 @@ async function listTalent(env: Env) {
 
 async function saveTalentImage(value: unknown, env: Env, listingId: string) {
   if (typeof value !== "string" || !value) return "";
-  const match = /^data:image\/webp;base64,([A-Za-z0-9+/=]+)$/.exec(value);
-  if (!match) throw new Error("图片格式无效，请重新上传。");
-  const bytes = Uint8Array.from(atob(match[1]), (char) => char.charCodeAt(0));
-  if (!bytes.byteLength || bytes.byteLength > 3 * 1024 * 1024) throw new Error("图片必须是小于 3MB 的 WebP 格式。");
-  const key = `talent/${listingId}.webp`;
-  await env.MEDIA.put(key, bytes, { httpMetadata: { contentType: "image/webp", cacheControl: "public, max-age=31536000, immutable" } });
+  const bytes = webpBytesFromDataUrl(value);
+  const key = `talent/${listingId}${IMAGE_UPLOAD_RULES.extension}`;
+  await env.MEDIA.put(key, bytes, { httpMetadata: { contentType: IMAGE_UPLOAD_RULES.outputMimeType, cacheControl: "public, max-age=31536000, immutable" } });
   return key;
 }
 

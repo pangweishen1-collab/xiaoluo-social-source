@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { prefetchArticle, prefetchArticleRoute } from "./article-cache.mjs";
+import { IMAGE_UPLOAD_RULES } from "../shared/image-upload.mjs";
 
-const MAX_TALENT_IMAGE_BYTES = 3 * 1024 * 1024;
 const ANALYSIS_PAGE_SIZE = 10;
 let articlesRequest: Promise<{ items?: Array<Record<string, unknown>> }> | null = null;
 let talentItemsRequest: Promise<{ items?: Array<Record<string, unknown>> }> | null = null;
@@ -18,21 +19,21 @@ const preloadPublicData = () => {
   void loadTalentItems().catch(() => undefined);
 };
 
-async function compressTalentImage(file: File) {
-  if (!/^image\/(png|jpe?g|webp)$/i.test(file.type)) throw new Error("请选择 PNG、JPG 或 WebP 图片。");
+async function compressUploadedImage(file: File) {
+  if (!IMAGE_UPLOAD_RULES.acceptedMimeTypes.includes(file.type)) throw new Error("请选择 PNG、JPG 或 WebP 图片。");
   const source = await new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image(); const url = URL.createObjectURL(file);
     image.onload = () => { URL.revokeObjectURL(url); resolve(image); };
     image.onerror = () => { URL.revokeObjectURL(url); reject(new Error("图片无法读取，请换一张再试。")); };
     image.src = url;
   });
-  for (let edge = Math.min(1920, Math.max(source.width, source.height)); edge >= 480; edge = Math.floor(edge * .75)) {
+  for (let edge = Math.min(IMAGE_UPLOAD_RULES.maxEdge, Math.max(source.width, source.height)); edge >= IMAGE_UPLOAD_RULES.minEdge; edge = Math.floor(edge * .75)) {
     const scale = Math.min(1, edge / Math.max(source.width, source.height));
     const canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(source.width * scale)); canvas.height = Math.max(1, Math.round(source.height * scale));
     canvas.getContext("2d")?.drawImage(source, 0, 0, canvas.width, canvas.height);
-    for (const quality of [.82, .7, .58, .46]) {
-      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", quality));
-      if (blob && blob.size <= MAX_TALENT_IMAGE_BYTES) return new Promise<{ data: string; size: number }>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve({ data: String(reader.result), size: blob.size }); reader.onerror = () => reject(new Error("图片压缩失败，请重试。")); reader.readAsDataURL(blob); });
+    for (const quality of IMAGE_UPLOAD_RULES.qualities) {
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, IMAGE_UPLOAD_RULES.outputMimeType, quality));
+      if (blob && blob.size <= IMAGE_UPLOAD_RULES.maxBytes) return new Promise<{ data: string; size: number }>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve({ data: String(reader.result), size: blob.size }); reader.onerror = () => reject(new Error("图片压缩失败，请重试。")); reader.readAsDataURL(blob); });
     }
   }
   throw new Error("图片压缩后仍超过 3MB，请换一张更小的图片。");
@@ -165,8 +166,6 @@ export default function Home() {
   useEffect(() => {
     setNow(new Date());
     fetch("/api/admin/session", { credentials: "same-origin", cache: "no-store" }).then((response) => response.ok ? response.json() : { authenticated: false }).then((data) => setAdmin(Boolean(data.authenticated))).catch(() => undefined);
-    const view = new URLSearchParams(window.location.search).get("view");
-    if (view === "analysis" || view === "matrix" || view === "talent" || view === "business") setTab(view);
     const idle = "requestIdleCallback" in window ? window.requestIdleCallback(preloadPublicData) : window.setTimeout(preloadPublicData, 200);
     return () => "cancelIdleCallback" in window ? window.cancelIdleCallback(idle) : window.clearTimeout(idle);
   }, []);
@@ -184,8 +183,8 @@ export default function Home() {
     <main>
       <header className="nav shell">
         <div className="brand"><button className="brand-home" onClick={() => setTab("home")} aria-label="回到首页"><span>小骆 <small>语聊出海观察</small></span></button><button className="avatar-login" onClick={() => setLoginOpen(true)} aria-label="打开人才市场管理"><img src="/xiaohongshu-avatar.webp" alt="" /></button></div>
-        <nav aria-label="主导航" style={{ backgroundColor: "#fff" }}>
-          <button className={tab === "home" ? "active" : ""} onClick={() => setTab("home")}>资讯与我</button>
+        <nav aria-label="主导航">
+          <button className={tab === "home" ? "active" : ""} onClick={() => setTab("home")}>首页</button>
           <button className={tab === "analysis" ? "active" : ""} onPointerEnter={preloadPublicData} onFocus={preloadPublicData} onClick={() => setTab("analysis")}>公司分析</button>
           <button className={tab === "matrix" ? "active" : ""} onClick={() => setTab("matrix")}>出海矩阵</button>
           <button className={tab === "talent" ? "active" : ""} onPointerEnter={preloadPublicData} onFocus={preloadPublicData} onClick={() => setTab("talent")}>人才市场</button>
@@ -196,7 +195,7 @@ export default function Home() {
       {tab === "home" ? <HomeView now={now} /> : tab === "analysis" ? <CompanyAnalysisView admin={admin} /> : tab === "matrix" ? <MatrixView /> : tab === "talent" ? <TalentView admin={admin} onLogout={logout} /> : <BusinessView />}
       {loginOpen && <AdminLogin onClose={() => setLoginOpen(false)} onSuccess={() => { setAdmin(true); setLoginOpen(false); setTab("talent"); }} />}
       <button className="community-fab" type="button" onClick={() => setCommunityOpen(true)} aria-label="打开语聊出海交流群二维码"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 1 0-3.46-6A5 5 0 1 0 8 12c-3.31 0-6 2-6 4.5V19h11v-2.5c0-1.22-.52-2.32-1.38-3.17A7.4 7.4 0 0 1 16 12c3.31 0 6 2 6 4.5V19h-7v-2.5c0-1.25-.42-2.41-1.14-3.4A5.9 5.9 0 0 0 11.5 12 5 5 0 0 0 16 11Z" /></svg></button>
-      {communityOpen && <div className="community-modal" role="dialog" aria-modal="true" aria-labelledby="community-dialog-title" onClick={(event) => { if (event.target === event.currentTarget) setCommunityOpen(false); }}><section><button type="button" autoFocus onClick={() => setCommunityOpen(false)} aria-label="关闭社群二维码">×</button><h2 id="community-dialog-title">群聊：小骆 🐫 语聊出海交流 2 群</h2><img src="/community-qr.jpg" alt="小骆语聊出海交流 2 群二维码" /><p>该二维码 9 月 11 日前有效</p></section></div>}
+      {communityOpen && <div className="community-modal" role="dialog" aria-modal="true" aria-labelledby="community-dialog-title" onClick={(event) => { if (event.target === event.currentTarget) setCommunityOpen(false); }}><section><header className="community-modal-header"><p>交流群 <span>/ COMMUNITY</span></p><button type="button" autoFocus onClick={() => setCommunityOpen(false)} aria-label="关闭社群二维码">×</button></header><div className="community-modal-body"><article className="community-qr-card"><h2 id="community-dialog-title">群聊：小骆 🐫 语聊出海交流 2 群</h2><img src="/community-qr.jpg" alt="小骆语聊出海交流 2 群二维码" /><p>该二维码 9 月 11 日前有效</p><a className="community-save" href="/community-qr.jpg" download="xiaoluo-community-qr.jpg" aria-label="保存小骆语聊出海交流 2 群二维码"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>保存二维码</a></article></div></section></div>}
     </main>
   );
 }
@@ -224,11 +223,11 @@ function HomeView({ now }: { now: Date | null }) {
       <aside className="hero-visual" aria-label="小骆形象图"><img src="/xiaohongshu-avatar.webp" alt="小骆形象" fetchPriority="high" decoding="async" /><span>Social product intelligence</span></aside>
     </section>
 
-    <section className="visitor-strip shell" aria-label="网站与账号数据"><p><i className="visitor-pulse" aria-hidden="true" />本站与账号数据</p><div><b>{visitorStats ? visitorStats.total.toLocaleString("zh-CN") : "—"}</b><span>累计访问</span></div><div><b>{visitorStats ? visitorStats.today.toLocaleString("zh-CN") : "—"}</b><span>今日访问</span></div><div><b>480</b><span>微信群人数</span></div><div><b>850</b><span>红书群人数</span></div><div><b>1230</b><span>小红书粉丝</span></div></section>
+    <section className="visitor-strip shell" aria-label="网站与账号数据"><div><b>{visitorStats ? visitorStats.total.toLocaleString("zh-CN") : "—"}</b><span>累计访问</span></div><div><b>{visitorStats ? visitorStats.today.toLocaleString("zh-CN") : "—"}</b><span>今日访问</span></div><div><b>480</b><span>微信群人数</span></div><div><b>850</b><span>红书群人数</span></div><div><b>1230</b><span>小红书粉丝</span></div></section>
 
     <section className="section shell" id="notes"><div className="section-top"><div><p className="eyebrow">LATEST NOTES</p><h2>最近的笔记</h2></div><a href="https://www.xiaohongshu.com/user/profile/6a559ddd000000000e03d001" target="_blank" rel="noreferrer">小红书查看全部 ↗</a></div><div className="notes notes-list">{notes.slice(0, 3).map((note) => <article className="note note-list-item" key={note.title}><a className="note-cover-link" href="https://www.xiaohongshu.com/user/profile/6a559ddd000000000e03d001" target="_blank" rel="noreferrer"><img className="note-cover" src={note.cover} alt={`${note.title} 封面`} loading="lazy" /></a><div className="note-content"><span>{note.tag}</span><h3>{note.title}</h3><p>{note.text}</p><a href="https://www.xiaohongshu.com/user/profile/6a559ddd000000000e03d001" target="_blank" rel="noreferrer">小红书主页 <b>↗</b></a></div></article>)}</div></section>
 
-    <section className="practical-tools shell" aria-labelledby="practical-tools-title"><div className="section-top"><div><p className="eyebrow">PRACTICAL TOOLS</p><h2 id="practical-tools-title">实用工具</h2></div></div><div className="practical-tools-list"><a className="practical-tool-card" href="https://immersivetranslate.com/zh-Hans/" target="_blank" rel="noreferrer"><img className="practical-tool-logo" src="https://immersivetranslate.com/_next/static/media/logo.761c1cd1.png" alt="沉浸式翻译 Logo" loading="lazy" /><div><span>翻译 / 阅读工具</span><h3>沉浸式翻译</h3><p>网页双语对照与沉浸式阅读，适合检索海外产品信息和资料。</p></div><div className="practical-tool-footer"><small>推荐人：盖伦</small><b>访问工具 ↗</b></div></a></div></section>
+    <section className="practical-tools shell" aria-labelledby="practical-tools-title"><div className="section-top"><div><p className="eyebrow">PRACTICAL TOOLS</p><h2 id="practical-tools-title">实用工具</h2></div></div><div className="practical-tools-list"><a className="practical-tool-card" href="https://immersivetranslate.com/zh-Hans/" target="_blank" rel="noreferrer"><img className="practical-tool-logo" src="https://immersivetranslate.com/_next/static/media/logo.761c1cd1.png" alt="沉浸式翻译 Logo" loading="lazy" /><div><span>翻译 / 阅读工具</span><h3>沉浸式翻译</h3><p>网页双语对照与沉浸式阅读，适合检索海外产品信息和资料。</p></div><div className="practical-tool-footer"><small>推荐人：盖伦</small><b>访问工具 ↗</b></div></a><a className="practical-tool-card" href="https://vibe-hub.org/topics/product" target="_blank" rel="noreferrer"><img className="practical-tool-logo" src="https://vibe-hub.org/icon.png" alt="VibeHub Logo" loading="lazy" /><div><span>产品 / Vibe Coding</span><h3>VibeHub 产品术语</h3><p>用可视化图解理解产品概念、使用场景与边界，更准确地向 AI 表达需求。</p></div><div className="practical-tool-footer"><small>推荐人：小骆</small><b>访问工具 ↗</b></div></a></div></section>
 
     <section className="proof shell"><div className="proof-heading"><p className="eyebrow">CORE STRENGTHS</p><h2>我的核心优势，<br /><em>来自一线的长期积累。</em></h2><p>研究、内容与资源连接并不是孤立的服务，而是在出海社交行业中持续观察、核验与沉淀下来的工作方法。</p></div><div className="proof-grid">{credibilityModules.map((module) => <article key={module.no}><span>{module.no}</span><h3>{module.title}</h3><p>{module.intro}</p><ul>{module.items.map((item) => <li key={item}>{item}</li>)}</ul></article>)}</div></section>
 
@@ -265,15 +264,22 @@ function BusinessView() {
 function CompanyAnalysisView({ admin }: { admin: boolean }) {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [articles, setArticles] = useState<Array<{ slug: string; title: string; company: string; category: string; summary: string; tags: string[]; publishedAt: string }>>([]);
+  const [articles, setArticles] = useState<Array<{ slug: string; title: string; company: string; category: string; summary: string; tags: string[]; publishedAt: string; updatedAt: string }>>([]);
   useEffect(() => { loadArticles().then((data) => setArticles((data.items || []) as typeof articles)).catch(() => undefined); }, []);
   const normalizedQuery = query.trim().toLowerCase();
   const shownAnalyses = articles.filter((item) => !normalizedQuery || [item.company, item.title, item.summary, ...item.tags].join(" ").toLowerCase().includes(normalizedQuery));
   const pageCount = Math.max(1, Math.ceil(shownAnalyses.length / ANALYSIS_PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageAnalyses = shownAnalyses.slice((currentPage - 1) * ANALYSIS_PAGE_SIZE, currentPage * ANALYSIS_PAGE_SIZE);
+  const warmArticle = (item: typeof articles[number]) => { prefetchArticleRoute(item.slug); void prefetchArticle(item.slug, item.updatedAt).catch(() => undefined); };
+  useEffect(() => {
+    if (!pageAnalyses.length) return;
+    const warm = () => pageAnalyses.forEach(warmArticle);
+    const idle = "requestIdleCallback" in window ? window.requestIdleCallback(warm) : window.setTimeout(warm, 200);
+    return () => "cancelIdleCallback" in window ? window.cancelIdleCallback(idle) : window.clearTimeout(idle);
+  }, [articles, currentPage, normalizedQuery]);
   return <>
-    <section className="analysis-section shell"><div className="analysis-head"><div><p className="eyebrow">RESEARCH ARCHIVE</p><h2>最新公司分析</h2></div><div className="analysis-head-actions"><p>持续更新 · 不以转载替代核验</p>{admin && <a className="primary analysis-publish-link" href="/admin">发布文章 →</a>}</div></div><label className="analysis-search"><input value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="例如：欢聚、Yalla、语聊、商业化" aria-label="搜索公司分析" /><b>{shownAnalyses.length} 篇</b></label><div className="analysis-list">{pageAnalyses.map((item) => <article key={item.slug}><a className="analysis-card-link" href={`/analysis/${item.slug}`}><div className="analysis-card-top"><span>{item.category} · {item.company}</span><span>by 小骆 · {new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium" }).format(new Date(item.publishedAt))}</span></div><h2>{item.title}</h2><p>{item.summary}</p><div>{item.tags.map((tag) => <i key={tag}>{tag}</i>)}</div><span className="analysis-more">阅读全文 →</span></a></article>)}</div>{pageCount > 1 && <nav className="analysis-pagination" aria-label="公司分析分页"><button type="button" onClick={() => setPage(currentPage - 1)} disabled={currentPage === 1}>上一页</button>{Array.from({ length: pageCount }, (_, index) => index + 1).map((pageNumber) => <button type="button" key={pageNumber} className={pageNumber === currentPage ? "is-active" : undefined} aria-current={pageNumber === currentPage ? "page" : undefined} onClick={() => setPage(pageNumber)}>{pageNumber}</button>)}<button type="button" onClick={() => setPage(currentPage + 1)} disabled={currentPage === pageCount}>下一页</button></nav>}{shownAnalyses.length === 0 && <div className="analysis-empty">{articles.length ? "没有匹配内容，换一个关键词试试。" : "还没有已发布的公司分析。"}</div>}</section>
+    <section className="analysis-section shell"><div className="analysis-head"><div><p className="eyebrow">RESEARCH ARCHIVE</p><h2>最新公司分析</h2></div><div className="analysis-head-actions"><p>持续更新 · 不以转载替代核验</p>{admin && <a className="primary analysis-publish-link" href="/admin">发布文章 →</a>}</div></div><label className="analysis-search"><input value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="例如：欢聚、Yalla、语聊、商业化" aria-label="搜索公司分析" /><b>{shownAnalyses.length} 篇</b></label><div className="analysis-list">{pageAnalyses.map((item) => <article key={item.slug}><a className="analysis-card-link" href={`/analysis/${item.slug}`} onPointerEnter={() => warmArticle(item)} onFocus={() => warmArticle(item)} onTouchStart={() => warmArticle(item)}><div className="analysis-card-top"><span>{item.category} · {item.company}</span><span>by 小骆 · {new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium" }).format(new Date(item.publishedAt))}</span></div><h2>{item.title}</h2><p>{item.summary}</p><div>{item.tags.map((tag) => <i key={tag}>{tag}</i>)}</div><span className="analysis-more">阅读全文 →</span></a></article>)}</div>{pageCount > 1 && <nav className="analysis-pagination" aria-label="公司分析分页"><button type="button" onClick={() => setPage(currentPage - 1)} disabled={currentPage === 1}>上一页</button>{Array.from({ length: pageCount }, (_, index) => index + 1).map((pageNumber) => <button type="button" key={pageNumber} className={pageNumber === currentPage ? "is-active" : undefined} aria-current={pageNumber === currentPage ? "page" : undefined} onClick={() => setPage(pageNumber)}>{pageNumber}</button>)}<button type="button" onClick={() => setPage(currentPage + 1)} disabled={currentPage === pageCount}>下一页</button></nav>}{shownAnalyses.length === 0 && <div className="analysis-empty">{articles.length ? "没有匹配内容，换一个关键词试试。" : "还没有已发布的公司分析。"}</div>}</section>
     <footer className="shell"><span>© 2026 小骆 / COMPANY RESEARCH</span><button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>回到顶部 ↑</button></footer>
   </>;
 }
@@ -498,13 +504,13 @@ function TalentView({ admin, onLogout }: { admin: boolean; onLogout: () => Promi
   }, [shownJobs, people]);
   const openPublish = (kind: "jobs" | "people" = mode) => { setImageError(""); setPublishError(""); setEditing({ kind }); setDraft({ kind, company: "", title: "", city: "Dubai", focus: "产品", type: "全职", level: "1–3 年", exp: "3 年", tags: "", note: "", description: "", contact: "", bossDirect: false, imageData: "", imageSize: 0 }); };
   const openEdit = (kind: "jobs" | "people", item: (typeof jobs[number]) | (typeof people[number])) => { const image = String((item as { imageUrl?: string }).imageUrl || ""); if (kind === "jobs") { const job = item as typeof jobs[number]; setDraft({ kind, company: job.company, title: job.title, city: job.city, focus: job.focus, type: job.type, level: job.level, exp: "", tags: "", note: "", description: job.description, contact: job.contact, bossDirect: Boolean(job.bossDirect), imageData: image, imageSize: 0 }); } else { const person = item as typeof people[number]; setDraft({ kind, company: "", title: person.title, city: person.city, focus: "", type: "", level: "", exp: person.exp, tags: person.tags.join("、"), note: person.note, description: "", contact: person.contact, bossDirect: false, imageData: image, imageSize: 0 }); } setImageError(""); setEditing({ kind, id: item.id }); };
-  const selectImage = async (file?: File) => { if (!file) return; setImageBusy(true); setImageError(""); try { const image = await compressTalentImage(file); setDraft((current) => ({ ...current, imageData: image.data, imageSize: image.size })); } catch (error) { setImageError(error instanceof Error ? error.message : "图片处理失败，请重试。"); } finally { setImageBusy(false); } };
+  const selectImage = async (file?: File) => { if (!file) return; setImageBusy(true); setImageError(""); try { const image = await compressUploadedImage(file); setDraft((current) => ({ ...current, imageData: image.data, imageSize: image.size })); } catch (error) { setImageError(error instanceof Error ? error.message : "图片处理失败，请重试。"); } finally { setImageBusy(false); } };
   useEffect(() => {
     if (!editing) return;
     const form = document.querySelector(".talent-form"); const actions = form?.querySelector(".talent-form-actions");
     if (!form || !actions) return;
     const label = document.createElement("label"); label.className = "talent-image-upload"; label.textContent = "信息图片（自动转 WebP，最大 3MB）";
-    const input = document.createElement("input"); input.type = "file"; input.accept = "image/png,image/jpeg,image/webp"; input.disabled = imageBusy;
+    const input = document.createElement("input"); input.type = "file"; input.accept = IMAGE_UPLOAD_RULES.accept; input.disabled = imageBusy;
     const hint = document.createElement("small"); hint.textContent = imageError || (draft.imageSize ? `已压缩为 WebP · ${(draft.imageSize / 1024 / 1024).toFixed(2)} MB` : "支持 PNG、JPG、WebP；上传后自动压缩。"); if (imageError) hint.className = "talent-image-error";
     label.append(input, hint);
     if (draft.imageData) { const preview = document.createElement("img"); preview.className = "talent-image-preview"; preview.src = draft.imageData; preview.alt = "已选择的图片预览"; label.append(preview); }
