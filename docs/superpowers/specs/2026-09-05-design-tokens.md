@@ -32,6 +32,9 @@
   --color-highlight-border: #cfe8dc;
   --color-selection-bg: #cfe8dc;
   --color-selection-text: #17614f;
+  --color-overlay: rgba(12, 37, 29, .45);
+  --color-danger: #b42318;
+  --color-danger-border: #f1c5c1;
 
   /* Spacing */
   --space-tight: 8px;

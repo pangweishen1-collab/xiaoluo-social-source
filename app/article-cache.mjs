@@ -34,3 +34,10 @@ export function prefetchArticleRoute(slug, documentRef = globalThis.document) {
   link.as = "document";
   documentRef.head.append(link);
 }
+
+export async function incrementArticleView(slug, fetcher = globalThis.fetch) {
+  if (!slug || !fetcher) return 0;
+  const response = await fetcher(`/api/articles/${encodeURIComponent(slug)}/view`, { method: "POST", credentials: "same-origin" });
+  if (!response.ok) throw new Error("阅读量暂时无法更新。");
+  return Number((await response.json()).views || 0);
+}

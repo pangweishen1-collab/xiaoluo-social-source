@@ -14,6 +14,8 @@ body, main { background: var(--color-page) !important; color: var(--color-text) 
 
 /* The header sits outside the home view; keep its H5 strip pure white too. */
 header.nav { background-color: var(--color-page) !important; background-image: none !important; }
+.nav nav button, .article-site-nav nav a { color: var(--color-muted) !important; }
+.nav nav button.active, .article-site-nav nav a.active { color: var(--color-text) !important; border-color: var(--color-brand) !important; }
 
 .eyebrow, .today-label, .analysis-card-top, .business-resource-title b,
 .company-card footer, .matrix-callout b, .talent-note, .company-entity-note { color: var(--color-brand-strong) !important; }
@@ -47,9 +49,9 @@ header.nav { background-color: var(--color-page) !important; background-image: n
 .text-button, .section-top a, .note a, .analysis-more, .email-link { color: var(--color-brand-strong) !important; border-color: var(--color-brand) !important; }
 .text-button:hover, .section-top a:hover, .note a:hover, .analysis-more:hover, .email-link:hover { color: var(--color-brand-strong) !important; border-color: var(--color-brand) !important; }
 .boss-direct-badge {
-  background: linear-gradient(135deg, #fff0bd 0%, #e8c467 48%, #f8df94 100%) !important;
-  color: var(--color-text) !important;
-  border-color: #d6ae45 !important;
+  background: var(--color-brand-soft) !important;
+  color: var(--color-brand-strong) !important;
+  border-color: var(--color-highlight-border) !important;
 }
 .visitor-pulse { background: var(--color-brand) !important; }
 
@@ -95,7 +97,42 @@ header.nav { background-color: var(--color-page) !important; background-image: n
   line-height: var(--line-height-article-title) !important;
 }
 
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-component);
+  padding: var(--space-section) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.page-header > div { max-width: 720px; }
+.page-header .eyebrow { margin: 0 0 var(--space-content); }
+.page-header h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-section);
+  line-height: var(--line-height-section);
+  letter-spacing: -.045em;
+}
+.page-header > div > p:last-child { margin: var(--space-content) 0 0; color: var(--color-muted); line-height: 1.7; }
+.page-header + .analysis-section, .page-header + .matrix-section, .page-header + .talent-admin,
+.page-header + .talent-section, .page-header + .business-links { padding-top: var(--space-section); }
+.analysis-card-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-content); margin-top: var(--space-component); }
+.analysis-card-footer .analysis-more { margin-top: 0; }
+.analysis-views { color: var(--color-muted); font-size: 12px; white-space: nowrap; }
+
 @media (max-width: 720px) {
+  .nav, .nav nav, .article-nav-bar {
+    background: var(--color-page) !important;
+    border-color: var(--color-border) !important;
+  }
+  .nav { height: 54px !important; padding-block: 0 !important; }
+  .nav .brand { font-size: 16px !important; }
+  .nav .brand img { width: 26px !important; height: 26px !important; }
+  .nav nav { top: 54px !important; left: calc((100vw - 100%) / -2) !important; height: 38px !important; justify-content: space-between !important; gap: 0 !important; padding-inline: var(--space-content) !important; }
+  .nav nav button, .article-site-nav nav a { font-size: 12px !important; padding: 10px 0 !important; }
+  .home-theme .hero { padding-top: 56px !important; }
+  .home-theme .today { margin-bottom: var(--space-component) !important; }
   .home-theme .hero h1, .network-hero h1, .analysis-hero h1, .matrix-hero h1,
   .matrix-atlas-head h2, .talent-hero h1, .business-hero h1 {
     font-size: var(--font-size-display-mobile) !important;
@@ -111,6 +148,13 @@ header.nav { background-color: var(--color-page) !important; background-image: n
     font-size: var(--font-size-card-mobile) !important;
   }
   .article-reader-header h1 { font-size: var(--font-size-article-title-mobile) !important; }
+  .page-header { display: block; margin-top: 38px; padding: var(--space-component) 0; }
+  .page-header .eyebrow { margin-bottom: var(--space-tight); }
+  .page-header h1 { font-size: var(--font-size-section-mobile); }
+  .page-header > div > p:last-child { margin-top: var(--space-tight); font-size: 13px; }
+  .page-header aside { margin-top: var(--space-content); }
+  .page-header + .analysis-section, .page-header + .matrix-section, .page-header + .talent-admin,
+  .page-header + .talent-section, .page-header + .business-links { padding-top: var(--space-component); }
 }
 
 .matrix-head > p, .matrix-head > p *, .analysis-search > span,
@@ -159,7 +203,7 @@ header.nav { background-color: var(--color-page) !important; background-image: n
 .job-card .job-meta span, .job-card .job-meta i {
   background: var(--color-brand-soft) !important;
   color: var(--color-brand-strong) !important;
-  border-color: #c9e8d9 !important;
+  border-color: var(--color-highlight-border) !important;
 }
 .job-card .job-description, .job-card .listing-contact { color: var(--color-muted) !important; }
 
@@ -227,44 +271,44 @@ hr { display: none !important; }
 
 /* Highlighted conversion areas use the light UI kit's mint surfaces. */
 .talent-callout {
-  background: #eaf7f1 !important;
-  border: 1px solid #cfe8dc !important;
+  background: var(--color-highlight) !important;
+  border: 1px solid var(--color-highlight-border) !important;
   border-radius: var(--radius-card) !important;
   padding: 52px 56px !important;
 }
 .talent-callout > div:last-child {
-  background: rgba(255, 255, 255, .78) !important;
-  border: 1px solid #d8ebe1 !important;
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-highlight-border) !important;
   border-radius: var(--radius-card) !important;
   padding: 26px 30px !important;
 }
 .talent-switch button span {
-  background: #e7f5ee !important;
+  background: var(--color-brand-soft) !important;
   color: var(--color-brand-strong) !important;
   border: 0 !important;
 }
 
 .business-contact {
-  background: #eaf7f1 !important;
-  border: 1px solid #cfe8dc !important;
+  background: var(--color-highlight) !important;
+  border: 1px solid var(--color-highlight-border) !important;
   border-radius: var(--radius-card) !important;
   padding: 54px 56px !important;
 }
 .business-contact .business-qr {
   background: var(--color-surface) !important;
-  border: 1px solid #cfe8dc !important;
+  border: 1px solid var(--color-highlight-border) !important;
   border-radius: var(--radius-card) !important;
   padding: 18px 22px !important;
 }
 .contact {
-  background: #eff8f4 !important;
-  border: 1px solid #d4e9de !important;
+  background: var(--color-highlight) !important;
+  border: 1px solid var(--color-highlight-border) !important;
   border-radius: var(--radius-card) !important;
   padding: 46px 54px !important;
 }
 .contact .qr {
   background: var(--color-surface) !important;
-  border: 1px solid #cfe8dc !important;
+  border: 1px solid var(--color-highlight-border) !important;
   border-radius: var(--radius-card) !important;
   padding: 18px 22px !important;
 }
@@ -360,7 +404,7 @@ hr { display: none !important; }
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(12, 37, 29, .45);
+  background: var(--color-overlay);
 }
 .matrix-submit-dialog {
   width: min(100%, 540px);
@@ -369,29 +413,29 @@ hr { display: none !important; }
   display: grid;
   gap: 16px;
   padding: 30px;
-  border: 1px solid #c8e5d7;
+  border: 1px solid var(--color-highlight-border);
   border-radius: var(--radius-card);
   background: var(--color-surface);
-  box-shadow: 0 24px 70px rgba(11, 40, 30, .22);
+  box-shadow: 0 24px 70px color-mix(in oklch, var(--color-brand-strong) 22%, transparent);
 }
 .matrix-submit-top { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; }
 .matrix-submit-top h2, .matrix-submit-dialog p { margin: 0; }
 .matrix-submit-close { appearance: none; border: 0; background: transparent; color: #5e716a; font-size: 28px; line-height: 1; cursor: pointer; }
 .matrix-submit-dialog label { display: grid; gap: 8px; color: #183a30; font-weight: 700; }
-.matrix-submit-dialog input, .matrix-submit-dialog textarea { width: 100%; box-sizing: border-box; border: 1px solid #b9ddce; border-radius: var(--radius-control); padding: 12px 13px; color: #17251f; background: var(--color-surface); font: inherit; }
+.matrix-submit-dialog input, .matrix-submit-dialog textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--color-highlight-border); border-radius: var(--radius-control); padding: 12px 13px; color: var(--color-text); background: var(--color-surface); font: inherit; }
 .matrix-submit-dialog textarea { min-height: 112px; resize: vertical; }
 .matrix-submit-dialog input:focus, .matrix-submit-dialog textarea:focus { outline: 0; border-color: var(--color-brand); box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-brand) 13%, transparent); }
 .matrix-submit-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .matrix-submit-actions button { border-radius: var(--radius-control); padding: 11px 15px; font: inherit; font-weight: 750; cursor: pointer; }
-.matrix-submit-actions button:first-child { border: 1px solid #c8ded5; background: var(--color-surface); color: #34554a; }
-.matrix-submit-success { padding: 12px 14px; border-radius: var(--radius-control); background: #ecf9f2; color: var(--color-brand-strong); }
-.matrix-submit-error { color: #b42318; }
+.matrix-submit-actions button:first-child { border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-muted); }
+.matrix-submit-success { padding: 12px 14px; border-radius: var(--radius-control); background: var(--color-brand-soft); color: var(--color-brand-strong); }
+.matrix-submit-error { color: var(--color-danger); }
 
 /* The owner sees incoming atlas suggestions after signing in through the avatar. */
 .atlas-admin {
   margin-top: 40px !important;
   padding: 28px !important;
-  border: 1px solid #c8e5d7 !important;
+  border: 1px solid var(--color-highlight-border) !important;
   border-radius: var(--radius-card) !important;
   background: #f4fbf7 !important;
 }
@@ -400,17 +444,17 @@ hr { display: none !important; }
 .atlas-admin-head > div { display: grid; gap: 8px; }
 .atlas-admin-head > span { flex: none; padding: 8px 11px; border-radius: 999px; background: #dff4e9; color: var(--color-brand-strong); font-weight: 800; }
 .atlas-admin-message { margin: 20px 0 0; color: #557268; }
-.atlas-admin-message.error { color: #b42318; }
+.atlas-admin-message.error { color: var(--color-danger); }
 .atlas-submission-list { display: grid; gap: 10px; margin-top: 20px; }
 .atlas-submission-list article { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 16px; border: 1px solid #d7e9e0; border-radius: var(--radius-card); background: var(--color-surface); }
 .atlas-submission-list strong { color: #17251f; font-size: 17px; }
 .atlas-submission-list p { margin: 5px 0; color: #557268; }
 .atlas-submission-list small { color: #73877f; }
 .atlas-submission-list article > div:last-child { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
-.atlas-submission-list span { padding: 5px 8px; border-radius: 999px; background: #fff2cf; color: var(--color-surface-subtle); font-size: 13px; font-weight: 750; }
+.atlas-submission-list span { padding: 5px 8px; border-radius: 999px; background: var(--color-brand-soft); color: var(--color-brand-strong); font-size: 13px; font-weight: 750; }
 .atlas-submission-list span.reviewed { background: #dff4e9; color: var(--color-brand-strong); }
 .atlas-submission-list button { border: 1px solid #b9ddce; border-radius: var(--radius-control); padding: 8px 10px; background: var(--color-surface); color: var(--color-brand-strong); font: inherit; font-size: 13px; font-weight: 750; cursor: pointer; }
-.atlas-submission-list .quiet-danger { border-color: #f1c5c1; color: #b42318; }
+.atlas-submission-list .quiet-danger { border-color: var(--color-danger-border); color: var(--color-danger); }
 @media (max-width: 720px) {
   .matrix-search { margin-bottom: 18px !important; }
   .matrix-atlas-actions { align-items: flex-start; text-align: left; }

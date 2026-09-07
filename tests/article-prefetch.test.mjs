@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { prefetchArticle, prefetchArticleRoute, readCachedArticle } from "../app/article-cache.mjs";
+import { incrementArticleView, prefetchArticle, prefetchArticleRoute, readCachedArticle } from "../app/article-cache.mjs";
 
 const storage = () => {
   const values = new Map();
@@ -36,4 +36,19 @@ test("article route prefetch is registered once before navigation", () => {
   prefetchArticleRoute("hawa-research", documentRef);
   prefetchArticleRoute("hawa-research", documentRef);
   assert.deepEqual(links, [{ rel: "prefetch", href: "/analysis/hawa-research", as: "document" }]);
+});
+
+test("every opened article records one view while prefetch records none", async () => {
+  const calls = [];
+  const fetcher = async (url, options = {}) => {
+    calls.push({ url, method: options.method || "GET" });
+    return new Response(JSON.stringify({ views: calls.filter((call) => call.method === "POST").length }));
+  };
+
+  assert.equal(await incrementArticleView("hawa-research", fetcher), 1);
+  assert.equal(await incrementArticleView("hawa-research", fetcher), 2);
+  assert.deepEqual(calls, [
+    { url: "/api/articles/hawa-research/view", method: "POST" },
+    { url: "/api/articles/hawa-research/view", method: "POST" },
+  ]);
 });

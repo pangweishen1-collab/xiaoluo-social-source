@@ -33,7 +33,7 @@ test("server-renders the Xiaoluo public homepage", async () => {
   assert.match(html, /<title>小骆｜社交产品资讯与资源网络<\/title>/);
   assert.match(html, /首页[\s\S]*公司分析[\s\S]*出海矩阵[\s\S]*人才市场[\s\S]*商务合作/);
   assert.match(html, /聚焦中东社交与海外语聊/);
-  assert.match(html, /先收藏再看！中国出海泛娱乐社交产品版图/);
+  assert.match(html, /13万美元大R挂首页，不怕被竞品挖走吗？/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site|codex-preview/);
 });
 
@@ -231,7 +231,7 @@ test("article reader keeps the site navigation visible and offers a return-to-to
   assert.match(reader, /article-return-top/);
   assert.match(reader, /window\.scrollTo\(\{ top: 0, behavior: "smooth" \}\)/);
   assert.match(css, /\.article-nav-bar\{position:sticky;top:0;z-index:30/);
-  assert.match(css, /\.article-nav-bar\{[^}]*background:#fff/);
+  assert.match(css, /\.article-nav-bar\{[^}]*background:var\(--color-page\)/);
   assert.match(css, /\.article-return-top/);
 });
 
@@ -511,6 +511,34 @@ test("selection and highlighted panels use semantic color tokens", async () => {
   assert.match(reset, /\.matrix-callout > div:last-child p\s*\{[^}]*color:\s*var\(--color-muted\) !important/s);
 });
 
+test("mobile navigation and article states use semantic color tokens", async () => {
+  const [globals, reset] = await Promise.all([
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
+  ]);
+  assert.doesNotMatch(globals, /rgba\(240,234,223,/);
+  assert.match(globals, /@media\(max-width:720px\)\{[\s\S]*?\.nav\{[^}]*background:var\(--color-page\)/);
+  assert.match(reset, /@media \(max-width: 720px\)[\s\S]*?\.nav nav[^}]*background:\s*var\(--color-page\) !important/s);
+  assert.match(reset, /\.nav nav button, \.article-site-nav nav a\s*\{[^}]*color:\s*var\(--color-muted\) !important/s);
+  assert.match(reset, /\.nav nav button\.active, \.article-site-nav nav a\.active\s*\{[^}]*color:\s*var\(--color-text\) !important[^}]*border-color:\s*var\(--color-brand\) !important/s);
+  assert.doesNotMatch(globals, /\.article-site-nav nav a\{[^}]*color:#[0-9a-f]{3,6}/i);
+  assert.doesNotMatch(globals, /\.article-nav-bar\{[^}]*background:#[0-9a-f]{3,6}/i);
+});
+
+test("responsive public styles do not retain legacy palette literals", async () => {
+  const [tokens, reset, business] = await Promise.all([
+    readFile(new URL("../tokens.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/business-overrides.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(tokens, /--color-overlay:/);
+  assert.match(tokens, /--color-danger:/);
+  assert.match(tokens, /--color-danger-border:/);
+  assert.doesNotMatch(reset, /#(?:fff0bd|e8c467|f8df94|d6ae45|eaf7f1|cfe8dc|eff8f4|d4e9de|fff2cf|b42318|f1c5c1)/i);
+  assert.doesNotMatch(reset, /rgba\((?:12, 37, 29|11, 40, 30),/);
+  assert.doesNotMatch(business, /rgba\(255, 253, 249,/);
+});
+
 test("article backend checks the existing site management session before article credentials", async () => {
   const worker = await readFile(new URL("../worker/articles.ts", import.meta.url), "utf8");
   assert.match(worker, /cookie\(request, "xiaoluo_admin"\)/);
@@ -599,14 +627,43 @@ test("public talent market keeps publishing controls inside admin mode", async (
 });
 
 test("home shows three desktop notes and switches to a compact mobile media list", async () => {
-  const [page, css] = await Promise.all([
+  const [page, css, app] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/app-light.css", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /notes\.slice\(0, 3\)\.map/);
   assert.match(css, /\.home-theme \.notes\.notes-list\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/);
   assert.match(css, /\.home-theme \.note\.note-list-item\{display:grid!important;grid-template-columns:112px minmax\(0,1fr\)!important/);
+  assert.match(app, /@media \(max-width: 720px\)[\s\S]*\.home-theme \.notes\.notes-list \{ grid-template-columns: 1fr !important; gap: var\(--space-content\) !important; \}/);
+  assert.match(app, /\.home-theme \.note\.note-list-item \{[\s\S]*grid-template-columns: 112px minmax\(0, 1fr\);[\s\S]*padding: var\(--space-content\) 0 !important;/);
+  assert.match(app, /\.home-theme \.note\.note-list-item \.note-content h3 \{[\s\S]*-webkit-line-clamp: 2/);
+});
+
+test("homepage uses a compact hero and recent-notes rhythm", async () => {
+  const [page, home] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/home-light.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(home, /\.home-theme \.hero \{[^}]*padding: 40px 0 32px !important/);
+  assert.match(home, /\.home-theme \.hero-visual img \{[^}]*height: min\(23vw, 340px\)/);
+  assert.match(home, /\.home-theme \.visitor-strip \{[^}]*margin-top: -10px[^}]*padding: 16px 24px/);
+  assert.match(home, /\.home-theme \.section \{ padding: 64px 0; \}/);
+  assert.match(home, /\.home-theme \.section-top \{[^}]*margin-bottom: 24px[^}]*padding-bottom: 12px/);
+  assert.match(home, /\.home-theme \.note-cover \{[^}]*aspect-ratio: 4 \/ 5/);
+  assert.match(page, /13万美元大R挂首页，不怕被竞品挖走吗？/);
+  assert.match(page, /TopTop资深产品Ray，说透了什么叫本地化/);
+  assert.match(page, /一年营收150亿的欢聚，为什么复制不出第二/);
+});
+
+test("mobile header uses a compact tokenized rhythm", async () => {
+  const reset = await readFile(new URL("../app/color-reset.css", import.meta.url), "utf8");
+  assert.match(reset, /@media \(max-width: 720px\)[\s\S]*\.nav \{[^}]*height: 54px !important[^}]*padding-block: 0 !important/s);
+  assert.match(reset, /\.nav nav \{[^}]*top: 54px !important[^}]*height: 38px !important[^}]*justify-content: space-between !important[^}]*gap: 0 !important/s);
+  assert.match(reset, /\.nav nav button, \.article-site-nav nav a \{[^}]*font-size: 12px !important[^}]*padding: 10px 0 !important/s);
+  assert.match(reset, /\.home-theme \.hero \{[^}]*padding-top: 56px !important/s);
 });
 
 test("homepage metrics use five equal compact columns without a leading label", async () => {
@@ -646,4 +703,42 @@ test("job detail button is compact and keeps white text when active", async () =
 
   assert.match(css, /\.job-detail-button\{[^}]*padding:8px 14px[^}]*text-align:center/);
   assert.match(css, /\.job-detail-button:hover\{[^}]*color:#fff/);
+});
+
+test("four public tabs share one page header pattern", async () => {
+  const [page, css] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /function PageHeader/);
+  assert.equal((page.match(/<PageHeader /g) || []).length, 4);
+  assert.match(page, /eyebrow="RESEARCH ARCHIVE" title="最新公司分析"/);
+  assert.match(page, /eyebrow="PRODUCT ATLAS" title="出海产品矩阵"/);
+  assert.match(page, /eyebrow="TALENT MARKET" title="人才市场"/);
+  assert.match(page, /eyebrow="BUSINESS COLLABORATION" title="商务合作"/);
+  assert.match(css, /\.page-header\s*\{[^}]*padding:[^}]*var\(--space-section\)/s);
+  assert.match(css, /\.page-header h1\s*\{[^}]*font-size:\s*var\(--font-size-section\)/s);
+});
+
+test("mobile primary navigation starts on the avatar alignment line", async () => {
+  const css = await readFile(new URL("../app/color-reset.css", import.meta.url), "utf8");
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.nav nav \{[^}]*padding-inline: var\(--space-content\) !important/s);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.nav nav \{[^}]*justify-content: space-between !important[^}]*gap: 0 !important/s);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.nav nav \{[^}]*left: calc\(\(100vw - 100%\) \/ -2\) !important/s);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.page-header \{[^}]*margin-top: 38px[^}]*padding: var\(--space-component\) 0/s);
+});
+
+test("article archive exposes persistent view counts", async () => {
+  const [page, reader, worker] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/analysis/[slug]/reader.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../worker/articles.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(worker, /view_count INTEGER NOT NULL DEFAULT 0/);
+  assert.match(worker, /UPDATE analysis_articles SET view_count = view_count \+ 1 WHERE slug = \?/);
+  assert.match(worker, /url\.pathname\.endsWith\("\/view"\) && request\.method === "POST"/);
+  assert.match(reader, /incrementArticleView\(slug\)/);
+  assert.match(page, /className="analysis-views">阅读 \{item\.views\}/);
 });

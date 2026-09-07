@@ -17,10 +17,13 @@ const hash = async (value: string) => Array.from(new Uint8Array(await crypto.sub
 
 async function ensureSchema(db: D1Database) {
   schemaReady ??= db.batch([
-    db.prepare("CREATE TABLE IF NOT EXISTS analysis_articles (id TEXT PRIMARY KEY, slug TEXT NOT NULL UNIQUE, title TEXT NOT NULL, company TEXT NOT NULL, category TEXT NOT NULL, summary TEXT NOT NULL, tags TEXT NOT NULL, body TEXT NOT NULL, recommendations TEXT NOT NULL DEFAULT '[]', published_at TEXT NOT NULL, updated_at TEXT NOT NULL)"),
+    db.prepare("CREATE TABLE IF NOT EXISTS analysis_articles (id TEXT PRIMARY KEY, slug TEXT NOT NULL UNIQUE, title TEXT NOT NULL, company TEXT NOT NULL, category TEXT NOT NULL, summary TEXT NOT NULL, tags TEXT NOT NULL, body TEXT NOT NULL, recommendations TEXT NOT NULL DEFAULT '[]', view_count INTEGER NOT NULL DEFAULT 0, published_at TEXT NOT NULL, updated_at TEXT NOT NULL)"),
     db.prepare("CREATE TABLE IF NOT EXISTS article_admin_sessions (token TEXT PRIMARY KEY, expires_at TEXT NOT NULL)"),
     db.prepare("CREATE TABLE IF NOT EXISTS matrix_companies (id TEXT PRIMARY KEY, company TEXT NOT NULL, products TEXT NOT NULL, category TEXT NOT NULL, logo TEXT NOT NULL DEFAULT '', note TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL, updated_at TEXT NOT NULL)"),
-  ]).then(async () => { await db.prepare("ALTER TABLE analysis_articles ADD COLUMN recommendations TEXT NOT NULL DEFAULT '[]'").run().catch(() => undefined); });
+  ]).then(async () => { await Promise.all([
+    db.prepare("ALTER TABLE analysis_articles ADD COLUMN recommendations TEXT NOT NULL DEFAULT '[]'").run().catch(() => undefined),
+    db.prepare("ALTER TABLE analysis_articles ADD COLUMN view_count INTEGER NOT NULL DEFAULT 0").run().catch(() => undefined),
+  ]); });
   return schemaReady;
 }
 
@@ -50,7 +53,7 @@ function input(value: unknown): ArticleInput | null {
   return article.title && article.company && article.summary && article.body && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(article.slug) ? article : null;
 }
 
-const row = (item: Record<string, unknown>, detail = true) => ({ id: String(item.id), slug: String(item.slug), title: String(item.title), company: String(item.company), category: String(item.category), summary: String(item.summary), tags: (() => { try { return JSON.parse(String(item.tags)); } catch { return []; } })(), recommendations: (() => { try { const value = JSON.parse(String(item.recommendations || "[]")); return Array.isArray(value) ? value.filter((recommendation): recommendation is Recommendation => Boolean(recommendation && typeof recommendation.title === "string" && typeof recommendation.url === "string")).slice(0, 5) : []; } catch { return []; } })(), ...(detail ? { body: String(item.body) } : {}), publishedAt: String(item.published_at), updatedAt: String(item.updated_at) });
+const row = (item: Record<string, unknown>, detail = true) => ({ id: String(item.id), slug: String(item.slug), title: String(item.title), company: String(item.company), category: String(item.category), summary: String(item.summary), tags: (() => { try { return JSON.parse(String(item.tags)); } catch { return []; } })(), recommendations: (() => { try { const value = JSON.parse(String(item.recommendations || "[]")); return Array.isArray(value) ? value.filter((recommendation): recommendation is Recommendation => Boolean(recommendation && typeof recommendation.title === "string" && typeof recommendation.url === "string")).slice(0, 5) : []; } catch { return []; } })(), views: Number(item.view_count || 0), ...(detail ? { body: String(item.body) } : {}), publishedAt: String(item.published_at), updatedAt: String(item.updated_at) });
 
 export async function handleArticleApi(request: Request, env: ArticleEnv, url: URL): Promise<Response | null> {
   const secure = url.protocol === "https:" ? "; Secure" : "";
@@ -65,7 +68,8 @@ export async function handleArticleApi(request: Request, env: ArticleEnv, url: U
     await env.DB.prepare("INSERT INTO article_admin_sessions (token, expires_at) VALUES (?, ?)").bind(token, expires).run();
     return json({ authenticated: true }, 200, `${articleCookie}=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=604800${secure}`);
   }
-  if (url.pathname === "/api/articles" && request.method === "GET") { await ensureSchema(env.DB); const result = await env.DB.prepare("SELECT id, slug, title, company, category, summary, tags, published_at, updated_at FROM analysis_articles ORDER BY published_at DESC").all<Record<string, unknown>>(); return json({ items: (result.results ?? []).map((item) => row(item, false)) }); }
+  if (url.pathname === "/api/articles" && request.method === "GET") { await ensureSchema(env.DB); const result = await env.DB.prepare("SELECT id, slug, title, company, category, summary, tags, view_count, published_at, updated_at FROM analysis_articles ORDER BY published_at DESC").all<Record<string, unknown>>(); return json({ items: (result.results ?? []).map((item) => row(item, false)) }); }
+  if (url.pathname.startsWith("/api/articles/") && url.pathname.endsWith("/view") && request.method === "POST") { const slug = url.pathname.slice(14, -5); await ensureSchema(env.DB); const result = await env.DB.prepare("UPDATE analysis_articles SET view_count = view_count + 1 WHERE slug = ?").bind(slug).run(); if (!result.meta.changes) return json({ error: "文章不存在。" }, 404); const item = await env.DB.prepare("SELECT view_count FROM analysis_articles WHERE slug = ?").bind(slug).first<Record<string, unknown>>(); return json({ views: Number(item?.view_count || 0) }); }
   if (url.pathname.startsWith("/api/articles/") && request.method === "GET") { const slug = url.pathname.slice(14); await ensureSchema(env.DB); const item = await env.DB.prepare("SELECT * FROM analysis_articles WHERE slug = ?").bind(slug).first<Record<string, unknown>>(); return item ? json({ item: row(item) }) : json({ error: "文章不存在。" }, 404); }
   if (url.pathname === "/api/matrix" && request.method === "GET") { await ensureSchema(env.DB); const result = await env.DB.prepare("SELECT * FROM matrix_companies ORDER BY created_at DESC").all<Record<string, unknown>>(); return json({ items: (result.results ?? []).map((item) => ({ id:String(item.id), company:String(item.company), products:JSON.parse(String(item.products || "[]")), category:String(item.category), logo:String(item.logo), note:String(item.note) })) }); }
   if (!url.pathname.startsWith("/api/article-admin/articles") && !url.pathname.startsWith("/api/article-admin/matrix")) return null;

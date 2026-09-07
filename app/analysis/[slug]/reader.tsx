@@ -1,9 +1,9 @@
 "use client";
 
-import { type ReactNode, useEffect, useState } from "react";
-import { prefetchArticle, readCachedArticle } from "../../article-cache.mjs";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import { incrementArticleView, prefetchArticle, readCachedArticle } from "../../article-cache.mjs";
 
-type Article = { title: string; company: string; category: string; summary: string; tags: string[]; body: string; publishedAt: string };
+type Article = { slug: string; title: string; company: string; category: string; summary: string; tags: string[]; body: string; publishedAt: string; views: number };
 type ArticleIndexItem = { slug: string; title: string; publishedAt: string };
 function BackToAnalysis() { return <a className="article-back" href="/?view=analysis">← 返回公司分析</a>; }
 function SiteNavigation() { return <div className="article-nav-bar"><header className="nav shell article-site-nav"><div className="brand"><a className="brand-home" href="/" aria-label="回到首页"><span>小骆 <small>语聊出海观察</small></span></a><a className="avatar-login" href="/?view=talent" aria-label="前往人才市场"><img src="/xiaohongshu-avatar.webp" alt="" /></a></div><nav aria-label="主导航"><a href="/">首页</a><a className="active" href="/?view=analysis">公司分析</a><a href="/?view=matrix">出海矩阵</a><a href="/?view=talent">人才市场</a><a href="/?view=business">商务合作</a></nav></header></div>; }
@@ -40,12 +40,18 @@ function renderMarkdown(body: string) {
 export default function ArticleReader() {
   const slug = typeof location === "undefined" ? "" : location.pathname.split("/").pop() || "";
   const [article, setArticle] = useState<Article | null>(null); const [articles, setArticles] = useState<ArticleIndexItem[]>([]); const [missing, setMissing] = useState(false);
+  const countedSlug = useRef("");
   useEffect(() => {
     if (!slug) return;
     const cached = readCachedArticle(slug);
     if (cached) { setArticle(cached); return; }
     prefetchArticle(slug).then((item) => item ? setArticle(item) : setMissing(true)).catch(() => setMissing(true));
   }, [slug]);
+  useEffect(() => {
+    if (!article || !slug || countedSlug.current === slug) return;
+    countedSlug.current = slug;
+    incrementArticleView(slug).then((views) => setArticle((current) => current ? { ...current, views } : current)).catch(() => undefined);
+  }, [article?.slug, slug]);
   useEffect(() => { fetch("/api/articles", { credentials: "same-origin", cache: "no-store" }).then(async (response) => response.ok ? setArticles(((await response.json()).items || []).sort((a: ArticleIndexItem, b: ArticleIndexItem) => +new Date(b.publishedAt) - +new Date(a.publishedAt))) : undefined).catch(() => undefined); }, []);
   if (missing) return <main className="article-reader-shell"><SiteNavigation /><section className="article-reader-card shell"><BackToAnalysis /><h1>文章不存在</h1><p>这篇分析可能已被删除，或链接有误。</p></section></main>;
   if (!article) return <main className="article-reader-shell"><SiteNavigation /><section className="article-reader-card shell article-reader-loading"><p className="eyebrow">RESEARCH ARCHIVE</p><p>正在读取文章…</p></section></main>;
