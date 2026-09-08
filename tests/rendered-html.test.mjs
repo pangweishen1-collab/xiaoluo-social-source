@@ -371,6 +371,7 @@ test("public pages share one sans-serif typeface and one card interaction", asyn
     readFile(new URL("../app/practical-tools.css", import.meta.url), "utf8"),
   ]);
   assert.match(page, /<span>搜索公司或产品<\/span>/);
+  assert.doesNotMatch(page, /className="matrix-legend"/);
   assert.match(globals, /font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif/);
   const app = await readFile(new URL("../app/app-light.css", import.meta.url), "utf8");
   assert.match(app, /body, body \* \{ font-family: var\(--font-sans\) !important; \}/);
@@ -605,6 +606,12 @@ test("article reader uses the site card layout", async () => {
   assert.match(css, /\.article-reader-content/);
 });
 
+test("mobile article reader removes the card chrome and keeps comfortable page gutters", async () => {
+  const css = await readFile(new URL("../app/color-reset.css", import.meta.url), "utf8");
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.article-reader-shell \{[^}]*padding:\s*0 20px 56px/);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.article-reader-card \{[^}]*margin-top:\s*22px[^}]*padding:\s*0 0 42px[^}]*border:\s*0[^}]*border-radius:\s*0[^}]*box-shadow:\s*none/);
+});
+
 test("business page puts the partner link before the resource directory", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const businessView = page.slice(page.indexOf("function BusinessView()"), page.indexOf("function CompanyAnalysisView()"));
@@ -652,7 +659,8 @@ test("homepage uses a compact hero and recent-notes rhythm", async () => {
   assert.match(home, /\.home-theme \.visitor-strip \{[^}]*margin-top: -10px[^}]*padding: 16px 24px/);
   assert.match(home, /\.home-theme \.section \{ padding: 64px 0; \}/);
   assert.match(home, /\.home-theme \.section-top \{[^}]*margin-bottom: 24px[^}]*padding-bottom: 12px/);
-  assert.match(home, /\.home-theme \.note-cover \{[^}]*aspect-ratio: 4 \/ 5/);
+  assert.match(home, /@media \(min-width: 721px\)[\s\S]*\.home-theme \.note-cover \{[^}]*aspect-ratio: 16 \/ 10/);
+  assert.match(home, /@media \(min-width: 721px\)[\s\S]*\.home-theme \.note h3 \{[^}]*min-height: 0[^}]*-webkit-line-clamp: 2/);
   assert.match(page, /13万美元大R挂首页，不怕被竞品挖走吗？/);
   assert.match(page, /TopTop资深产品Ray，说透了什么叫本地化/);
   assert.match(page, /一年营收150亿的欢聚，为什么复制不出第二/);

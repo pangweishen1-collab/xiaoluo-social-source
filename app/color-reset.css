@@ -464,3 +464,18 @@ hr { display: none !important; }
   .atlas-admin-head, .atlas-submission-list article { align-items: flex-start; flex-direction: column; }
   .atlas-submission-list article > div:last-child { justify-content: flex-start; }
 }
+
+/* H5 articles use the page itself as the reading surface, without nested card chrome. */
+@media (max-width: 720px) {
+  .article-reader-shell {
+    padding: 0 20px 56px;
+  }
+  .article-reader-card {
+    margin-top: 22px;
+    padding: 0 0 42px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+}

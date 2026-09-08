@@ -82,6 +82,24 @@ body { background: var(--color-page); color: var(--home-ink); }
 .home-theme .note p { margin-top: auto !important; color: var(--home-muted) !important; }
 .home-theme .note a { color: var(--home-jade-dark); }
 
+@media (min-width: 721px) {
+  .home-theme .note.note-list-item { padding: 12px !important; }
+  .home-theme .note-cover { aspect-ratio: 16 / 10; }
+  .home-theme .note-content { padding: 12px 2px 0; }
+  .home-theme .note h3 {
+    display: -webkit-box;
+    min-height: 0;
+    margin: 7px 0 8px !important;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: 20px !important;
+    line-height: 1.28 !important;
+  }
+  .home-theme .note p { margin-top: 0 !important; }
+  .home-theme .note-content > a { margin-top: 12px !important; padding-top: 0 !important; }
+}
+
 .home-theme .proof { display: grid; grid-template-columns: minmax(250px, .75fr) minmax(0, 1.25fr); gap: 54px; padding: 68px 0; }
 .home-theme .proof-heading { position: sticky; top: 28px; align-self: start; }
 .home-theme .proof-heading h2 em { color: var(--home-jade); font-style: normal; }
