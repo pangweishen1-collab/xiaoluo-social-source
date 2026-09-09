@@ -1,1 +1,2 @@
-.company-title h3{font-family:Arial,"PingFang SC",sans-serif}
+.company-title h3{gap:var(--space-tight);font-family:Arial,"PingFang SC",sans-serif}
+.company-logo-image{flex:0 0 var(--size-brand-mark);width:var(--size-brand-mark);height:var(--size-brand-mark)}

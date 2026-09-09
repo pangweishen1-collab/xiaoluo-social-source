@@ -95,6 +95,11 @@ test("job cards prioritize the company name over the position title", async () =
   assert.match(jobCard, /<h2>\{job\.company\}<\/h2><h3>\{job\.title\}<\/h3>/);
 });
 
+test("featured job badge uses a restrained gold gradient with dark text", async () => {
+  const css = await readFile(new URL("../app/color-reset.css", import.meta.url), "utf8");
+  assert.match(css, /\.boss-direct-badge \{[^}]*linear-gradient\(135deg, #fff4c7 0%, #d6a94e 52%, #f8df91 100%\)[^}]*color: #17140d !important[^}]*border: 1px solid #c89b3c !important/);
+});
+
 test("job images appear in the detail dialog instead of the job card", async () => {
   const [page, css] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
@@ -132,6 +137,8 @@ test("all current dialog overlays close when their empty backdrop is clicked", a
 test("product matrix card titles use a sans-serif font", async () => {
   const css = await readFile(new URL("../app/matrix-title.css", import.meta.url), "utf8");
   assert.match(css, /\.company-title h3\{[^}]*font-family:Arial,"PingFang SC",sans-serif/);
+  assert.match(css, /\.company-title h3\{[^}]*gap:var\(--space-tight\)/);
+  assert.match(css, /\.company-logo-image\{[^}]*width:var\(--size-brand-mark\)[^}]*height:var\(--size-brand-mark\)/);
 });
 
 test("home page places the practical tools list below recent notes with a site logo", async () => {
@@ -282,7 +289,7 @@ test("site design tokens provide one reusable visual source", async () => {
     "color-brand", "color-brand-strong", "color-brand-soft", "color-text",
     "color-muted", "color-border", "color-page", "color-surface", "color-surface-subtle",
     "space-tight", "space-content", "space-component", "space-section",
-    "radius-control", "radius-card", "font-sans", "motion-duration",
+    "radius-control", "radius-card", "size-brand-mark", "font-sans", "motion-duration",
     "motion-lift", "shadow-card-hover",
   ]) assert.match(tokens, new RegExp(`--${name}:`));
   assert.ok(layout.indexOf('import "../tokens.css"') < layout.indexOf('import "./globals.css"'));
@@ -608,8 +615,8 @@ test("article reader uses the site card layout", async () => {
 
 test("mobile article reader removes the card chrome and keeps comfortable page gutters", async () => {
   const css = await readFile(new URL("../app/color-reset.css", import.meta.url), "utf8");
-  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.article-reader-shell \{[^}]*padding:\s*0 20px 56px/);
-  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.article-reader-card \{[^}]*margin-top:\s*22px[^}]*padding:\s*0 0 42px[^}]*border:\s*0[^}]*border-radius:\s*0[^}]*box-shadow:\s*none/);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.article-reader-shell \{[^}]*padding:\s*0 14px 56px/);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.article-reader-card \{[^}]*margin-top:\s*32px[^}]*padding:\s*0 0 42px[^}]*border:\s*0[^}]*border-radius:\s*0[^}]*box-shadow:\s*none/);
 });
 
 test("business page puts the partner link before the resource directory", async () => {

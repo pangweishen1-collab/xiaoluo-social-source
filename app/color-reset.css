@@ -49,9 +49,9 @@ header.nav { background-color: var(--color-page) !important; background-image: n
 .text-button, .section-top a, .note a, .analysis-more, .email-link { color: var(--color-brand-strong) !important; border-color: var(--color-brand) !important; }
 .text-button:hover, .section-top a:hover, .note a:hover, .analysis-more:hover, .email-link:hover { color: var(--color-brand-strong) !important; border-color: var(--color-brand) !important; }
 .boss-direct-badge {
-  background: var(--color-brand-soft) !important;
-  color: var(--color-brand-strong) !important;
-  border-color: var(--color-highlight-border) !important;
+  background: linear-gradient(135deg, #fff4c7 0%, #d6a94e 52%, #f8df91 100%) !important;
+  color: #17140d !important;
+  border: 1px solid #c89b3c !important;
 }
 .visitor-pulse { background: var(--color-brand) !important; }
 
@@ -468,10 +468,10 @@ hr { display: none !important; }
 /* H5 articles use the page itself as the reading surface, without nested card chrome. */
 @media (max-width: 720px) {
   .article-reader-shell {
-    padding: 0 20px 56px;
+    padding: 0 14px 56px;
   }
   .article-reader-card {
-    margin-top: 22px;
+    margin-top: 32px;
     padding: 0 0 42px;
     border: 0;
     border-radius: 0;
