@@ -187,8 +187,12 @@ header.nav { background-color: var(--color-page) !important; background-image: n
 @media (max-width: 720px) { .job-grid, .talent-grid { grid-template-columns: 1fr !important; } }
 .talent-section .publish-talent, .talent-section .talent-empty .primary, .talent-callout .primary { display: inline-flex !important; }
 .talent-admin + .talent-section .publish-talent { display: inline-flex !important; }
-.matrix-search input::placeholder, .analysis-search input::placeholder,
-.talent-form input::placeholder, .talent-form textarea::placeholder { color: #8a9892 !important; }
+/* Empty-field hints stay quiet and consistent across every form. */
+input::placeholder, textarea::placeholder {
+  color: #9aa59f !important;
+  font-weight: 400 !important;
+  opacity: 1;
+}
 .home-theme .visitor-summary > p { color: var(--color-muted) !important; }
 .atlas-submission-list span { color: var(--color-text) !important; }
 

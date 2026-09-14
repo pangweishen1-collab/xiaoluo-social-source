@@ -61,6 +61,42 @@ test("product atlas has no contribution buttons", async () => {
   assert.doesNotMatch(matrixView, /matrix-contribute-button/);
 });
 
+test("product atlas gives site administrators a logo publishing workflow", async () => {
+  const [page, articleWorker, css] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../worker/articles.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /function MatrixView\(\{ admin \}/);
+  assert.match(page, /发布公司/);
+  assert.match(page, /编辑/);
+  assert.match(page, /删除/);
+  assert.match(page, /compressMatrixLogo/);
+  assert.match(page, /支持横版、竖版和方形 Logo/);
+  const matrixEditor = page.slice(page.indexOf("function MatrixEditor"), page.indexOf("function recordsHasPersistedInitial"));
+  assert.doesNotMatch(matrixEditor, /产品分类/);
+  assert.match(articleWorker, /matrix_companies/);
+  assert.match(articleWorker, /matrix-logo/);
+  assert.match(articleWorker, /env\.MEDIA\.put/);
+  assert.match(css, /matrix-admin-actions/);
+});
+
+test("matrix cards keep a consistent height and use sans-serif numeric data", async () => {
+  const matrixCss = await readFile(new URL("../app/matrix-title.css", import.meta.url), "utf8");
+  assert.match(matrixCss, /\.company-logo-image\{width:40px!important;height:40px!important/);
+  assert.match(matrixCss, /\.matrix-grid\{align-items:stretch!important;grid-auto-rows:1fr\}/);
+  assert.match(matrixCss, /\.company-card\{min-height:310px!important;height:100%!important;align-self:stretch!important/);
+  assert.match(matrixCss, /font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif!important/);
+});
+
+test("all empty form hints use a light regular-weight placeholder style", async () => {
+  const css = await readFile(new URL("../app/color-reset.css", import.meta.url), "utf8");
+  assert.match(css, /input::placeholder, textarea::placeholder/);
+  assert.match(css, /font-weight:\s*400\s*!important/);
+  assert.match(css, /color:\s*#9aa59f\s*!important/);
+});
+
 test("talent publishing accepts a compressed WebP image under 3 MB", async () => {
   const [page, worker] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),

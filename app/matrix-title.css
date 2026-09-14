@@ -1,2 +1,8 @@
 .company-title h3{gap:var(--space-tight);font-family:Arial,"PingFang SC",sans-serif}
 .company-logo-image{flex:0 0 var(--size-brand-mark);width:var(--size-brand-mark);height:var(--size-brand-mark)}
+
+/* 图谱卡片的 Logo 固定为紧凑方形，卡片高度随内容收起。 */
+.matrix-grid{align-items:stretch!important;grid-auto-rows:1fr}.company-card{min-height:310px!important;height:100%!important;align-self:stretch!important}.company-card footer{margin-top:auto!important}.company-logo-image{width:40px!important;height:40px!important;flex:0 0 40px!important;object-fit:contain!important;object-position:center!important}@media(max-width:720px){.matrix-grid{grid-auto-rows:auto}.company-card{height:auto!important}}
+
+/* 全站数据、日期与计数使用无衬线数字。 */
+body{font-variant-numeric:tabular-nums}.profile-stats b,.network-total b,.resource-grid b,.company-title b,.company-title b small,.today,.today time,.talent-switch span,.proof-grid article>span,.visitor-summary strong,.profile-visitors b,.partner-track b,.business-grid span,.resource-grid .resource-group-head b,.analysis-search b,.business-resource-title b,.article-reader-meta,.article-page time{font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif!important;font-variant-numeric:tabular-nums}

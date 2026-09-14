@@ -39,6 +39,29 @@ async function compressUploadedImage(file: File) {
   throw new Error("图片压缩后仍超过 3MB，请换一张更小的图片。");
 }
 
+async function compressMatrixLogo(file: File) {
+  if (!/^image\/(png|jpe?g|webp)$/i.test(file.type)) throw new Error("请选择 PNG、JPG 或 WebP 图片。");
+  const source = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image(); const url = URL.createObjectURL(file);
+    image.onload = () => { URL.revokeObjectURL(url); resolve(image); };
+    image.onerror = () => { URL.revokeObjectURL(url); reject(new Error("图片无法读取，请换一张再试。")); };
+    image.src = url;
+  });
+  const scale = Math.min(1, 640 / Math.max(source.width, source.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(source.width * scale));
+  canvas.height = Math.max(1, Math.round(source.height * scale));
+  canvas.getContext("2d")?.drawImage(source, 0, 0, canvas.width, canvas.height);
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", .82));
+  if (!blob || blob.size > 2 * 1024 * 1024) throw new Error("公司 Logo 压缩后仍超过 2MB，请换一张更小的图片。");
+  return new Promise<{ data: string; url: string }>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve({ data: String(reader.result), url: URL.createObjectURL(blob) });
+    reader.onerror = () => reject(new Error("图片压缩失败，请重试。"));
+    reader.readAsDataURL(blob);
+  });
+}
+
 const notes = [
   { title: "13万美元大R挂首页，不怕被竞品挖走吗？", text: "22 赞", tag: "产品观察", cover: "/notes/latest-1.webp", href: "https://www.xiaohongshu.com/user/profile/6a559ddd000000000e03d001" },
   { title: "TopTop资深产品Ray，说透了什么叫本地化", text: "34 赞", tag: "行业访谈", cover: "/notes/latest-2.webp", href: "https://www.xiaohongshu.com/user/profile/6a559ddd000000000e03d001" },
@@ -192,7 +215,7 @@ export default function Home() {
         </nav>
       </header>
 
-      {tab === "home" ? <HomeView now={now} /> : tab === "analysis" ? <CompanyAnalysisView admin={admin} /> : tab === "matrix" ? <MatrixView /> : tab === "talent" ? <TalentView admin={admin} onLogout={logout} /> : <BusinessView />}
+      {tab === "home" ? <HomeView now={now} /> : tab === "analysis" ? <CompanyAnalysisView admin={admin} /> : tab === "matrix" ? <MatrixView admin={admin} /> : tab === "talent" ? <TalentView admin={admin} onLogout={logout} /> : <BusinessView />}
       {loginOpen && <AdminLogin onClose={() => setLoginOpen(false)} onSuccess={() => { setAdmin(true); setLoginOpen(false); setTab("talent"); }} />}
       <button className="community-fab" type="button" onClick={() => setCommunityOpen(true)} aria-label="打开语聊出海交流群二维码"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 1 0-3.46-6A5 5 0 1 0 8 12c-3.31 0-6 2-6 4.5V19h11v-2.5c0-1.22-.52-2.32-1.38-3.17A7.4 7.4 0 0 1 16 12c3.31 0 6 2 6 4.5V19h-7v-2.5c0-1.25-.42-2.41-1.14-3.4A5.9 5.9 0 0 0 11.5 12 5 5 0 0 0 16 11Z" /></svg></button>
       {communityOpen && <div className="community-modal" role="dialog" aria-modal="true" aria-labelledby="community-dialog-title" onClick={(event) => { if (event.target === event.currentTarget) setCommunityOpen(false); }}><section><header className="community-modal-header"><p>交流群 <span>/ COMMUNITY</span></p><button type="button" autoFocus onClick={() => setCommunityOpen(false)} aria-label="关闭社群二维码">×</button></header><div className="community-modal-body"><article className="community-qr-card"><h2 id="community-dialog-title">群聊：小骆 🐫 语聊出海交流 2 群</h2><img src="/community-qr.jpg" alt="小骆语聊出海交流 2 群二维码" /><p>该二维码 9 月 11 日前有效</p><a className="community-save" href="/community-qr.jpg" download="xiaoluo-community-qr.jpg" aria-label="保存小骆语聊出海交流 2 群二维码"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>保存二维码</a></article></div></section></div>}
@@ -290,16 +313,48 @@ function CompanyAnalysisView({ admin }: { admin: boolean }) {
   </>;
 }
 
-function MatrixView() {
+type MatrixRecord = { id: string; company: string; products: string[]; category: string; logoUrl: string; note: string; sourceCompany: string; deleted: boolean };
+type MatrixEntry = MatrixRecord & { tone: string; isBuiltIn: boolean };
+const builtInMatrixId = (company: string) => `atlas:${company}`;
+
+function MatrixView({ admin }: { admin: boolean }) {
   const [query, setQuery] = useState("");
-  const normalizedQuery = query.trim().toLowerCase();
-  const shownCompanies = matrixCompanies.filter((item) => !normalizedQuery || [item.company, ...item.products].join(" ").toLowerCase().includes(normalizedQuery));
+  const [records, setRecords] = useState<MatrixRecord[]>([]);
+  const [editor, setEditor] = useState<MatrixEntry | null>(null);
+  const load = async () => { const response = await fetch("/api/matrix", { cache: "no-store" }); if (response.ok) setRecords((await response.json()).items || []); };
+  useEffect(() => { void load(); }, []);
+  const overrides = new Map(records.filter((record) => record.sourceCompany).map((record) => [record.sourceCompany, record]));
+  const builtIns = matrixCompanies.map((item) => {
+    const override = overrides.get(item.company);
+    return { id: override?.id || builtInMatrixId(item.company), company: override?.company || item.company, products: override?.products || item.products, category: override?.category || item.tone, logoUrl: override?.logoUrl || companyLogos[item.company] || "", note: override?.note || companyEntityNotes[item.company] || "", sourceCompany: item.company, deleted: override?.deleted || false, tone: override?.category || item.tone, isBuiltIn: true };
+  }).filter((item) => !item.deleted);
+  const additions = records.filter((record) => !record.sourceCompany && !record.deleted).map((record) => ({ ...record, tone: record.category, isBuiltIn: false }));
+  const companies = [...builtIns, ...additions];
+  const shownCompanies = companies.filter((item) => !query.trim() || [item.company, ...item.products].join(" ").toLowerCase().includes(query.trim().toLowerCase()));
+  const remove = async (item: MatrixEntry) => {
+    if (!confirm(`确定删除「${item.company}」吗？`)) return;
+    const override = records.find((record) => record.sourceCompany === item.sourceCompany);
+    const body = item.isBuiltIn ? { company: item.company, products: item.products, category: item.category, note: item.note, sourceCompany: item.sourceCompany, deleted: true } : undefined;
+    const endpoint = item.isBuiltIn ? (override ? `/api/article-admin/matrix/${override.id}` : "/api/article-admin/matrix") : `/api/article-admin/matrix/${item.id}`;
+    const method = item.isBuiltIn ? (override ? "PATCH" : "POST") : "DELETE";
+    const response = await fetch(endpoint, { method, credentials: "same-origin", headers: body ? { "Content-Type": "application/json" } : undefined, body: body ? JSON.stringify(body) : undefined });
+    if (!response.ok) alert("删除失败，请稍后重试。"); else await load();
+  };
   return <>
-    <PageHeader eyebrow="PRODUCT ATLAS" title="出海产品矩阵" description={`收录 ${matrixCompanies.length} 个公司 / 团队、${matrixCompanies.reduce((sum, item) => sum + item.count, 0)} 款产品，归属与状态持续核验。`} />
-    <section className="matrix-section shell"><label className="matrix-search"><span>搜索公司或产品</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="例如：Yalla、Litmatch、BIGO" /><b>{shownCompanies.length} 条结果</b></label>{shownCompanies.length ? <div className="matrix-grid">{shownCompanies.map((item) => { const logo = companyLogos[item.company]; const entityNote = companyEntityNotes[item.company]; return <article className="company-card" key={item.company}><div className="company-title"><span>图谱收录</span><h3>{logo && <img className="company-logo-image" src={logo} alt={`${item.company} logo`} />}{item.company}</h3><b>{item.count}<small> 款产品</small></b></div><div className="product-tags">{item.products.map((product, index) => <i className={`${item.tone}-${index % 4}`} key={product}>{product}</i>)}</div>{entityNote && <p className="company-entity-note">{entityNote}</p>}<footer><span>来源：小骆产品图谱</span><button>查看档案 →</button></footer></article>})}</div> : <div className="matrix-empty">没有匹配结果，试试公司名或任一产品名。</div>}</section>
+    <PageHeader eyebrow="PRODUCT ATLAS" title="出海产品矩阵" description={`收录 ${companies.length} 个公司 / 团队、${companies.reduce((sum, item) => sum + item.products.length, 0)} 款产品，归属与状态持续核验。`} aside={admin && <button className="primary matrix-publish-button" onClick={() => setEditor({ id: "", company: "", products: [], category: "voice", logoUrl: "", note: "", sourceCompany: "", deleted: false, tone: "voice", isBuiltIn: false })}>发布公司 ＋</button>} />
+    <section className="matrix-section shell"><label className="matrix-search"><span>搜索公司或产品</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="例如：Yalla、Litmatch、BIGO" /><b>{shownCompanies.length} 条结果</b></label>{shownCompanies.length ? <div className="matrix-grid">{shownCompanies.map((item) => <article className="company-card" key={item.id}><div className="company-title"><h3>{item.logoUrl && <img className="company-logo-image" src={item.logoUrl} alt={`${item.company} logo`} />}{item.company}</h3><b>{item.products.length}<small> 款产品</small></b></div><div className="product-tags">{item.products.map((product, index) => <i className={`${item.tone}-${index % 4}`} key={product}>{product}</i>)}</div>{item.note && <p className="company-entity-note">{item.note}</p>}<footer><span>来源：小骆产品图谱</span>{admin ? <span className="matrix-admin-actions"><button onClick={() => setEditor(item)}>编辑</button><button className="danger" onClick={() => void remove(item)}>删除</button></span> : <button>查看档案 →</button>}</footer></article>)}</div> : <div className="matrix-empty">没有匹配结果，试试公司名或任一产品名。</div>}</section>
     <section className="matrix-callout shell"><div><p className="eyebrow">CONTRIBUTE TO THE ATLAS</p><h2>这张图谱，<br />应该由行业一起补全。</h2></div><div><p>欢迎提交公司与产品线索，审核后会补充到图谱。每家公司将持续核验归属、产品时间线、商店链接与核心市场。</p></div></section>
+    {editor && <MatrixEditor initial={editor} onClose={() => setEditor(null)} onSaved={async () => { setEditor(null); await load(); }} />}
     <footer className="shell"><span>© 2026 小骆 / PRODUCT ATLAS</span><button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>回到顶部 ↑</button></footer>
   </>;
+}
+
+function MatrixEditor({ initial, onClose, onSaved }: { initial: MatrixEntry; onClose: () => void; onSaved: () => void }) {
+  const [company, setCompany] = useState(initial.company); const [products, setProducts] = useState(initial.products.join("、")); const [note, setNote] = useState(initial.note); const [logo, setLogo] = useState(""); const [preview, setPreview] = useState(initial.logoUrl); const [saving, setSaving] = useState(false); const [error, setError] = useState("");
+  const selectLogo = async (file?: File) => { if (!file) return; setError(""); try { const output = await compressMatrixLogo(file); setLogo(output.data); setPreview(output.url); } catch (cause) { setError(cause instanceof Error ? cause.message : "公司 Logo 处理失败。"); } };
+  const persisted = initial.isBuiltIn && initial.id !== builtInMatrixId(initial.sourceCompany);
+  const submit = async (event: React.FormEvent) => { event.preventDefault(); setSaving(true); setError(""); const payload = { company, products: products.split(/[、,，]/).map((item) => item.trim()).filter(Boolean), category: initial.category || "voice", note, logo, sourceCompany: initial.sourceCompany }; try { const response = await fetch(initial.id && (!initial.isBuiltIn || persisted) ? `/api/article-admin/matrix/${initial.id}` : "/api/article-admin/matrix", { method: initial.id && (!initial.isBuiltIn || persisted) ? "PATCH" : "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || "发布失败，请稍后重试。"); onSaved(); } catch (cause) { setError(cause instanceof Error ? cause.message : "发布失败，请稍后重试。"); } finally { setSaving(false); } };
+  return <div className="matrix-submit-modal" role="dialog" aria-modal="true" aria-label="发布公司" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><form className="matrix-submit-dialog matrix-company-editor" onSubmit={(event) => void submit(event)}><div className="matrix-submit-top"><div><p className="eyebrow">PRODUCT ATLAS ADMIN</p><h2>{initial.id ? "编辑公司" : "发布公司"}</h2></div><button className="matrix-submit-close" type="button" onClick={onClose} aria-label="关闭">×</button></div><label>公司 / 团队名称<input autoFocus required value={company} onChange={(event) => setCompany(event.target.value)} placeholder="例如：某某科技有限公司" /></label><label>产品名称<textarea required value={products} onChange={(event) => setProducts(event.target.value)} placeholder="多个产品用顿号或逗号分隔" /></label><label>公司说明（可选）<textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="例如：归属或产品状态说明" /></label><label>公司 Logo（PNG、JPG、WebP）<input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => void selectLogo(event.target.files?.[0])} /><small>支持横版、竖版和方形 Logo，上传后按原比例转换为 WebP。</small></label>{preview && <img className="matrix-logo-preview" src={preview} alt="公司 Logo 预览" />}{error && <p className="matrix-submit-error">{error}</p>}<div className="matrix-submit-actions"><button type="button" onClick={onClose}>取消</button><button className="primary" type="submit" disabled={saving}>{saving ? "正在保存…" : initial.id ? "保存修改" : "发布公司"}</button></div></form></div>;
 }
 
 function MatrixSubmissionModal({ onClose }: { onClose: () => void }) {
