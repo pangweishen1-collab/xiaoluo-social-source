@@ -676,19 +676,21 @@ test("public talent market keeps publishing controls inside admin mode", async (
   assert.match(talentView, /\{admin && <section className="talent-callout shell">/);
 });
 
-test("home shows three desktop notes and switches to a compact mobile media list", async () => {
+test("home shows four desktop notes and switches to a compact mobile media list", async () => {
   const [page, css, app] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/app-light.css", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /notes\.slice\(0, 3\)\.map/);
+  assert.match(page, /notes\.slice\(0, 4\)\.map/);
   assert.match(css, /\.home-theme \.notes\.notes-list\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/);
   assert.match(css, /\.home-theme \.note\.note-list-item\{display:grid!important;grid-template-columns:112px minmax\(0,1fr\)!important/);
   assert.match(app, /@media \(max-width: 720px\)[\s\S]*\.home-theme \.notes\.notes-list \{ grid-template-columns: 1fr !important; gap: var\(--space-content\) !important; \}/);
   assert.match(app, /\.home-theme \.note\.note-list-item \{[\s\S]*grid-template-columns: 112px minmax\(0, 1fr\);[\s\S]*padding: var\(--space-content\) 0 !important;/);
   assert.match(app, /\.home-theme \.note\.note-list-item \.note-content h3 \{[\s\S]*-webkit-line-clamp: 2/);
+  assert.match(app, /\.home-theme \.notes\.notes-list \{ grid-template-columns: repeat\(4, minmax\(0, 1fr\)\) !important;/);
+  assert.match(app, /@media \(min-width: 721px\)[\s\S]*\.home-theme \.note\.note-list-item \.note-cover \{ aspect-ratio: 3 \/ 4 !important;/);
 });
 
 test("homepage uses a compact hero and recent-notes rhythm", async () => {
@@ -704,9 +706,10 @@ test("homepage uses a compact hero and recent-notes rhythm", async () => {
   assert.match(home, /\.home-theme \.section-top \{[^}]*margin-bottom: 24px[^}]*padding-bottom: 12px/);
   assert.match(home, /@media \(min-width: 721px\)[\s\S]*\.home-theme \.note-cover \{[^}]*aspect-ratio: 16 \/ 10/);
   assert.match(home, /@media \(min-width: 721px\)[\s\S]*\.home-theme \.note h3 \{[^}]*min-height: 0[^}]*-webkit-line-clamp: 2/);
-  assert.match(page, /13万美元大R挂首页，不怕被竞品挖走吗？/);
-  assert.match(page, /TopTop资深产品Ray，说透了什么叫本地化/);
-  assert.match(page, /一年营收150亿的欢聚，为什么复制不出第二/);
+  assert.match(page, /迅雷Q2涨39%，真正拉增长的竟然是海外语聊/);
+  assert.match(page, /海外社交业务暴涨52%！挚文集团Q2财报解读/);
+  assert.match(page, /沙特2030愿景，正在给出海语聊打开另一扇门/);
+  assert.match(page, /Yalla Ludo这个活动，值得产品和运营好好看/);
 });
 
 test("mobile header uses a compact tokenized rhythm", async () => {

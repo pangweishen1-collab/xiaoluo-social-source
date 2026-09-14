@@ -66,7 +66,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .admin-login-modal, .talent-modal { border-color: var(--app-line); border-radius: var(--radius-card); box-shadow: 0 20px 54px color-mix(in oklch, var(--color-brand-strong) 16%, transparent); }
 
 /* Latest notes use the original card grid on every screen size. */
-.home-theme .notes.notes-list { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 18px !important; }
+.home-theme .notes.notes-list { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 18px !important; }
 .home-theme .note.note-list-item {
   display: flex !important;
   flex-direction: column;
@@ -77,6 +77,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .home-theme .note.note-list-item .note-cover-link { width: 100%; margin: 0 !important; }
 .home-theme .note.note-list-item .note-cover { width: 100% !important; margin: 0 !important; }
 .home-theme .note.note-list-item .note-content { min-width: 0; padding: 17px 4px 4px !important; }
+
+@media (min-width: 721px) {
+  .home-theme .note.note-list-item { padding: 10px !important; }
+  .home-theme .note.note-list-item .note-cover { aspect-ratio: 3 / 4 !important; object-position: center top; }
+  .home-theme .note.note-list-item .note-content { padding: 10px 2px 2px !important; }
+  .home-theme .note.note-list-item .note-content h3 { margin: 6px 0 !important; font-size: 17px !important; font-weight: 400 !important; line-height: 1.4 !important; }
+  .home-theme .note.note-list-item .note-content > a { margin-top: 8px !important; }
+}
 
 @media (max-width: 720px) {
   .home-theme .notes.notes-list { grid-template-columns: 1fr !important; gap: var(--space-content) !important; }
@@ -93,7 +101,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .home-theme .note.note-list-item .note-cover { width: 112px !important; height: 112px !important; aspect-ratio: 1 !important; object-fit: cover !important; }
   .home-theme .note.note-list-item .note-content { display: block !important; padding: 0 !important; }
   .home-theme .note.note-list-item .note-content > span { font-size: 11px !important; }
-  .home-theme .note.note-list-item .note-content h3 { display: -webkit-box; min-height: 0 !important; margin: var(--space-tight) 0 !important; overflow: hidden; font-size: 17px !important; line-height: 1.35 !important; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .home-theme .note.note-list-item .note-content h3 { display: -webkit-box; min-height: 0 !important; margin: var(--space-tight) 0 !important; overflow: hidden; font-size: 16px !important; font-weight: 400 !important; line-height: 1.4 !important; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
   .home-theme .note.note-list-item .note-content p { margin: 0 !important; overflow: hidden; color: var(--color-muted) !important; font-size: 11px !important; line-height: 1.5 !important; text-overflow: ellipsis; white-space: nowrap; }
   .home-theme .note.note-list-item .note-content > a { display: none !important; }
 }
