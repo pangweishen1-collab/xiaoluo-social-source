@@ -1,0 +1,8 @@
+/* Keep every site dialog on the same 60% black scrim. */
+html body dialog::backdrop {
+  background: var(--color-overlay) !important;
+}
+
+html body :is(.admin-login-modal, .talent-modal, .matrix-submit-modal, .job-detail-modal) {
+  background: var(--color-overlay) !important;
+}

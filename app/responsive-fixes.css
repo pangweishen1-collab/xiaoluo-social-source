@@ -1,0 +1,81 @@
+/* Final responsive layer: keep legacy page styles from overriding shared UI. */
+html body .home-theme .hero-actions .text-button { display: inline-flex !important; }
+html body a, html body a *, html body button { text-decoration: none !important; }
+html body button, html body .text-button, html body a.primary { box-shadow: none !important; }
+html body .text-button { border: 0 !important; }
+html body .home-theme .section-top,
+html body .nav, html body .article-nav-bar {
+  border: 0 !important;
+}
+html body .home-theme.research-home .visitor-strip {
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-card);
+}
+html body .home-theme.research-home .visitor-strip > div { border: 0 !important; }
+html body .home-theme.research-home .visitor-strip > div + div {
+  border-left: 1px solid var(--color-border) !important;
+}
+@media (max-width: 720px) {
+  html body .home-theme.research-home .visitor-strip > div:nth-child(3) { border-left: 0 !important; }
+}
+html body .home-theme .note-cover-link { padding: 0 !important; background: #fff !important; }
+html body .home-theme .note-cover { background: #fff !important; transform: none !important; }
+html body .home-theme .note-content h3 a { color: var(--color-text) !important; font: inherit !important; padding: 0 !important; }
+.admin-login-modal, .talent-modal, .matrix-submit-modal, .job-detail-modal {
+  border-radius: 0 !important;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+@media (min-width: 721px) and (max-width: 1024px) {
+  .home-theme .notes.notes-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .home-research-grid { grid-template-columns: 1fr; }
+  .home-methods { gap: 16px; }
+  .home-methods article { padding: 20px; }
+}
+@media (max-width: 720px) {
+  .home-theme .hero h1 { font-size: clamp(30px, 8.5vw, 38px) !important; line-height: 1.3 !important; max-width: none !important; }
+  .home-theme .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .home-theme .hero-actions > * { min-height: 44px; }
+  .home-theme .visitor-strip { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; gap: 20px 8px !important; padding: 20px 12px !important; }
+  .home-theme .visitor-strip > div { grid-column: span 2; padding: 0 !important; min-width: 0; }
+  .home-theme .visitor-strip > div:nth-child(-n+2) { grid-column: span 3; }
+  .home-theme .visitor-strip b { font-size: 25px !important; letter-spacing: 0 !important; overflow-wrap: anywhere; }
+  .home-theme .visitor-strip span { font-size: 12px !important; line-height: 1.5; }
+  .home-theme .section-top { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .home-theme .section-top h2 { font-size: 26px !important; line-height: 1.35 !important; }
+  .home-theme .section-top > a, .home-theme .section-top > button { min-height: 44px; display: inline-flex; align-items: center; }
+  .research-home .section-intro { margin-top: 0; }
+  .home-theme .notes.notes-list { gap: 16px !important; }
+  .home-theme .note.note-list-item { padding: 0 !important; gap: 0 !important; grid-template-columns: 116px minmax(0, 1fr) !important; }
+  .home-theme .note.note-list-item .note-cover-link { width: 96px !important; height: 128px !important; margin: 10px !important; aspect-ratio: 3 / 4; }
+  .home-theme .note.note-list-item .note-content { padding: 10px 10px 10px 0 !important; }
+  .home-theme .note.note-list-item .note-cover { width: 100% !important; height: 100% !important; }
+  .home-theme.research-home .note.note-list-item .note-content h3 { margin: 0 !important; -webkit-line-clamp: 3; font-size: 15px !important; line-height: 1.6 !important; }
+  .home-theme .note-content h3 a { display: block; padding: 0 !important; font: inherit !important; color: inherit; }
+  .admin-login-form input, .talent-form input, .talent-form textarea,
+  .talent-form select, .matrix-submit-dialog input, .matrix-submit-dialog textarea { font-size: 16px !important; min-height: 44px; }
+  .admin-login-form, .talent-form, .matrix-submit-dialog, .job-detail-panel, .job-detail-modal section {
+    max-height: calc(100dvh - 28px) !important;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+/* Only separate the three homepage atlas metrics, not the surrounding sections. */
+html body .research-home .home-atlas-stats {
+  gap: 0;
+}
+html body .research-home .home-atlas-stats > div {
+  min-width: 0;
+  padding-inline: var(--space-component);
+}
+html body .research-home .home-atlas-stats > div:first-child {
+  padding-left: 0;
+}
+html body .research-home .home-atlas-stats > div + div {
+  border-left: 1px solid var(--color-border) !important;
+}
+@media (max-width: 640px) {
+  html body .research-home .home-atlas-stats > div {
+    padding-inline: var(--space-tight);
+  }
+}

@@ -1,0 +1,59 @@
+/* One lift token for public content surfaces; never animate navigation/layout. */
+html body :is(.note-list-item, .analysis-list > article, .company-card, .job-card, .talent-card, .practical-tool-card, .proof-grid article, .partner-track article, .collab-services > article, .collab-case, .featured-link, .daily-report) {
+  transition: transform var(--motion-duration) ease, box-shadow var(--motion-duration) ease, border-color var(--motion-duration) ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  html body :is(.home-theme, .research-archive, .matrix-explorer, .collab-page, main, .daily-reports) :is(.note-list-item, .analysis-list > article, .company-card, .job-card, .talent-card, .practical-tool-card, .proof-grid article, .partner-track article, .collab-services > article, .collab-case, .featured-link, .daily-report):hover {
+    transform: var(--motion-lift) !important;
+    border-color: var(--color-brand) !important;
+    box-shadow: var(--shadow-card-hover) !important;
+  }
+  /* A nested action does not lift independently from its card. */
+  html body :is(.collab-services, .company-card, .job-card, .talent-card) button:hover { transform: none; box-shadow: none; }
+}
+html body .site-navigation .brand { display: flex; align-items: center; flex-wrap: wrap; column-gap: 10px; row-gap: 6px; }
+html body .site-navigation .avatar-login { flex: 0 0 40px; }
+html body .site-navigation .site-brand-name { font-size: 15px; font-weight: 600; line-height: 1.5; color: var(--color-text); white-space: nowrap; letter-spacing: 0; }
+html body .site-navigation .admin-exit { font-size: 12px; padding: 6px 8px; }
+@media (min-width: 1121px) { html body .site-navigation .brand .admin-exit { flex-basis: auto; } }
+
+/* Editorial split: a quiet left introduction and a vertical evidence column. */
+html body .collab-page .collab-value { display: grid; grid-template-columns: minmax(180px, .7fr) minmax(0, 1.6fr); gap: 64px; padding-block: 36px; border-block: 1px solid var(--color-border); }
+.collab-value .collab-section-head { max-width: 300px; }
+.collab-value .collab-value-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+.collab-value-grid > article { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px 20px; border: 0; border-radius: 0; border-bottom: 1px solid var(--color-border); padding: 24px 12px; }
+.collab-value-grid > article:first-child { padding-top: 0; }
+.collab-value-grid > article:last-child { border-bottom: 0; }
+.collab-value-grid > article > :not(.collab-number) { grid-column: 2; }
+.collab-value-grid .collab-number { grid-row: 1; padding-top: 5px; }
+.collab-value-grid .collab-value-benefit { padding-top: 0; border: 0; margin: 0; }
+.collab-value-grid .collab-value-benefit strong { display: inline; }
+.collab-value-grid .collab-service-link { justify-content: flex-start; gap: 16px; padding-top: 0; }
+
+/* Alternating wide/narrow service tiles instead of four identical boxes. */
+.collab-page .collab-business-types { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
+.collab-business-types > article { grid-column: span 2; padding: 32px; background: #f8fafb; border: 1px solid #e5eaed; position: relative; }
+.collab-business-types > article:first-child, .collab-business-types > article:last-child { grid-column: span 3; background: #f3f8f6; }
+.collab-business-types .collab-number { font-size: 28px; font-weight: 400; line-height: 1; opacity: .7; margin-bottom: 12px; }
+.collab-business-types .collab-type-brief { background: rgba(255,255,255,.7); margin-top: 8px; }
+.collab-business-types .collab-service-link { margin-top: 8px; border-top: 1px solid var(--color-border); min-height: 44px; }
+
+/* Cooperation formats become a compact two-column numbered directory. */
+.collab-page section[aria-labelledby="collab-services-title"] > .collab-services { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; }
+.collab-page section[aria-labelledby="collab-services-title"] article { display: grid; grid-template-columns: 32px minmax(0, 1fr); border: 0; border-top: 1px solid var(--color-border); border-radius: 0; padding: 28px 8px; gap: 12px 16px; }
+.collab-page section[aria-labelledby="collab-services-title"] article > :not(.collab-number) { grid-column: 2; }
+.collab-page section[aria-labelledby="collab-services-title"] .collab-number { grid-row: 1; padding-top: 5px; }
+.collab-page section[aria-labelledby="collab-services-title"] .collab-tags { margin: 0; padding: 0; }
+.collab-page section[aria-labelledby="collab-services-title"] .collab-service-link { padding-top: 4px; min-height: 44px; }
+.collab-page .collab-case { background: #fafbfc; border: 0; }
+.collab-page .collab-contact { border-left: 4px solid var(--color-brand); }
+@media (max-width: 720px) {
+  html body .collab-page .collab-value { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-block: 24px; }
+  .collab-value .collab-section-head { max-width: none; }
+  .collab-page .collab-business-types, .collab-page section[aria-labelledby="collab-services-title"] > .collab-services { grid-template-columns: minmax(0, 1fr); }
+  .collab-business-types > article, .collab-business-types > article:first-child, .collab-business-types > article:last-child { grid-column: auto; padding: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body :is(.note-list-item, .analysis-list > article, .company-card, .job-card, .talent-card, .practical-tool-card, .proof-grid article, .partner-track article, .collab-services > article, .collab-case, .featured-link, .daily-report),
+  html body :is(.home-theme, .research-archive, .matrix-explorer, .collab-page, main, .daily-reports) :is(.note-list-item, .analysis-list > article, .company-card, .job-card, .talent-card, .practical-tool-card, .proof-grid article, .partner-track article, .collab-services > article, .collab-case, .featured-link, .daily-report):hover { transform: none !important; transition: none !important; }
+}

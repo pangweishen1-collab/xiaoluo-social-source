@@ -1,24 +1,26 @@
 const key = (slug) => `xiaoluo:article:${slug}`;
+const maxAge = 30000;
+function browserStorage() { try { return globalThis.sessionStorage; } catch { return null; } }
 const pending = new Map();
 const prefetchedRoutes = new Set();
 
-export function readCachedArticle(slug, storage = globalThis.sessionStorage) {
+export function readCachedArticle(slug, storage = browserStorage()) {
   if (!slug || !storage) return null;
-  try { return JSON.parse(storage.getItem(key(slug)) || "null")?.item || null; } catch { storage.removeItem(key(slug)); return null; }
+  try { const cached = JSON.parse(storage?.getItem(key(slug)) || "null"); return cached && Date.now() - cached.at < maxAge ? cached.item : null; } catch { return null; }
 }
 
-export async function prefetchArticle(slug, version = "", { storage = globalThis.sessionStorage, fetcher = globalThis.fetch } = {}) {
-  if (!slug || !storage || !fetcher) return null;
+export async function prefetchArticle(slug, version = "", { storage = browserStorage(), fetcher = globalThis.fetch } = {}) {
+  if (!slug || !fetcher) return null;
   try {
     const cached = JSON.parse(storage.getItem(key(slug)) || "null");
-    if (cached?.item && cached.version === version) return cached.item;
-  } catch { storage.removeItem(key(slug)); }
+    if (cached?.item && cached.version === version && Date.now() - cached.at < maxAge) return cached.item;
+  } catch { /* Cache access must not prevent a network read. */ }
   const requestKey = `${slug}:${version}`;
   if (pending.has(requestKey)) return pending.get(requestKey);
   const request = fetcher(`/api/articles/${encodeURIComponent(slug)}`, { credentials: "same-origin" }).then(async (response) => {
     if (!response.ok) throw new Error("文章暂时无法读取。");
     const item = (await response.json()).item;
-    storage.setItem(key(slug), JSON.stringify({ version, item }));
+    try { storage?.setItem(key(slug), JSON.stringify({ version, item, at: Date.now() })); } catch { /* Storage may be full or disabled. */ }
     return item;
   }).finally(() => pending.delete(requestKey));
   pending.set(requestKey, request);

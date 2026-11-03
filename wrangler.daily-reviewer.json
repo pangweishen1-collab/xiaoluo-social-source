@@ -1,0 +1,8 @@
+{
+  "name": "xiaoluo-daily-reviewer",
+  "main": "worker/daily-automation/reviewer.mjs",
+  "compatibility_date": "2026-05-15",
+  "workers_dev": false,
+  "ai": { "binding": "AI" },
+  "services": [{ "binding": "PUBLISHER", "service": "xiaoluo-daily-publisher" }]
+}

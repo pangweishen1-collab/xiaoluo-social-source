@@ -1,0 +1,11 @@
+{
+  "name": "xiaoluo-daily-generator",
+  "main": "worker/daily-automation/generator.mjs",
+  "compatibility_date": "2026-05-15",
+  "workers_dev": false,
+  "triggers": { "crons": ["0 3 * * *"] },
+  "ai": { "binding": "AI" },
+  "services": [
+    { "binding": "REVIEWER", "service": "xiaoluo-daily-reviewer" }
+  ]
+}

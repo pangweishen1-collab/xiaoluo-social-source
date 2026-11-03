@@ -1,0 +1,13 @@
+/* Only the renderer's body-emphasis marker, never ordinary strong/em or links. */
+.daily-report-body em.daily-markdown-highlight {
+  color: #2563EB;
+  font-weight: 700;
+  font-style: normal;
+  font-size: inherit;
+  line-height: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+}

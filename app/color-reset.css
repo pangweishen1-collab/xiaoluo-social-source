@@ -426,9 +426,9 @@ hr { display: none !important; }
 .matrix-submit-top h2, .matrix-submit-dialog p { margin: 0; }
 .matrix-submit-close { appearance: none; border: 0; background: transparent; color: #5e716a; font-size: 28px; line-height: 1; cursor: pointer; }
 .matrix-submit-dialog label { display: grid; gap: 8px; color: #183a30; font-weight: 700; }
-.matrix-submit-dialog input, .matrix-submit-dialog textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--color-highlight-border); border-radius: var(--radius-control); padding: 12px 13px; color: var(--color-text); background: var(--color-surface); font: inherit; }
+.matrix-submit-dialog input, .matrix-submit-dialog textarea, .matrix-submit-dialog select { width: 100%; min-height: 44px; box-sizing: border-box; border: 1px solid var(--color-highlight-border); border-radius: var(--radius-control); padding: 12px 13px; color: var(--color-text); background: var(--color-surface); font: inherit; }
 .matrix-submit-dialog textarea { min-height: 112px; resize: vertical; }
-.matrix-submit-dialog input:focus, .matrix-submit-dialog textarea:focus { outline: 0; border-color: var(--color-brand); box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-brand) 13%, transparent); }
+.matrix-submit-dialog input:focus, .matrix-submit-dialog textarea:focus, .matrix-submit-dialog select:focus { outline: 0; border-color: var(--color-brand); box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-brand) 13%, transparent); }
 .matrix-submit-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .matrix-submit-actions button { border-radius: var(--radius-control); padding: 11px 15px; font: inherit; font-weight: 750; cursor: pointer; }
 .matrix-submit-actions button:first-child { border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-muted); }

@@ -1,8 +1,13 @@
 /** Cloudflare Worker entry point for the vinext-starter template. */
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
-import { handleArticleApi } from "./articles";
+import { handleArticleApi, authenticated } from "./articles";
+import { handleDanmaku } from "./danmaku";
+import { handleBusinessInquiry, listBusinessInquiries } from "./business-inquiries";
+import { handleDurableHotList } from "./hot-list";
+import { isCrossOriginMutation } from "../shared/request-security.mjs";
 import { IMAGE_UPLOAD_RULES, webpBytesFromDataUrl } from "../shared/image-upload.mjs";
+import { withAssetCache } from "../shared/asset-cache.mjs";
 
 interface Env {
   ASSETS: Fetcher;
@@ -17,6 +22,9 @@ interface Env {
   MEDIA: R2Bucket;
   ARTICLE_ADMIN_USERNAME?: string;
   ARTICLE_ADMIN_PASSWORD_HASH?: string;
+  BUSINESS_EMAIL_API_KEY?: string;
+  BUSINESS_EMAIL_FROM?: string;
+  BUSINESS_EMAIL_TO?: string;
 }
 
 interface ExecutionContext {
@@ -282,6 +290,15 @@ async function deleteMatrixSubmission(env: Env, id: string) {
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
+    if (url.pathname === "/api/danmaku") return handleDanmaku(request, env.DB);
+    if (url.pathname.startsWith("/api/") && isCrossOriginMutation(request)) return json({ error: "不允许跨站修改数据。" }, undefined, 403);
+    if (url.pathname === "/api/business-inquiries") return handleBusinessInquiry(request, env);
+    if (url.pathname === "/api/admin/business-inquiries") return listBusinessInquiries(request, env, await authenticated(request, env));
+    if (url.pathname === "/api/hot-list") return handleDurableHotList(request, {
+      db: env.DB,
+      cache: typeof caches === "undefined" ? undefined : caches.default,
+      waitUntil: (promise) => ctx.waitUntil(promise),
+    });
 
     const articleResponse = await handleArticleApi(request, env, url);
     if (articleResponse) return articleResponse;
@@ -391,7 +408,7 @@ const worker = {
     }
 
     if (url.pathname.startsWith("/_next/") || (url.pathname !== "/" && !url.pathname.startsWith("/api/") && /\.[a-z0-9]+$/i.test(url.pathname))) {
-      return env.ASSETS.fetch(request);
+      return withAssetCache(await env.ASSETS.fetch(request), url.pathname);
     }
 
     return handler.fetch(request, env, ctx);

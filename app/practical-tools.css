@@ -12,3 +12,36 @@
 .practical-tool-card b{font-size:13px;color:var(--color-brand-strong)}
 @media(hover:hover) and (pointer:fine){.practical-tool-card:hover{border-color:var(--color-brand);background:var(--color-surface);transform:var(--motion-lift);box-shadow:var(--shadow-card-hover)}}
 @media(max-width:720px){.practical-tools{padding:0 0 65px}.practical-tools .section-top{margin-bottom:18px}.practical-tools .section-top h2{font-size:34px}.practical-tools-list{grid-template-columns:1fr;gap:10px}.practical-tool-card{min-height:0;padding:20px}.practical-tool-logo{width:38px;height:38px;margin-bottom:17px}.practical-tool-card h3{font-size:22px}}
+.compact-tools.practical-tools{padding-bottom:var(--space-section)}
+html body .compact-tools .section-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
+.compact-tools .tools-total{font-size:14px;color:var(--color-muted);white-space:nowrap}
+.compact-tools .tools-directory{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+html body .compact-tools .tool-row{
+  position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:stretch;min-width:0;min-height:178px;
+  padding:22px 24px;border:1px solid var(--color-border);border-radius:var(--radius-card);
+  background:linear-gradient(155deg,var(--color-surface) 68%,var(--color-surface-subtle));
+  color:var(--color-text);text-decoration:none;overflow:hidden;
+  transition:transform .32s cubic-bezier(.2,.75,.2,1),border-color .32s ease,box-shadow .32s ease,background-color .32s ease
+}
+.compact-tools .tool-row::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--color-brand),#a8cbb5);transform:scaleX(0);transform-origin:left;transition:transform .42s cubic-bezier(.2,.75,.2,1)}
+.compact-tools .tool-row::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 36%,rgba(255,255,255,.48) 50%,transparent 64%);pointer-events:none;transform:translateX(-145%) skewX(-12deg);transition:transform .78s ease}
+.compact-tools .tool-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:17px;min-width:0}
+.compact-tools .tool-copy{min-width:0}
+.compact-tools .tool-site-logo{position:relative;display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border:1px solid var(--color-border);border-radius:13px;background:var(--color-surface-subtle);overflow:hidden;color:var(--color-brand-strong);font-size:20px;font-weight:600;transition:transform .32s ease,border-color .32s ease,box-shadow .32s ease}
+.compact-tools .tool-site-logo img{position:absolute;inset:5px;width:36px;height:36px;object-fit:contain;background:var(--color-surface-subtle)}
+.compact-tools .tool-group{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border-radius:999px;background:var(--color-surface-subtle);color:var(--color-brand-strong);font:500 12px/1.4 var(--font-sans);white-space:nowrap;transition:background-color .32s ease,color .32s ease,transform .32s ease}
+html body .compact-tools .tool-row h3{margin:0 0 5px;font:600 18px/1.35 var(--font-sans);letter-spacing:-.025em;color:var(--color-text);overflow-wrap:anywhere}
+html body .compact-tools .tool-row p{margin:0;font:400 14px/1.55 var(--font-sans);color:var(--color-muted);overflow-wrap:anywhere}
+html body .compact-tools .tool-row:focus-visible{outline:2px solid var(--color-brand);outline-offset:4px;border-color:var(--color-brand);box-shadow:0 14px 28px rgba(34,88,66,.12)}
+.compact-tools .tool-row:focus-visible::before{transform:scaleX(1)}
+.compact-tools .tools-note{margin:12px 0 0;font-size:12px;line-height:1.6;color:var(--color-muted)}
+@media(hover:hover) and (pointer:fine){
+  html body .compact-tools .tool-row:hover{transform:translateY(-5px);border-color:var(--color-brand);box-shadow:0 15px 30px rgba(34,88,66,.14)}
+  .compact-tools .tool-row:hover::before{transform:scaleX(1)}
+  .compact-tools .tool-row:hover::after{transform:translateX(145%) skewX(-12deg)}
+  .compact-tools .tool-row:hover .tool-site-logo{transform:translateY(-2px) scale(1.05);border-color:var(--color-brand);box-shadow:0 5px 12px rgba(34,88,66,.1)}
+  .compact-tools .tool-row:hover .tool-group{transform:translateY(-2px);background:var(--color-brand-soft)}
+}
+@media(max-width:1000px){.compact-tools .tools-directory{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.compact-tools .tools-directory{grid-template-columns:1fr;gap:12px}html body .compact-tools .tool-row{min-height:0;padding:18px 20px}.compact-tools .tool-card-top{margin-bottom:14px}}
+@media(prefers-reduced-motion:reduce){html body .compact-tools .tool-row,.compact-tools .tool-row::before,.compact-tools .tool-site-logo,.compact-tools .tool-group{transition:none}.compact-tools .tool-row::after{display:none}html body .compact-tools .tool-row:hover,.compact-tools .tool-row:hover .tool-site-logo,.compact-tools .tool-row:hover .tool-group{transform:none}}

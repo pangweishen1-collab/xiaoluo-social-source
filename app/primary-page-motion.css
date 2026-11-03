@@ -1,0 +1,255 @@
+/* A shared entrance rhythm for the first-level views. Animate only top-level
+   surfaces so cards keep their own hover transforms and reading remains stable. */
+@keyframes primary-page-rise {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes primary-page-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes research-card-reveal {
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html body :is(
+    .home-theme .home-research-grid > .home-research-card,
+    .matrix-explorer .matrix-grid > .company-card:nth-child(-n + 6),
+    .resource-market .job-grid > .job-card:nth-child(-n + 6),
+    .resource-market .talent-grid > .talent-card:nth-child(-n + 6)
+  ) {
+    animation: primary-page-fade .42s ease backwards;
+  }
+
+  html body .research-archive .analysis-list > article {
+    animation: research-card-reveal .56s cubic-bezier(.2, .7, .2, 1) both;
+    animation-delay: calc(100ms + var(--research-stagger, 0ms));
+  }
+
+  html body :is(
+    .research-archive > .page-header,
+    .matrix-explorer > .page-header,
+    .collab-page .business-photo-hero .page-header,
+    main > .page-header,
+    .daily-reports > .page-header
+  ) {
+    animation: primary-page-rise .58s cubic-bezier(.2, .7, .2, 1) backwards;
+  }
+
+  html body :is(
+    .research-archive .analysis-search,
+    .matrix-explorer > .weekly-product-broadcast,
+    .matrix-explorer > .atlas-toolbar,
+    .matrix-explorer > .company-regions,
+    .resource-market > .resource-market-tab-shell,
+    .daily-reports > .daily-layout
+  ) {
+    animation: primary-page-rise .58s .1s cubic-bezier(.2, .7, .2, 1) backwards;
+  }
+
+  html body :is(
+    .matrix-explorer > .matrix-section,
+    .resource-market > .resource-provider-panel,
+    .resource-market > #market-panel-jobs,
+    .collab-page > .collab-section:first-of-type
+  ) {
+    animation: primary-page-fade .62s .16s ease backwards;
+  }
+
+  html body .research-archive .analysis-list > article:focus-within .analysis-more::after {
+    transform: translate(3px, -3px);
+  }
+}
+
+/* Navigation and content cards share a visible, quiet hover/focus language. */
+html body .site-navigation > nav button::after {
+  transition: transform .24s cubic-bezier(.2, .7, .2, 1);
+}
+
+html body .site-navigation > nav button:not(.active):focus-visible {
+  color: var(--color-brand-strong) !important;
+}
+html body .site-navigation > nav button:not(.active):focus-visible::after {
+  transform: scaleX(1);
+}
+
+html body .research-archive .analysis-list h2,
+html body .collab-page .collab-plan h3,
+html body .collab-page .collab-business-types h3,
+html body .daily-reports .daily-report h2 {
+  transition: color .22s ease;
+}
+
+html body .research-archive .analysis-more::after {
+  content: "↗";
+  display: inline-block;
+  margin-left: 7px;
+  transition: transform .22s ease;
+}
+
+html body .research-archive .analysis-list > article:focus-within {
+  border-color: var(--color-brand) !important;
+  box-shadow: 0 16px 34px rgba(25, 71, 51, .1) !important;
+}
+
+html body .research-archive .analysis-list > article:focus-within h2,
+html body .collab-page .collab-plan:focus-within h3,
+html body .collab-page .collab-business-types article:focus-within h3,
+html body .daily-reports .daily-report:focus-within h2 {
+  color: var(--color-brand-strong);
+}
+
+html body .matrix-explorer .company-card:focus-within {
+  border-color: var(--color-brand) !important;
+  box-shadow: 0 20px 42px rgba(25, 71, 51, .13) !important;
+}
+
+html body .matrix-explorer .company-card {
+  transition: transform .32s cubic-bezier(.2, .7, .2, 1), box-shadow .32s ease, border-color .32s ease;
+}
+
+html body .matrix-explorer .company-card:focus-within::before {
+  transform: scaleX(1);
+}
+
+html body .daily-reports .daily-timeline a:focus-visible {
+  background: var(--color-brand-soft);
+  color: var(--color-brand-strong);
+}
+
+html body .resource-market .resource-market-tabs button[aria-selected="false"]:focus-visible {
+  background: #dbeae1;
+  color: var(--color-brand-strong);
+}
+
+html body .daily-reports .daily-report:focus-within summary::after {
+  border-color: var(--color-brand);
+  background: var(--color-brand-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html body .site-navigation > nav button:not(.active):hover,
+  html body .site-navigation > nav button:not(.active):focus-visible {
+    color: var(--color-brand-strong) !important;
+  }
+  html body .site-navigation > nav button:not(.active):is(:hover, :focus-visible)::after {
+    transform: scaleX(1);
+  }
+
+  html body .research-archive .analysis-list > article:hover {
+    transform: translateY(-3px) !important;
+    border-color: var(--color-brand) !important;
+    box-shadow: 0 16px 34px rgba(25, 71, 51, .1) !important;
+  }
+  html body .research-archive .analysis-list > article:hover h2,
+  html body .collab-page .collab-plan:hover h3,
+  html body .collab-page .collab-business-types article:hover h3,
+  html body .daily-reports .daily-report:hover h2 {
+    color: var(--color-brand-strong);
+  }
+  html body .research-archive .analysis-list > article:hover .analysis-more::after {
+    transform: translate(3px, -3px);
+  }
+
+  html body .matrix-explorer .company-card:hover {
+    transform: translateY(-5px) !important;
+    border-color: var(--color-brand) !important;
+    box-shadow: 0 20px 42px rgba(25, 71, 51, .13) !important;
+  }
+  html body .matrix-explorer .company-card:hover::before {
+    transform: scaleX(1);
+  }
+  html body .matrix-explorer .company-card:hover .atlas-card-logo {
+    transform: scale(1.04);
+    border-color: #bad9c7;
+    background: #f7fbf8;
+  }
+  html body .matrix-explorer .company-card:hover .atlas-products > span:not(.is-match) {
+    transform: translateX(2px);
+    background: #ebf4ee !important;
+  }
+
+  html body .resource-market .resource-market-tabs button[aria-selected="false"]:hover {
+    background: #dbeae1;
+    color: var(--color-brand-strong);
+  }
+  html body .resource-market .resource-provider-link:hover::after,
+  html body .resource-market .resource-provider-invite a:hover::after {
+    transform: translate(2px, -2px);
+  }
+  html body .resource-market :is(.resource-provider-link, .resource-provider-invite a)::after {
+    transition: transform .22s ease;
+  }
+
+  html body .collab-page .collab-plan:not(.collab-plan-featured):hover .collab-plan-action {
+    border-color: var(--color-brand);
+    background: var(--color-brand-soft);
+    color: var(--color-brand-strong);
+  }
+  html body .daily-reports .daily-timeline a:hover {
+    background: var(--color-brand-soft);
+    color: var(--color-brand-strong);
+  }
+  html body .daily-reports .daily-report:hover summary::after {
+    border-color: var(--color-brand);
+    background: var(--color-brand-soft);
+  }
+  html body .home-theme.research-home .note.note-list-item:focus-within .note-cover {
+    transform: scale(1.045) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html body :is(
+    .home-theme .home-research-grid > .home-research-card,
+    .research-archive .analysis-list > article,
+    .matrix-explorer .matrix-grid > .company-card:nth-child(-n + 6),
+    .resource-market .job-grid > .job-card:nth-child(-n + 6),
+    .resource-market .talent-grid > .talent-card:nth-child(-n + 6),
+    .research-archive > .page-header,
+    .research-archive .analysis-search,
+    .matrix-explorer > .page-header,
+    .matrix-explorer > .weekly-product-broadcast,
+    .matrix-explorer > .atlas-toolbar,
+    .matrix-explorer > .company-regions,
+    .matrix-explorer > .matrix-section,
+    .collab-page .business-photo-hero .page-header,
+    .collab-page > .collab-section:first-of-type,
+    main > .page-header,
+    .resource-market > .resource-market-tab-shell,
+    .resource-market > .resource-provider-panel,
+    .resource-market > #market-panel-jobs,
+    .daily-reports > .page-header,
+    .daily-reports > .daily-layout
+  ) { animation: none !important; }
+
+  html body .site-navigation > nav button::after,
+  html body .research-archive .analysis-list h2,
+  html body .research-archive .analysis-more::after,
+  html body .matrix-explorer .company-card::before,
+  html body .matrix-explorer .atlas-card-logo,
+  html body .matrix-explorer .atlas-products > span,
+  html body .collab-page .collab-plan h3,
+  html body .collab-page .collab-business-types h3,
+  html body .daily-reports .daily-report h2,
+  html body .resource-market .resource-provider-link::after,
+  html body .resource-market .resource-provider-invite a::after {
+    transition: none !important;
+  }
+
+  html body .research-archive .analysis-list > article:hover,
+  html body .matrix-explorer .company-card:hover,
+  html body .research-archive .analysis-list > article:focus-within .analysis-more::after,
+  html body .research-archive .analysis-list > article:hover .analysis-more::after,
+  html body .matrix-explorer .company-card:hover::before,
+  html body .matrix-explorer .company-card:focus-within::before,
+  html body .matrix-explorer .company-card:hover .atlas-card-logo,
+  html body .matrix-explorer .company-card:hover .atlas-products > span,
+  html body .home-theme.research-home .note.note-list-item:focus-within .note-cover {
+    transform: none !important;
+  }
+}

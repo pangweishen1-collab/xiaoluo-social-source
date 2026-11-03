@@ -1,0 +1,5 @@
+{
+  "name": "xiaoluo-typecheck-only",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"]
+}

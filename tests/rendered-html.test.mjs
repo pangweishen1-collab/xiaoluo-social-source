@@ -31,10 +31,55 @@ test("server-renders the Xiaoluo public homepage", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>小骆｜社交产品资讯与资源网络<\/title>/);
-  assert.match(html, /首页[\s\S]*公司分析[\s\S]*出海矩阵[\s\S]*人才市场[\s\S]*商务合作/);
-  assert.match(html, /聚焦中东社交与海外语聊/);
-  assert.match(html, /13万美元大R挂首页，不怕被竞品挖走吗？/);
+  assert.match(html, /首页[\s\S]*小骆资讯[\s\S]*公司分析[\s\S]*出海矩阵[\s\S]*资源市场[\s\S]*商务合作/);
+  assert.match(html.replace(/<[^>]*>/g, ""), /中东社交观察海外语聊研究/);
+  assert.match(html, /一张月卡，怎么让用户愿意买、经常来？/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site|codex-preview/);
+});
+
+test("hot-list navigation opens ranked stories with Chinese headlines and smaller original titles", async () => {
+  const [page, hotList, hotCss, footer] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/hot-list.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/hot-list.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/site-footer.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(page, /<button className=\{tab === "home"[\s\S]*>小骆资讯<\/button>[\s\S]*<button className=\{tab === "analysis"/);
+  assert.match(page, /role="tablist" aria-label="小骆资讯"/);
+  assert.match(page, /role="tab"[\s\S]*>小骆日报<\/button>[\s\S]*role="tab"[\s\S]*>热点榜<\/button>/);
+  assert.match(page, /tab === "hot" \? <HotList \/> : <DailyReports admin=\{admin\} \/>/);
+  assert.match(hotList, /aria-label="热点榜排名"/);
+  assert.doesNotMatch(hotList, /资讯热度 TOP 10|RANKED STORIES|hot-section-heading/);
+  assert.match(hotList, /小骆社交热点榜 <span className="hot-top-ten">TOP10<\/span>/);
+  assert.match(hotList, /data-rank=\{story\.rank \|\| index \+ 1\}/);
+  assert.doesNotMatch(hotList, /AIHOT/i);
+  assert.match(hotList, /近 7 天/);
+  assert.doesNotMatch(hotList, /单源 · 待交叉核验|hot-verification/);
+  assert.match(hotList, /每家发布者只计一次/);
+  assert.match(hotList, /单源资讯仍需交叉核验/);
+  assert.match(hotList, /<ol className="hot-method-steps">/);
+  assert.match(hotList, /官方一手/);
+  assert.match(hotList, /行业媒体/);
+  assert.match(hotList, /const title = hotTitleForDisplay\(story\)/);
+  assert.match(hotList, /className="hot-story-original"/);
+  assert.doesNotMatch(hotList, /hot-story-meta|hot-topic/);
+  assert.match(hotList, /className="hot-story-time" dateTime=\{story\.publishedAt\}/);
+  assert.match(hotList, /setInterval\(refreshIfExpired, HOT_LIST_CACHE_MS\)/);
+  assert.match(hotList, /addEventListener\("visibilitychange", refreshIfExpired\)/);
+  assert.doesNotMatch(hotList, /setFeed\(null\)/, "temporary refresh failure must retain the previous ranking");
+  assert.match(hotCss, /\.hot-hero h1 \{[^}]*font-size: var\(--font-size-section\)/);
+  assert.match(hotCss, /\.hot-ranking-list \{ display: grid; gap: 16px; \}/);
+  assert.doesNotMatch(hotCss, /\.hot-story-bottom \{[^}]*border-top/);
+  assert.match(hotCss, /\.hot-story-time \{[^}]*margin-left: auto;[^}]*text-align: right/);
+  assert.match(hotCss, /@media \(max-width: 600px\) \{[\s\S]*\.hot-story-time \{ flex-basis: 100%; margin-left: 0; text-align: left; \}/);
+  assert.match(hotCss, /\.hot-story-original \{[^}]*font-size: clamp\(\.78rem/);
+  assert.match(hotCss, /\.hot-story h3 \{[^}]*font-weight: 500/);
+  assert.match(hotCss, /\.hot-story h3 \{[^}]*font-family: "PingFang SC", "Microsoft YaHei", sans-serif !important/);
+  assert.match(hotCss, /\.hot-method-source-groups \{[^}]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.doesNotMatch(hotCss, /\.hot-method-sources \{[^}]*border-left/);
+  assert.doesNotMatch(hotCss, /linear-gradient\(/);
+  for (const rank of [1, 2, 3]) assert.match(hotCss, new RegExp(`\\.hot-story\\[data-rank="${rank}"\\]`));
+  assert.match(footer, /label: "小骆资讯", href: "\/\?view=daily"/);
 });
 
 test("keeps the real product shell and metadata out of the starter preview", async () => {
@@ -46,11 +91,29 @@ test("keeps the real product shell and metadata out of the starter preview", asy
 
   assert.match(page, /function Home\(\)/);
   assert.match(page, /const notes = \[/);
-  assert.match(page, /UGC贵族体系也能“玩”？这是我没想到的！/);
+  assert.match(page, /为什么同样是幸运礼物，它家就是比别人“爽”？/);
+  assert.match(page, /Binmo不满足卖Queen，开始做活动了/);
+  assert.match(page, /Hawa连分类都改成游戏了？/);
+  assert.match(page, /Binmo正式环境有bug，调试工具出现了！/);
   assert.match(page, /function CompanyAnalysisView/);
   assert.match(layout, /小骆｜社交产品资讯与资源网络/);
   assert.doesNotMatch(page, /<SkeletonPreview|codex-preview/);
   assert.match(packageJson, /"postbuild"/);
+});
+
+test("homepage business action opens the shared QR dialog", async () => {
+  const [page, dialog, heroCss] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/business-qr-dialog.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/home-editorial.css", import.meta.url), "utf8"),
+  ]);
+  const home = page.slice(page.indexOf("function HomeView("), page.indexOf("function NetworkView("));
+  assert.match(home, /<BusinessQrDialog plan="商务合作" title="商务合作"/);
+  assert.match(home, /aria-haspopup="dialog" onClick=\{\(\) => setBusinessQrOpen\(true\)\}>商务合作/);
+  assert.doesNotMatch(home, /浏览产品矩阵/);
+  assert.doesNotMatch(heroCss, /\.hero-copy > \.eyebrow::before\s*\{/);
+  assert.match(heroCss, /\.hero-actions \.primary\s*\{[^}]*min-width:\s*150px/);
+  assert.match(dialog, /\/optimized\/wechat-qr\.webp/);
 });
 
 test("product atlas has no contribution buttons", async () => {
@@ -82,11 +145,11 @@ test("product atlas gives site administrators a logo publishing workflow", async
   assert.match(css, /matrix-admin-actions/);
 });
 
-test("matrix cards keep a consistent height and use sans-serif numeric data", async () => {
+test("matrix cards stay aligned within each row without forcing every row to the tallest height", async () => {
   const matrixCss = await readFile(new URL("../app/matrix-title.css", import.meta.url), "utf8");
   assert.match(matrixCss, /\.company-logo-image\{width:40px!important;height:40px!important/);
-  assert.match(matrixCss, /\.matrix-grid\{align-items:stretch!important;grid-auto-rows:1fr\}/);
-  assert.match(matrixCss, /\.company-card\{min-height:310px!important;height:100%!important;align-self:stretch!important/);
+  assert.match(matrixCss, /\.matrix-grid\{align-items:stretch!important;grid-auto-rows:auto\}/);
+  assert.match(matrixCss, /\.company-card\{min-height:0!important;height:auto!important;align-self:stretch!important/);
   assert.match(matrixCss, /font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif!important/);
 });
 
@@ -122,7 +185,7 @@ test("Pages static worker includes talent image persistence and retrieval", asyn
 test("Pages worker serves client bundles from static assets before app routing", async () => {
   const worker = await readFile(new URL("../worker/index.ts", import.meta.url), "utf8");
   assert.match(worker, /url\.pathname\.startsWith\("\/_next\/"\)/);
-  assert.match(worker, /return env\.ASSETS\.fetch\(request\)/);
+  assert.match(worker, /return withAssetCache\(await env\.ASSETS\.fetch\(request\), url\.pathname\)/);
 });
 
 test("job cards prioritize the company name over the position title", async () => {
@@ -183,16 +246,16 @@ test("home page places the practical tools list below recent notes with a site l
     readFile(new URL("../app/practical-tools.css", import.meta.url), "utf8"),
   ]);
 
-  const toolsIndex = page.indexOf('className="practical-tools shell"');
+  const toolsIndex = page.indexOf('<PracticalTools />');
   const notesIndex = page.indexOf('id="notes"');
   assert.ok(toolsIndex > notesIndex);
-  assert.match(page, /https:\/\/immersivetranslate\.com\/zh-Hans\//);
-  assert.match(page, /https:\/\/immersivetranslate\.com\/_next\/static\/media\/logo\.761c1cd1\.png/);
-  assert.match(page, /推荐人：盖伦/);
-  assert.match(page, /https:\/\/vibe-hub\.org\/topics\/product/);
-  assert.match(page, /VibeHub 产品术语/);
-  assert.match(page, /推荐人：小骆/);
-  assert.match(css, /\.practical-tool-card/);
+  const tools = await readFile(new URL("../app/practical-tools.tsx", import.meta.url), "utf8");
+  assert.match(tools, /https:\/\/immersivetranslate\.com\/zh-Hans\//);
+  assert.match(tools, /\/optimized\/logos\/tools\/immersive-square.webp/);
+  assert.match(tools, /https:\/\/vibe-hub\.org\/topics\/product/);
+  assert.match(tools, /VibeHub 产品术语/);
+  assert.doesNotMatch(tools, /推荐人：/);
+  assert.match(css, /\.compact-tools \.tool-row/);
 });
 
 test("practical tools heading matches the recent notes heading scale", async () => {
@@ -261,7 +324,7 @@ test("article reader retains the site navigation with company analysis selected"
   assert.match(reader, /公司分析/);
   assert.match(reader, /className="active"/);
   assert.match(reader, /\?view=matrix/);
-  assert.doesNotMatch(page, /new URLSearchParams\(window\.location\.search\)/);
+  assert.match(page, /viewFromSearch\(window\.location\.search\)/);
 });
 
 test("article reader keeps the site navigation visible and offers a return-to-top control", async () => {
@@ -280,7 +343,7 @@ test("article reader keeps the site navigation visible and offers a return-to-to
 
 test("article reader links to adjacent analyses around its return-to-top control", async () => {
   const reader = await readFile(new URL("../app/analysis/[slug]/reader.tsx", import.meta.url), "utf8");
-  assert.match(reader, /fetch\("\/api\/articles"/);
+  assert.match(reader, /loadPublicData\("\/api\/articles"/);
   assert.match(reader, /上一篇/);
   assert.match(reader, /下一篇/);
   assert.match(reader, /article-adjacent-link/);
@@ -368,7 +431,7 @@ test("the public shell refreshes to 首页 on a white canvas with white card hov
     readFile(new URL("../app/practical-tools.css", import.meta.url), "utf8"),
   ]);
   assert.match(page, />首页<\/button>/);
-  assert.doesNotMatch(page, /new URLSearchParams\(window\.location\.search\)/);
+  assert.match(page, /viewFromSearch\(window\.location\.search\)/);
   assert.match(tokens, /--color-page:\s*#fff(?:fff)?/i);
   assert.match(reset, /body, main \{ background: var\(--color-page\) !important/);
   assert.match(reset, /\.analysis-list article:hover[^}]*background: var\(--color-surface\) !important/);
@@ -403,7 +466,7 @@ test("shared components consume semantic spacing and radius tokens", async () =>
     readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
   ]);
   assert.match(analysis, /\.analysis-list\{[^}]*gap:var\(--space-section\)/);
-  assert.match(app, /\.community-modal section\{[^}]*border-radius:var\(--radius-card\)/);
+  assert.match(app, /\.admin-login-form, \.talent-form, \.matrix-submit-dialog, \.job-detail-modal section, \.job-detail-panel \{[\s\S]*border-radius: var\(--radius-card\) !important;/);
   assert.match(reset, /\.analysis-search input[^}]*border-radius:\s*var\(--radius-control\)/);
 });
 
@@ -413,7 +476,7 @@ test("public pages share one sans-serif typeface and one card interaction", asyn
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/practical-tools.css", import.meta.url), "utf8"),
   ]);
-  assert.match(page, /<span>搜索公司或产品<\/span>/);
+  assert.match(page, /aria-label="搜索公司或产品"/);
   assert.doesNotMatch(page, /className="matrix-legend"/);
   assert.match(globals, /font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif/);
   const app = await readFile(new URL("../app/app-light.css", import.meta.url), "utf8");
@@ -424,16 +487,25 @@ test("public pages share one sans-serif typeface and one card interaction", asyn
   assert.match(app, /\.analysis-list article:hover[^}]*transform: var\(--motion-lift\)[^}]*box-shadow: var\(--shadow-card-hover\)/);
 });
 
-test("public typography and primary actions use the compact token scale", async () => {
-  const [tokens, reset] = await Promise.all([
+test("public typography and primary actions use the smaller shared heading scale", async () => {
+  const [tokens, reset, home, business, matrix] = await Promise.all([
     readFile(new URL("../tokens.css", import.meta.url), "utf8"),
     readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/home-editorial.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/business-editorial.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/matrix-explorer.css", import.meta.url), "utf8"),
   ]);
-  assert.match(tokens, /--font-size-display:\s*48px/);
-  assert.match(tokens, /--font-size-section:\s*36px/);
-  assert.match(tokens, /--font-size-card:\s*24px/);
-  assert.match(tokens, /--font-size-article-title:\s*34px/);
-  assert.match(tokens, /--font-size-article-title-mobile:\s*30px/);
+  assert.match(tokens, /--font-size-display:\s*42px/);
+  assert.match(tokens, /--font-size-display-mobile:\s*34px/);
+  assert.match(tokens, /--font-size-section:\s*32px/);
+  assert.match(tokens, /--font-size-section-mobile:\s*27px/);
+  assert.match(tokens, /--font-size-card:\s*22px/);
+  assert.match(tokens, /--font-size-card-mobile:\s*19px/);
+  assert.match(tokens, /--font-size-article-title:\s*31px/);
+  assert.match(tokens, /--font-size-article-title-mobile:\s*27px/);
+  assert.match(home, /font-size: clamp\(41px, 3\.4vw, 50px\) !important/);
+  assert.match(business, /\.business-photo-hero h1 \{ font-size:clamp\(29px,3vw,42px\) !important/);
+  assert.match(matrix, /\.matrix-explorer \.page-header h1 \{ font-size: var\(--font-size-section\)/);
   assert.match(reset, /\.primary[^}]*background: var\(--color-brand\) !important/);
   assert.match(reset, /\.primary:hover[^}]*background: var\(--color-brand-strong\) !important/);
   assert.match(reset, /\.article-reader-header h1[^}]*font-size: var\(--font-size-article-title\) !important/);
@@ -445,40 +517,27 @@ test("slow public data starts loading before its destination tab is opened", asy
   assert.match(page, /const preloadPublicData = \(\) =>/);
   assert.match(page, /void loadArticles\(\)/);
   assert.match(page, /void loadTalentItems\(\)/);
-  assert.match(page, /requestIdleCallback/);
+  assert.match(page, /scheduleIdleWork\(preloadPublicData\)/);
+  const idle = await readFile(new URL("../app/idle-work.ts", import.meta.url), "utf8");
+  assert.match(idle, /window\.requestIdleCallback\(callback\)/);
+  assert.match(idle, /globalThis\.setTimeout\(callback, 200\)/);
 });
 
-test("community button opens an accessible QR-code dialog", async () => {
+test("the floating community entry and its dialog are removed", async () => {
   const [page, css] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/app-light.css", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /className="community-fab"/);
-  assert.match(page, /群聊：小骆 🐫 语聊出海交流 2 群/);
-  assert.match(page, /src="\/community-qr\.jpg"/);
-  assert.match(page, /event\.key === "Escape"/);
-  assert.match(page, /event\.target === event\.currentTarget/);
-  assert.match(css, /\.community-fab\{position:fixed/);
-  assert.match(css, /\.community-modal\{position:fixed/);
+  assert.doesNotMatch(page, /community-fab|community-modal|communityOpen/);
+  assert.doesNotMatch(css, /\.community-fab|\.community-modal/);
 });
 
-test("community dialog follows the tokenized editorial modal layout", async () => {
-  const [page, css] = await Promise.all([
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/app-light.css", import.meta.url), "utf8"),
-  ]);
-
-  assert.match(page, /className="community-modal-header"/);
-  assert.match(page, /交流群\s*<span>\/\s*COMMUNITY<\/span>/);
-  assert.match(page, /className="community-qr-card"/);
-  assert.match(page, /className="community-save"[^>]*href="\/community-qr\.jpg"[^>]*download/);
-  assert.match(css, /\.community-modal\{[^}]*backdrop-filter:blur\(8px\)/);
-  assert.match(css, /\.community-modal section\{[^}]*width:min\(100%,720px\)[^}]*border-radius:var\(--radius-card\)/);
-  assert.match(css, /\.community-modal-header\{[^}]*padding:var\(--space-component\)/);
-  assert.match(css, /\.community-qr-card\{[^}]*border:1px solid var\(--color-border\)[^}]*border-radius:var\(--radius-card\)/);
-  assert.match(css, /\.community-save\{[^}]*background:var\(--color-brand\)/);
-  assert.match(css, /@media\(max-width:720px\)\{[\s\S]*\.community-modal-body\{padding:var\(--space-content\)/);
+test("all active dialogs use the shared flat modal treatment", async () => {
+  const css = await readFile(new URL("../app/app-light.css", import.meta.url), "utf8");
+  assert.match(css, /\.admin-login-modal, \.talent-modal, \.matrix-submit-modal, \.job-detail-modal \{[\s\S]*background: var\(--color-overlay\) !important;[\s\S]*backdrop-filter: none !important;/);
+  assert.match(css, /\.admin-login-form, \.talent-form, \.matrix-submit-dialog, \.job-detail-modal section, \.job-detail-panel \{[\s\S]*background: var\(--color-surface\) !important;[\s\S]*box-shadow: none !important;/);
+  assert.match(css, /\.matrix-submit-close, \.talent-form-top > button, \.job-detail-close, \.job-detail-modal section > button \{[\s\S]*border-radius: 50% !important;/);
 });
 
 test("article editor separates company information from the Markdown body", async () => {
@@ -576,6 +635,7 @@ test("responsive public styles do not retain legacy palette literals", async () 
     readFile(new URL("../app/business-overrides.css", import.meta.url), "utf8"),
   ]);
   assert.match(tokens, /--color-overlay:/);
+  assert.match(tokens, /--color-overlay: rgba\(0, 0, 0, \.6\);/);
   assert.match(tokens, /--color-danger:/);
   assert.match(tokens, /--color-danger-border:/);
   assert.doesNotMatch(reset, /#(?:fff0bd|e8c467|f8df94|d6ae45|eaf7f1|cfe8dc|eff8f4|d4e9de|fff2cf|b42318|f1c5c1)/i);
@@ -587,12 +647,12 @@ test("article backend checks the existing site management session before article
   const worker = await readFile(new URL("../worker/articles.ts", import.meta.url), "utf8");
   assert.match(worker, /cookie\(request, "xiaoluo_admin"\)/);
   assert.match(worker, /talent_admin_sessions/);
-  assert.match(worker, /return siteAdminAuthenticated\(request, env\) \|\| articleAuthenticated\(request, env\)/);
+  assert.match(worker, /return await siteAdminAuthenticated\(request, env\) \|\| await articleAuthenticated\(request, env\)/);
 });
 
 test("company analysis archive reads published articles from the API", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  assert.match(page, /fetch\("\/api\/articles"/);
+  assert.match(page, /loadPublicData\("\/api\/articles"/);
   assert.match(page, /\/analysis\/\$\{item\.slug\}/);
 });
 
@@ -613,7 +673,7 @@ test("article publishing entry appears only for logged-in managers", async () =>
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   assert.match(page, /<CompanyAnalysisView admin=\{admin\} \/>/);
   assert.match(page, /function CompanyAnalysisView\(\{ admin \}: \{ admin: boolean \}\)/);
-  assert.match(page, /\{admin && <a className="primary analysis-publish-link" href="\/admin">发布文章 →<\/a>\}/);
+  assert.match(page, /\{admin && <a className="primary analysis-publish-link" href="\/admin">发布文章<\/a>\}/);
 });
 
 test("article admin uses the site management session instead of a second login form", async () => {
@@ -655,11 +715,14 @@ test("mobile article reader removes the card chrome and keeps comfortable page g
   assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.article-reader-card \{[^}]*margin-top:\s*32px[^}]*padding:\s*0 0 42px[^}]*border:\s*0[^}]*border-radius:\s*0[^}]*box-shadow:\s*none/);
 });
 
-test("business page puts the partner link before the resource directory", async () => {
+test("business page keeps real cases before the original partner card", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const businessView = page.slice(page.indexOf("function BusinessView()"), page.indexOf("function CompanyAnalysisView()"));
+  const businessView = page.slice(page.indexOf("function BusinessView("), page.indexOf("function CompanyAnalysisView("));
 
-  assert.ok(businessView.indexOf('className="business-links shell"') < businessView.indexOf('className="business-resources shell"'));
+  assert.ok(businessView.indexOf('className="collab-cases"') >= 0);
+  assert.ok(businessView.indexOf('className="business-links shell collab-section"') > businessView.indexOf('className="collab-cases"'));
+  assert.match(businessView, /company: "极瞬"/);
+  assert.match(businessView, /company: "声网"/);
 });
 
 test("featured partner card has a compact desktop height", async () => {
@@ -676,21 +739,26 @@ test("public talent market keeps publishing controls inside admin mode", async (
   assert.match(talentView, /\{admin && <section className="talent-callout shell">/);
 });
 
-test("home shows four desktop notes and switches to a compact mobile media list", async () => {
+test("home shows eight desktop notes in two rows of four and switches to a compact mobile media list", async () => {
   const [page, css, app] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/app-light.css", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /notes\.slice\(0, 4\)\.map/);
+  assert.match(page, /notes\.slice\(0, 8\)\.map/);
+  assert.doesNotMatch(page, /<span>\{note\.tag\}<\/span>/);
   assert.match(css, /\.home-theme \.notes\.notes-list\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/);
   assert.match(css, /\.home-theme \.note\.note-list-item\{display:grid!important;grid-template-columns:112px minmax\(0,1fr\)!important/);
   assert.match(app, /@media \(max-width: 720px\)[\s\S]*\.home-theme \.notes\.notes-list \{ grid-template-columns: 1fr !important; gap: var\(--space-content\) !important; \}/);
   assert.match(app, /\.home-theme \.note\.note-list-item \{[\s\S]*grid-template-columns: 112px minmax\(0, 1fr\);[\s\S]*padding: var\(--space-content\) 0 !important;/);
   assert.match(app, /\.home-theme \.note\.note-list-item \.note-content h3 \{[\s\S]*-webkit-line-clamp: 2/);
   assert.match(app, /\.home-theme \.notes\.notes-list \{ grid-template-columns: repeat\(4, minmax\(0, 1fr\)\) !important;/);
-  assert.match(app, /@media \(min-width: 721px\)[\s\S]*\.home-theme \.note\.note-list-item \.note-cover \{ aspect-ratio: 3 \/ 4 !important;/);
+  assert.match(app, /@media \(min-width: 721px\)[\s\S]*\.home-theme \.note\.note-list-item \.note-cover-link \{ [^}]*aspect-ratio: 3 \/ 4;[^}]*\}[\s\S]*\.home-theme \.note\.note-list-item \.note-cover \{[^}]*height: 100% !important; aspect-ratio: 3 \/ 4 !important; object-fit: cover !important; object-position: center;/);
+  assert.match(app, /\.home-theme \.note\.note-list-item \.note-content h3 \{[^}]*font-size: 11px !important;[^}]*font-weight: 400 !important;/);
+  assert.match(app, /\.home-theme \.note\.note-list-item \.note-cover-link \{[^}]*border: 0;/);
+  assert.match(app, /\.home-theme \.note\.note-list-item \.note-cover-link \{[^}]*background: #fff !important;/);
+  assert.doesNotMatch(page, /查看笔记 <b>↗<\/b>/);
 });
 
 test("homepage uses a compact hero and recent-notes rhythm", async () => {
@@ -706,10 +774,10 @@ test("homepage uses a compact hero and recent-notes rhythm", async () => {
   assert.match(home, /\.home-theme \.section-top \{[^}]*margin-bottom: 24px[^}]*padding-bottom: 12px/);
   assert.match(home, /@media \(min-width: 721px\)[\s\S]*\.home-theme \.note-cover \{[^}]*aspect-ratio: 16 \/ 10/);
   assert.match(home, /@media \(min-width: 721px\)[\s\S]*\.home-theme \.note h3 \{[^}]*min-height: 0[^}]*-webkit-line-clamp: 2/);
-  assert.match(page, /迅雷Q2涨39%，真正拉增长的竟然是海外语聊/);
-  assert.match(page, /海外社交业务暴涨52%！挚文集团Q2财报解读/);
-  assert.match(page, /沙特2030愿景，正在给出海语聊打开另一扇门/);
-  assert.match(page, /Yalla Ludo这个活动，值得产品和运营好好看/);
+  assert.match(page, /一张月卡，怎么让用户愿意买、经常来？/);
+  assert.match(page, /Yalla Ludo让玩家设计礼物？是礼物不好卖了？/);
+  assert.match(page, /语聊产品关系卡也能拿来做营销？第一次见！/);
+  assert.match(page, /这是我目前为止见过做的最好的超跑活动！/);
 });
 
 test("mobile header uses a compact tokenized rhythm", async () => {
@@ -720,20 +788,23 @@ test("mobile header uses a compact tokenized rhythm", async () => {
   assert.match(reset, /\.home-theme \.hero \{[^}]*padding-top: 56px !important/s);
 });
 
-test("homepage metrics use five equal compact columns without a leading label", async () => {
-  const [page, home, reset] = await Promise.all([
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/home-light.css", import.meta.url), "utf8"),
-    readFile(new URL("../app/color-reset.css", import.meta.url), "utf8"),
-  ]);
-
-  const strip = page.match(/<section className="visitor-strip shell"[\s\S]*?<\/section>/)?.[0] ?? "";
-  assert.doesNotMatch(strip, /本站与账号数据|visitor-pulse/);
-  assert.match(home, /\.home-theme \.visitor-strip \{[^}]*grid-template-columns: repeat\(5, minmax\(0, 1fr\)\)/);
-  assert.match(home, /\.home-theme \.visitor-strip > div \{[^}]*text-align: center/);
-  assert.match(home, /\.home-theme \.visitor-strip b \{[^}]*font: 400 26px\/1/);
-  assert.match(home, /@media \(max-width: 720px\)[\s\S]*\.home-theme \.visitor-strip b \{ font-size: 20px; \}/);
-  assert.match(reset, /\.home-theme \.visitor-strip > div \+ div \{[^}]*border-left: 1px solid var\(--color-border\)/);
+test("homepage statistics render research first with three compact audience metrics and verified followers", async () => {
+  const response = await render();
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const panel = html.match(/<section class="shell home-statistics-panel"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(panel, 'the statistics panel is server rendered');
+  assert.match(panel, /收录公司 \/ 团队[\s\S]*收录产品[\s\S]*已发布研究[\s\S]*累计访问/);
+  const audience = panel.match(/<dl class="statistics-audience"[\s\S]*?<\/dl>/)?.[0] ?? '';
+  for (const label of ['累计访问', '今日访问', '小红书粉丝']) {
+    assert.ok(audience.includes(`<dt>${label}</dt>`));
+  }
+  assert.equal((audience.match(/<dd(?:\s[^>]*)?>/g) || []).length, 3);
+  assert.match(audience, /<dd title="小红书主页核对：2026-10-20">1,799<\/dd>/);
+  assert.doesNotMatch(audience, /微信群人数|1,454|红书群人数|<dd>950<\/dd>/);
+  assert.equal((audience.match(/<dd>—<\/dd>/g) || []).length, 2, 'unloaded visits must not become zero');
+  assert.doesNotMatch(panel, /查看更新|近7天新增|class="atlas-activity"/);
+  assert.doesNotMatch(panel, /visitor-strip|atlas-metric-increase|<h2/);
 });
 
 test("talent publishing shows its error inside the modal and retains the returned image URL", async () => {
@@ -767,10 +838,15 @@ test("four public tabs share one page header pattern", async () => {
 
   assert.match(page, /function PageHeader/);
   assert.equal((page.match(/<PageHeader /g) || []).length, 4);
-  assert.match(page, /eyebrow="RESEARCH ARCHIVE" title="最新公司分析"/);
+  assert.match(page, /eyebrow="COMPANY RESEARCH" title="公司深度研究"/);
   assert.match(page, /eyebrow="PRODUCT ATLAS" title="出海产品矩阵"/);
-  assert.match(page, /eyebrow="TALENT MARKET" title="人才市场"/);
-  assert.match(page, /eyebrow="BUSINESS COLLABORATION" title="商务合作"/);
+  assert.match(page, /eyebrow="RESOURCE MARKET" title="资源市场"/);
+  assert.match(page, /eyebrow="BUSINESS COLLABORATION \/ 商务合作" title="让好的想法，遇见合适的合作。"/);
+  assert.match(page, /alt="虚构商务团队在明亮办公室交流产品方案，AI生成场景示意"/);
+  assert.match(page, /business-collaboration-photo\.webp/);
+  const sharedType = await readFile(new URL("../app/module-typography.css", import.meta.url), "utf8");
+  assert.match(sharedType, /:is\(\.page-header, \.collab-intro\) h1/);
+  assert.match(sharedType, /font-size: var\(--font-size-section\) !important/);
   assert.match(css, /\.page-header\s*\{[^}]*padding:[^}]*var\(--space-section\)/s);
   assert.match(css, /\.page-header h1\s*\{[^}]*font-size:\s*var\(--font-size-section\)/s);
 });

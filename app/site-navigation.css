@@ -1,0 +1,88 @@
+/* Shared compact navigation; override the legacy mobile absolute nav. */
+@media (min-width: 721px) {
+  html { scrollbar-gutter: stable; }
+  @supports not (scrollbar-gutter: stable) { html { overflow-y: scroll; } }
+}
+@media (max-width: 720px) {
+  html { scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; }
+}
+html body .nav.site-navigation {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-areas: "brand navigation search"; align-items: center; gap: 24px; height: auto !important;
+  min-height: 88px; padding-block: 20px !important; position: relative; z-index: 30;
+}
+html body .site-navigation .brand { grid-area: brand; justify-self: start; min-width: 0; gap: 12px; }
+html body .site-navigation .brand .admin-exit { margin-left: 0; }
+html body .site-navigation .avatar-login { width: 40px; height: 40px; align-items: center; justify-content: center; }
+html body .site-navigation .avatar-login img { width: 32px !important; height: 32px !important; }
+html body .site-navigation > nav {
+  display: flex; position: static; order: 0; width: auto; height: auto !important;
+  grid-area: navigation; justify-self: center; margin-left: 0; padding: 0 !important; gap: 24px !important;
+  flex-shrink: 0; min-width: 0; max-width: 100%; white-space: nowrap; background: transparent;
+}
+html body .site-navigation > nav :is(button, a) {
+  font-family: var(--font-sans); font-size: .875rem !important; font-weight: 400 !important;
+  line-height: 1.5; padding: 12px 0 !important; letter-spacing: 0;
+}
+html body .site-navigation > nav :is(button, a)::after { left: 0; right: 0; }
+.news-tabs-wrap { padding-block: 16px 20px; background: var(--color-page); }
+html body .news-tabs.shell {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch;
+  width: min(336px, calc(100% - 32px)); min-height: 0; gap: 4px; margin-inline: auto; padding: 5px;
+  border-radius: 13px; background: #f1f5f2;
+}
+.news-tabs :is(button, a) {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 0; min-height: 46px;
+  padding: 10px 14px; border: 0; border-radius: 9px; background: transparent;
+  color: var(--color-muted); font-size: .875rem; font-weight: 550; line-height: 1.4; text-decoration: none;
+  transition: background-color .2s ease, color .2s ease;
+}
+.news-tabs :is(button, a):hover { color: var(--color-brand-strong); background: #e0ebe4; transform: none; box-shadow: none; }
+.news-tabs :is(button, a).active, .news-tabs :is(button, a).active:hover {
+  color: #fff; background: var(--color-brand-strong); font-weight: 650; box-shadow: none;
+}
+.news-tabs :is(button, a):focus-visible { outline: 2px solid var(--color-brand-strong); outline-offset: 2px; }
+.global-search { grid-area: search; justify-self: end; position: relative; width: 100%; min-width: 0; max-width: 280px; }
+.global-search-field { display: flex; align-items: center; height: 42px; gap: 9px; padding: 0 12px; background: #f8fafb; border: 1px solid var(--color-border); border-radius: 9px; }
+.global-search-field:focus-within { border-color: var(--color-brand); outline: 2px solid var(--color-brand-soft); }
+.global-search-field svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--color-muted); }
+html body .global-search-field input { width: 100%; min-width: 0; border: 0; padding: 0; outline: 0; background: transparent; color: var(--color-text); font-size: .875rem; line-height: 1.5; }
+/* This field already has an SVG icon; suppress the shared input background icon. */
+html body .global-search-field input[type="search"] { background-image: none !important; padding-left: 0 !important; appearance: none; }
+.global-search-field input::-webkit-search-cancel-button { display: none; }
+.global-search-clear { flex-shrink: 0; width: 26px; height: 30px; padding: 0; font-size: 20px; color: var(--color-muted); }
+.global-search-panel { position: absolute; top: calc(100% + 10px); right: 0; width: min(580px, calc(100vw - 40px)); padding: 8px; background: var(--color-page); border: 1px solid var(--color-border); border-radius: 12px; box-shadow: 0 12px 36px #15292016; overflow: hidden; }
+.global-search-status, .global-search-error, .global-search-empty, .global-search-hint { margin: 0; padding: 10px 12px; color: var(--color-muted); font-size: .875rem; line-height: 1.6; overflow-wrap: anywhere; }
+.global-search-error button { margin-left: 8px; color: var(--color-brand-strong); }
+.global-search-results { max-height: min(440px, 55dvh); overflow-y: auto; overscroll-behavior: contain; }
+.global-search-results > a { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 5px 10px; padding: 12px; border-radius: 7px; color: var(--color-text); }
+.global-search-results > a:hover, .global-search-results > a.is-active { background: var(--color-brand-soft); }
+.global-search-results strong { font-size: .9375rem; font-weight: 500; line-height: 1.55; overflow-wrap: anywhere; }
+.global-search-kind { color: var(--color-brand-strong); font-size: .75rem; line-height: 1.9; white-space: nowrap; }
+.global-search-excerpt { grid-column: 2; font-size: .8125rem; line-height: 1.6; color: var(--color-muted); overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.daily-report, .job-card, .talent-card { scroll-margin-top: 28px; }
+.job-card:target, .talent-card:target { outline: 2px solid var(--color-brand); outline-offset: 3px; }
+@media (max-width: 1120px) {
+  html body .nav.site-navigation { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "brand search" "navigation navigation"; gap: 12px 20px; }
+  html body .site-navigation > nav { justify-content: center !important; overflow-x: auto; gap: 24px !important; }
+}
+@media (max-width: 560px) {
+  .news-tabs-wrap { padding-block: 12px 16px; }
+  .news-tabs :is(button, a) { min-height: 48px; padding-inline: 12px; }
+  html body .nav.site-navigation { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "brand search" "navigation navigation"; min-height: 0; padding-block: 10px !important; gap: 8px 10px; }
+  html body .site-navigation .brand { width: auto; }
+  html body .site-navigation .site-brand-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  html body .site-navigation .brand .admin-exit { margin-left: auto; }
+  .global-search { max-width: none; margin: 0; }
+  html body .global-search-field input { font-size: 1rem; }
+  html body .site-navigation > nav { justify-self: stretch; justify-content: flex-start !important; gap: 20px !important; scroll-padding-inline: 12px; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+  html body .site-navigation > nav :is(button, a) { min-height: 44px; }
+  .global-search-panel { width: calc(100vw - 32px); }
+  .global-search-results { max-height: 45dvh; }
+  html body .nav.site-navigation:has(.admin-exit) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "brand" "search" "navigation"; }
+  html body .site-navigation:has(.admin-exit) .brand { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .news-tabs :is(button, a) { transition: none; }
+}

@@ -1,0 +1,5 @@
+{
+  "name": "xiaoluo-daily-publisher",
+  "compatibility_date": "2026-05-15",
+  "d1_databases": [{ "binding": "DB", "database_name": "xiaoluo-visitor-stats", "database_id": "bf4ffb2e-1441-4556-9507-d88594e05dd1" }]
+}

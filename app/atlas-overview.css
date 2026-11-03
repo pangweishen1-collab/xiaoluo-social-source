@@ -1,0 +1,163 @@
+/* Research scale leads; audience details stay in a quiet right-hand column. */
+html body .home-theme.research-home .home-statistics-panel {
+  margin-block: 0 40px;
+  padding: 0 32px;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 18px;
+  background: transparent;
+  color: var(--color-text);
+}
+.home-statistics-panel .statistics-main {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0;
+  padding-block: 12px;
+}
+.home-statistics-panel .atlas-overview-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  min-width: 0;
+}
+html body .home-statistics-panel .atlas-overview-metrics > button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 4px 24px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-muted);
+  text-align: center;
+  cursor: pointer;
+}
+.home-statistics-panel .atlas-overview-metrics > button + button::before,
+.home-statistics-panel .statistics-audience::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1px;
+  height: 64px;
+  max-height: calc(100% - 16px);
+  background: var(--color-border);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.home-statistics-panel .atlas-overview-metrics button > span {
+  font-size: .875rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+.home-statistics-panel .atlas-overview-metrics strong {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  max-width: 100%;
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -.025em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  color: var(--color-text);
+  transition: color 160ms ease;
+}
+.home-statistics-panel .atlas-overview-metrics small {
+  font-size: .875rem;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--color-muted);
+}
+.home-statistics-panel .atlas-metric-increase {
+  margin-left: 4px;
+  font-size: .875rem;
+  line-height: 1.5;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: #b42318;
+}
+.home-statistics-panel .statistics-audience {
+  position: relative;
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 4px 24px;
+}
+.home-statistics-panel .statistics-audience > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+}
+.home-statistics-panel .statistics-audience dt {
+  font-size: .875rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+.home-statistics-panel .statistics-audience dd {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+html body .home-statistics-panel .atlas-overview-metrics > button:hover {
+  background: transparent;
+  transform: none;
+  box-shadow: none;
+}
+.home-statistics-panel .atlas-overview-metrics button:hover strong { color: var(--color-brand-strong); }
+.home-statistics-panel .atlas-overview-metrics > button:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 6px;
+}
+@media (max-width: 900px) {
+  html body .home-theme.research-home .home-statistics-panel { padding-inline: 24px; }
+  .home-statistics-panel .statistics-audience { padding-inline: 12px; }
+  html body .home-statistics-panel .atlas-overview-metrics > button { padding-inline: 12px; }
+}
+@media (max-width: 720px) {
+  .home-statistics-panel .statistics-main { grid-template-columns: minmax(0, 1fr); gap: 12px; padding-block: 12px; }
+  .home-statistics-panel .statistics-audience::before { display: none; }
+  html body .home-statistics-panel .atlas-overview-metrics > button { gap: 8px; }
+  .home-statistics-panel .statistics-audience { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); gap: 10px 12px; padding: 12px 0 0; border-left: 0; border-top: 1px solid var(--color-border); }
+  .home-statistics-panel .statistics-audience > div { flex-direction: column; align-items: center; gap: 4px; }
+  .home-statistics-panel .statistics-audience dt { font-size: 12px; }
+}
+@media (max-width: 440px) {
+  html body .home-theme.research-home .home-statistics-panel { padding-inline: 18px; }
+  html body .home-statistics-panel .atlas-overview-metrics > button { padding-inline: 6px; }
+  .home-statistics-panel .atlas-overview-metrics strong { font-size: 1.875rem; gap: 4px; }
+  .home-statistics-panel .atlas-overview-metrics button > span { min-height: 3.2em; }
+  .home-statistics-panel .statistics-audience { column-gap: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-statistics-panel .atlas-overview-metrics strong { transition: none; }
+}
+/* Preserve the previously approved compact hero. */
+html body .home-theme.research-home .hero { padding-top: 16px !important; padding-bottom: 24px !important; }
+html body .home-theme.research-home .hero-visual { width: min(100%, 280px); justify-self: end; }
+html body .home-theme.research-home .hero-visual img { height: auto; aspect-ratio: 1 / 1.05; }
+html body .home-theme.research-home .hero-visual video { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: inherit; }
+@media (max-width: 720px) {
+  html body .home-theme.research-home .hero { padding-top: 12px !important; }
+  html body .home-theme.research-home .hero-visual { width: min(100%, 240px); justify-self: center; }
+}

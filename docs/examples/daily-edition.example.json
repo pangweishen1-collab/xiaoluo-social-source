@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "leadItemId": "example-app::voice-rooms::v2",
+  "highlightIds": [],
+  "sections": [
+    {
+      "key": "radar",
+      "label": "产品雷达",
+      "items": []
+    },
+    {
+      "key": "hiring",
+      "label": "团队与招聘动向",
+      "items": []
+    },
+    {
+      "key": "week_changes",
+      "label": "语聊直播产品近一周变化",
+      "items": [
+        {
+          "id": "example-app::voice-rooms::v2",
+          "eventKey": "example-app::voice-rooms::v2",
+          "title": "[格式示例，勿发布] 示例产品开放多人语聊房",
+          "summary": "这只是字段结构演示；不能作为已核实的资讯发布。",
+          "eventDate": null,
+          "sourceUrls": ["https://example.org/not-a-real-news-link"]
+        }
+      ]
+    }
+  ]
+}

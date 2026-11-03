@@ -8,6 +8,19 @@ const storage = () => {
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), removeItem: (key) => values.delete(key) };
 };
 
+test("article loading works when cache storage is disabled or full", async () => {
+  const item = { slug: "storage-disabled", body: "正文" };
+  const blocked = { getItem() { throw Error("blocked"); }, setItem() { throw Error("quota"); } };
+  assert.equal(readCachedArticle(item.slug, blocked), null);
+  assert.deepEqual(await prefetchArticle(item.slug, "", { storage: blocked, fetcher: async () => new Response(JSON.stringify({ item })) }), item);
+  assert.deepEqual(await prefetchArticle(item.slug, "", { storage: null, fetcher: async () => new Response(JSON.stringify({ item })) }), item);
+});
+test("expired article cache is not rendered indefinitely", () => {
+  const cache = storage();
+  cache.setItem("xiaoluo:article:old", JSON.stringify({ at: Date.now() - 31000, item: { slug: "old" } }));
+  assert.equal(readCachedArticle("old", cache), null);
+});
+
 test("prefetched article data is available synchronously before navigation", async () => {
   const cache = storage();
   let requests = 0;

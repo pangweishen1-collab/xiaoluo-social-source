@@ -1,0 +1,107 @@
+/* Distribution is scoped to the atlas; colors and geometry follow existing tokens. */
+.atlas-logo-baitan, .atlas-logo-xiaoxiang, .atlas-logo-zhipin { position: relative; overflow: hidden; display: block; background: white; }
+.atlas-logo-zhipin img { position: absolute; width: 862.857%; height: 198.571%; max-width: none; left: -70.714%; top: -42.857%; }
+.atlas-logo-baitan img { position: absolute; width: 738.571%; height: 174.286%; max-width: none; left: -45%; top: -17.143%; }
+.atlas-logo-xiaoxiang img { position: absolute; width: 420%; height: 165.333%; max-width: none; left: -21.333%; top: -20%; }
+.atlas-logo-changxiangban, .atlas-logo-changzhi, .atlas-logo-yushan, .atlas-logo-fuya, .atlas-logo-milian { position: relative; overflow: hidden; display: block; background: white; }
+.atlas-logo-changxiangban img, .atlas-logo-changzhi img, .atlas-logo-yushan img, .atlas-logo-fuya img, .atlas-logo-milian img { position: absolute; max-width: none; }
+.atlas-logo-changxiangban img { width: 748.571%; height: 172.857%; left: -53.571%; top: -18.571%; }
+.atlas-logo-changzhi img { width: 560%; height: 175.714%; left: -46.429%; top: -31.429%; }
+.atlas-logo-yushan img { width: 542.857%; height: 171.429%; left: -43.571%; top: -10%; }
+.atlas-logo-fuya img { width: 670%; height: 164.286%; left: -32.143%; top: -20%; }
+.atlas-logo-milian img { width: 499.310%; height: 144.828%; left: -27.586%; top: -31.034%; }
+.atlas-logo-yihao { position: relative; overflow: hidden; display: block; background: white; }
+.atlas-logo-yihao img { position: absolute; width: 637.333%; height: 168%; max-width: none; left: -28%; top: -26.667%; }
+.atlas-logo-yuanqi, .atlas-logo-huijing, .atlas-logo-taqu, .atlas-logo-yinguo { position: relative; overflow: hidden; display: block; background: white; }
+.atlas-logo-yuanqi img, .atlas-logo-huijing img, .atlas-logo-taqu img, .atlas-logo-yinguo img { position: absolute; max-width: none; }
+.atlas-logo-yuanqi img { width: 594.286%; height: 195.714%; left: -29.286%; top: -12.857%; }
+.atlas-logo-huijing img { width: 575.714%; height: 141.429%; left: -29.286%; top: -14.286%; }
+.atlas-logo-taqu img { width: 634.286%; height: 185.714%; left: -40.714%; top: -20%; }
+.atlas-logo-yinguo img { width: 674.286%; height: 171.429%; left: -39.286%; top: -18.571%; }
+.atlas-logo-hexin { position: relative; overflow: hidden; display: block; background: white; }
+.atlas-logo-hexin img { position: absolute; width: 572.464%; height: 136.232%; max-width: none; left: -21.739%; top: -18.116%; }
+.atlas-logo-duoshou { position: relative; overflow: hidden; display: block; background: white; }
+.atlas-logo-duoshou img { position: absolute; width: 620%; height: 148.571%; max-width: none; left: -37.857%; top: -32.857%; }
+.atlas-logo-baiyitu { position: relative; overflow: hidden; display: block; background: white; }
+.atlas-logo-baiyitu img { position: absolute; width: 698.571%; height: 224.286%; max-width: none; left: -32.143%; top: -38.571%; }
+html body .atlas-toolbar-above-regions { grid-template-columns: minmax(0, 1fr); margin-bottom: var(--space-component); }
+html body .region-companies-dialog h2 { font-size: 21px; }
+.region-company-list { display: grid; gap: var(--space-tight); list-style: none; padding: 0; margin: var(--space-component) 0 0; }
+.region-company-list li { display: flex; align-items: baseline; gap: var(--space-content); padding: 14px var(--space-content); border-radius: var(--radius-control); background: var(--color-surface-subtle); }
+.region-company-list li > span { color: var(--color-muted); font-size: 12px; flex-shrink: 0; }
+.region-company-list strong { font-size: 14px; line-height: 1.7; font-weight: 500; overflow-wrap: anywhere; }
+html body .matrix-explorer .company-map { padding: var(--space-component); margin-bottom: var(--space-section); border: 1px solid var(--color-border) !important; border-radius: var(--radius-card); background: var(--color-surface); }
+html body .matrix-explorer .company-map + .matrix-section { padding-top: 0; }
+html body .matrix-explorer .company-map + .matrix-section .atlas-summary { margin-top: 0; }
+.company-map-heading { display: flex; align-items: start; justify-content: space-between; gap: var(--space-content); }
+html body .company-map h2 { margin: 0; font: 600 24px/1.4 var(--font-sans); letter-spacing: 0; }
+html body .company-map-heading p, html body .company-map-regions > p { margin: 8px 0 0; color: var(--color-muted); font: 400 14px/1.7 var(--font-sans); }
+.company-map-heading > span { padding-top: 6px; color: var(--color-muted); font-size: 13px; white-space: nowrap; }
+.company-map-layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(240px, 1fr); align-items: start; gap: var(--space-section); margin-top: var(--space-content); }
+.company-map-canvas { min-width: 0; }
+html body .company-map-status { min-height: 24px; margin: 0; color: var(--color-brand-strong); font: 400 14px/1.7 var(--font-sans); }
+.company-map-canvas svg { width: 100%; height: 300px; display: block; overflow: visible; }
+.company-map-inset rect { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 1; }
+.company-map-inset text { fill: var(--color-muted); font: 12px var(--font-sans); }
+.company-map-footer { display: flex; align-items: center; justify-content: flex-start; gap: 8px 24px; flex-wrap: wrap; }
+.company-map-footer .company-map-legend { justify-content: flex-start; }
+html body .company-map-status-hidden { position: absolute; width: 1px; height: 1px; min-height: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+html body .company-map-sources-trigger { display: block; min-height: 44px; padding: 8px 0; margin: 0; border: 0; background: transparent; color: var(--color-brand-strong); font: 400 13px/1.7 var(--font-sans); cursor: pointer; }
+html body .company-sources-dialog { height: 560px; max-height: calc(100dvh - 32px); overflow: hidden; }
+.company-sources-dialog[open] { display: flex; flex-direction: column; }
+.company-sources-dialog .atlas-dialog-top { flex: 0 0 auto; }
+html body .company-sources-dialog h2 { font-size: 21px; margin: 0; }
+.company-sources-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding-right: 8px; }
+.company-sources-scroll ul { grid-template-columns: minmax(0, 1fr); }
+.company-map-province { stroke: var(--color-surface); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.company-map .level-0 { fill: var(--color-surface-subtle); background: var(--color-surface-subtle); }
+.company-map .level-1 { fill: color-mix(in srgb, var(--color-brand) 28%, var(--color-surface)); background: color-mix(in srgb, var(--color-brand) 28%, var(--color-surface)); }
+.company-map .level-2 { fill: color-mix(in srgb, var(--color-brand) 60%, var(--color-surface)); background: color-mix(in srgb, var(--color-brand) 60%, var(--color-surface)); }
+.company-map .level-3 { fill: var(--color-brand); background: var(--color-brand); }
+.company-map-province[role="button"] { cursor: pointer; }
+.company-map-province[role="button"]:is(:hover, :focus-visible), .company-map-province.is-selected { fill: var(--color-brand-strong); stroke: var(--color-brand-strong); stroke-width: 2; outline: none; }
+.company-map-label circle { fill: var(--color-text); stroke: var(--color-surface); stroke-width: 1.5; }
+.company-map-label text { fill: var(--color-text); stroke: var(--color-surface); stroke-width: 3px; paint-order: stroke; font: 600 13px/1 var(--font-sans); }
+.company-map-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 16px; font-size: 12px; color: var(--color-muted); }
+.company-map-legend span { display: flex; gap: 6px; align-items: center; }
+.company-map-legend i { width: 14px; height: 10px; border: 1px solid var(--color-border); border-radius: 2px; }
+html body .company-map-regions h3 { margin: 0; font: 600 16px/1.5 var(--font-sans); }
+.company-map-regions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-content: center; align-self: stretch; padding-left: var(--space-component); border-left: 1px solid var(--color-border); }
+.company-map-regions > h3, .company-map-regions > p, .company-map-regions > .company-region-all { grid-column: 1 / -1; }
+html body .company-map-regions button { display: grid; align-items: center; width: 100%; min-height: 48px; margin: 0; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-control); color: var(--color-text); font: 400 14px/1.5 var(--font-sans); background: transparent; box-shadow: none; text-align: left; }
+html body .company-map-regions button:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
+html body .matrix-explorer .atlas-directory-title { margin: 0; font: 600 21px/1.4 var(--font-sans); letter-spacing: 0; flex-shrink: 0; }
+.atlas-directory-header { display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; margin-bottom: var(--space-component); }
+html body .matrix-explorer .atlas-directory-header .atlas-summary { margin: 0; justify-content: flex-end; margin-left: auto; }
+@media (max-width: 720px) {
+  html body .matrix-explorer .atlas-directory-header .atlas-summary { width: 100%; margin-left: 0; justify-content: flex-start; }
+}
+.company-map-footer { margin-top: var(--space-content); padding-top: var(--space-tight); border-top: 1px solid var(--color-border); }
+html body .company-map-regions button:is(:hover, .is-active) { border-color: var(--color-highlight-border); background: var(--color-highlight); color: var(--color-brand-strong); }
+html body .company-map-regions .company-region-all, .company-region-line { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.company-region-line > span:last-child, .company-region-all > span:last-child { flex-shrink: 0; white-space: nowrap; }
+.company-region-bar { display: block; height: 4px; margin-top: 8px; background: var(--color-surface-subtle); border-radius: 4px; overflow: hidden; }
+.company-region-bar i { display: block; height: 100%; background: var(--color-brand); border-radius: inherit; }
+.company-map-placeholder { display: grid; place-content: center; gap: 16px; min-height: 320px; color: var(--color-muted); font-size: 14px; }
+.company-map-placeholder button { min-height: 44px; color: var(--color-brand-strong); }
+.company-map-sources { margin-top: 0; color: var(--color-muted); font-size: 13px; line-height: 1.7; }
+.company-map-sources summary { cursor: pointer; width: fit-content; min-height: 44px; padding: 10px 0; }
+html body .company-map-sources p { margin: 8px 0; font-size: 13px; line-height: 1.7; }
+.company-map-sources ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; padding: 0; list-style: none; }
+.company-map-sources li { min-width: 0; overflow-wrap: anywhere; }
+.company-map-sources small { display: block; font-size: 12px; }
+.company-map-sources a { color: var(--color-brand-strong); }
+html body .atlas-location { margin: 8px 0 0; font-size: 12px; line-height: 1.5; color: var(--color-muted); }
+@media (max-width: 800px) {
+  .company-map-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-content); }
+  .company-map-heading { flex-direction: column; gap: 8px; }
+  .company-map-heading > span { white-space: normal; }
+  .company-map-canvas svg { height: auto; max-height: 280px; }
+  .company-map-regions { padding: var(--space-content) 0 0; border-left: 0; border-top: 1px solid var(--color-border); }
+  .company-map-sources ul { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  html body .matrix-explorer .company-map { padding: var(--space-content); }
+  html body .company-map h2 { font-size: 21px; }
+  .company-map-legend { gap: 8px 10px; }
+}

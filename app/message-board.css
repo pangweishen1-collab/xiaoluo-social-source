@@ -1,0 +1,30 @@
+.message-board-trigger { position: fixed; right: 28px; bottom: max(28px,env(safe-area-inset-bottom)); z-index: 45; padding: 14px 22px; border: 0; border-radius: 28px; background: #306955; color: white; font-size: 16px; cursor: pointer; }
+html body .message-board-dialog { width: min(980px,calc(100vw - 32px)); max-width: none; max-height: 85dvh; box-sizing: border-box; margin: auto; padding: 28px; overflow: auto; border: 1px solid var(--color-border); border-radius: 20px; background: white; color: #23372f; }
+.message-board-dialog::backdrop { background: #172b2366; }
+.message-board-dialog[open] { display: flex; flex-direction: column; height: min(640px,85dvh); overflow: hidden; }
+.message-board-dialog > header { flex-shrink: 0; }
+.message-board-dialog .message-board-topbar { justify-content: flex-end; }
+.message-board-dialog .message-board-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.message-board-dialog header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.message-board-dialog h2 { margin: 0; font-size: 24px; }
+.message-board-dialog header button { border: 0; background: transparent; font-size: 28px; padding: 0 10px; cursor: pointer; }
+.message-board-dialog p,.message-board-dialog small { font-size: 14px; line-height: 1.6; color: #65756d; }
+.message-board-columns { display: grid; grid-template-columns: minmax(0,1.3fr) minmax(0,1fr); gap: 28px; margin-top: 20px; align-items: stretch; flex: 1; min-height: 0; }
+.message-board-list { min-height: 0; overflow-y: auto; margin: 0; padding-right: 8px; overscroll-behavior: contain; }
+.message-board-meta { display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: 4px 12px; margin-bottom: 12px; }
+.message-board-meta time { color: #65756d; font-size: 14px; font-variant-numeric: tabular-nums; }
+.message-board-list article { padding: 4px 0; margin-bottom: 22px; background: transparent; overflow-wrap: anywhere; }
+.message-board-message { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+.message-board-avatar { flex: 0 0 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: #e6efea; color: #59786a; }
+.message-board-list strong { font-size: 14px; color: #306955; }
+.message-board-list article p { min-width: 0; max-width: calc(100% - 52px); box-sizing: border-box; margin: 0; padding: 11px 15px; border-radius: 4px 16px 16px 16px; background: #f1f7f4; white-space: pre-wrap; font-size: 16px; color: #23372f; }
+.message-board-dialog form { min-width: 0; min-height: 0; overflow-y: auto; border-left: 1px solid var(--color-border); padding: 6px 8px 8px 28px; box-sizing: border-box; }
+.message-board-dialog label { display: block; margin-bottom: 14px; font-size: 14px; }
+.message-board-dialog input,.message-board-dialog textarea { display: block; box-sizing: border-box; width: 100%; margin-top: 6px; padding: 10px 12px; border: 1px solid #cbdcd3; border-radius: 10px; background: white; color: #23372f; font: inherit; font-size: 16px; }
+.message-board-dialog textarea { min-height: 220px; resize: vertical; }
+.message-board-submit { width: 100%; padding: 12px; border: 0; border-radius: 10px; background: #306955; color: white; font-size: 16px; cursor: pointer; }
+.message-board-submit:disabled { opacity: .6; cursor: wait; }
+.message-board-dialog .message-board-error { color: #a63030; }
+.message-board-dialog :focus-visible,.message-board-trigger:focus-visible { outline: 2px solid #306955; outline-offset: 3px; }
+@media(max-width:600px) { .message-board-trigger { right: 16px; bottom: max(16px,env(safe-area-inset-bottom)); } html body .message-board-dialog { padding: 20px; } }
+@media(max-width:720px) { .message-board-columns { grid-template-columns: minmax(0,1fr); grid-template-rows: minmax(100px,1fr) minmax(180px,1.2fr); gap: 20px; overflow-y: auto; } .message-board-dialog form { border-left: 0; padding-left: 0; border-top: 1px solid var(--color-border); padding-top: 20px; } }

@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "lib": ["esnext"], "types": ["node"], "incremental": false },
+  "include": ["worker/**/*.ts", "db/**/*.ts", "worker-runtime.d.ts", "worker-env.d.ts"],
+  "exclude": ["node_modules"]
+}

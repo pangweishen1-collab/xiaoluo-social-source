@@ -14,17 +14,25 @@ const { d1, r2 } = hostingConfig;
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const isNetlifyBuild = process.env.NITRO_PRESET === "netlify";
-const useRemoteArticleData = process.env.XIAOLUO_REMOTE_ARTICLES === "1";
+const useRemoteArticleData = process.env.XIAOLUO_REMOTE_ARTICLES !== "0";
+
+// Local previews read public production content; mutations stay in local storage.
+const publicContentProxy = {
+  target: "https://xiaoluo-social.pages.dev",
+  changeOrigin: true,
+  bypass(req: { method?: string; url?: string }) {
+    if (req.method !== "GET" && req.method !== "HEAD") return req.url;
+  },
+};
 
 const localServer = {
   ...(isCodexSeatbeltSandbox ? { watch: { useFsEvents: false, usePolling: true } } : {}),
   ...(useRemoteArticleData
     ? {
         proxy: {
-          "/api/articles": {
-            target: "https://xiaoluo-social.pages.dev",
-            changeOrigin: true,
-          },
+          "^/api/articles(?:/|$)": publicContentProxy,
+          "^/api/talent(?:/|$)": publicContentProxy,
+          "^/api/talent-images/": publicContentProxy,
         },
       }
     : {}),

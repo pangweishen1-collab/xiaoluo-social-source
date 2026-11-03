@@ -1,0 +1,55 @@
+html body .matrix-explorer .company-regions {
+  position: relative;
+  margin-bottom: 28px;
+  padding: 18px 20px;
+  overflow: visible;
+  border: 1px solid #dce8e1 !important;
+  border-radius: 16px;
+  background: #fff;
+}
+.matrix-explorer .company-regions + .matrix-section { padding-top: 0; }
+.matrix-explorer .company-regions + .matrix-section .atlas-summary { margin-top: 0; }
+.company-regions-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; margin-bottom: 14px; }
+.company-regions-heading-copy { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 16px; min-width: 0; }
+html body .company-regions h2 { margin: 0; color: var(--color-text); font: 600 20px/1.4 var(--font-sans); letter-spacing: -.02em; }
+.company-regions-heading-copy > p { margin: 0; color: var(--color-muted); font: 400 13px/1.5 var(--font-sans); }
+.company-regions-actions { display: flex; align-items: center; flex: 0 0 auto; gap: 12px; }
+html body .company-region-all { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: auto; min-height: 44px; padding: 8px 14px; margin: 0; border: 1px solid #cddfd4; border-radius: 9px; background: white; color: var(--color-brand-strong); box-shadow: none; font: 500 13px/1.4 var(--font-sans); white-space: nowrap; cursor: pointer; }
+.company-region-all-count { font-size: 12px; font-variant-numeric: tabular-nums; }
+html body .company-region-all.is-active { border-color: var(--color-brand); background: var(--color-brand); color: white; }
+html body .company-region-all.is-active:hover { border-color: var(--color-brand-strong); background: var(--color-brand-strong); }
+.company-regions-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+html body .company-region-card { display: flex; flex-direction: column; justify-content: center; min-width: 0; min-height: 72px; padding: 12px; margin: 0; border: 1px solid #e1e9e4; border-radius: 10px; background: #f8faf9; color: var(--color-text); box-shadow: none; text-align: left; cursor: pointer; transition: border-color .2s ease, background-color .2s ease; }
+.company-region-card-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2px 8px; width: 100%; }
+.company-region-name { font-size: 14px; font-weight: 500; line-height: 1.4; }
+.company-region-count { display: inline-flex; align-items: baseline; gap: 3px; white-space: nowrap; }
+.company-region-count strong { font: 600 20px/1.2 var(--font-sans); font-variant-numeric: tabular-nums; }
+.company-region-count > span { color: var(--color-muted); font-size: 11px; }
+.company-region-card-bottom { display: flex; align-items: center; gap: 8px; width: 100%; padding-top: 7px; color: var(--color-muted); font-size: 11px; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.company-region-meter { display: block; flex: 1; height: 3px; overflow: hidden; border-radius: 4px; background: #e3ece6; }
+.company-region-meter i { display: block; height: 100%; border-radius: inherit; background: #75a68e; }
+html body .company-region-card:hover { border-color: #8fbda2; background: #eff6f1; }
+html body .company-region-card.is-active { border-color: var(--color-brand); background: #eaf4ee; color: var(--color-brand-strong); }
+.company-region-card.is-active .company-region-meter i { background: var(--color-brand); }
+.company-region-unknown-note { color: var(--color-muted); }
+.company-regions-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.company-regions button:focus-visible { outline: 2px solid var(--color-brand-strong); outline-offset: 3px; }
+@media (max-width: 1100px) {
+  .company-regions-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  html body .matrix-explorer .company-regions { padding: 14px; border-radius: 14px; margin-bottom: 22px; }
+  .company-regions-heading { align-items: stretch; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+  .company-regions-heading-copy { justify-content: space-between; gap: 4px 12px; }
+  html body .company-regions h2 { font-size: 18px; }
+  .company-regions-heading-copy > p { font-size: 12px; }
+  .company-regions-actions { justify-content: space-between; gap: 12px; }
+  .company-regions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+}
+@media (max-width: 420px) {
+  .company-regions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  html body .company-region-card { min-height: 68px; padding: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .company-region-card { transition: none; }
+}

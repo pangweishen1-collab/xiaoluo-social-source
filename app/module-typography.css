@@ -1,0 +1,69 @@
+/* Shared type scale for company, matrix, talent and business page headers. */
+html body .home-theme.research-home .hero h1 {
+  color: var(--color-text) !important;
+}
+/* One header rhythm across tabs, including the daily brief. */
+html body :is(.page-header, .collab-intro) {
+  display: flex;
+  align-items: flex-start !important;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 48px !important;
+  padding-bottom: 32px !important;
+  min-height: 0;
+  box-sizing: border-box;
+}
+html body :is(.page-header, .collab-intro) > div {
+  flex: 1;
+  min-width: 0;
+  max-width: 720px;
+}
+html body :is(.page-header, .collab-intro) > :is(aside, a) {
+  flex-shrink: 0;
+  margin-top: 34px;
+}
+html body :is(.page-header, .collab-intro) h1 {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-section) !important;
+  font-weight: 700;
+  line-height: var(--line-height-section) !important;
+  letter-spacing: 0 !important;
+  margin: 0 !important;
+}
+html body :is(.page-header, .collab-intro) > div > .eyebrow {
+  font-size: 12px !important;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: .12em;
+  margin: 0 0 var(--space-content) !important;
+}
+html body :is(.page-header, .collab-intro) > div > p:last-child:not(.eyebrow) {
+  font-size: 16px !important;
+  font-weight: 400;
+  line-height: 1.8;
+  margin: var(--space-content) 0 0 !important;
+}
+html body .nav nav button {
+  font-family: var(--font-sans);
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.5;
+}
+@media (max-width: 720px) {
+  html body :is(.page-header, .collab-intro) {
+    display: block;
+    min-height: 0;
+    padding-top: 32px !important;
+    padding-bottom: 28px !important;
+  }
+  html body :is(.page-header, .collab-intro) > :is(aside, a) { margin-top: 20px; }
+  html body :is(.page-header, .collab-intro) h1 {
+    font-size: var(--font-size-section-mobile) !important;
+  }
+  html body :is(.page-header, .collab-intro) > div > p:last-child:not(.eyebrow) {
+    font-size: 14px !important;
+  }
+  html body .nav nav button { font-size: 14px !important; }
+}

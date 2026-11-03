@@ -1,0 +1,37 @@
+/* One section-heading-to-content rhythm across the public pages. */
+html body .home-theme.research-home .section-top,
+html body .home-theme.research-home .compact-tools .section-top,
+html body .collab-page .collab-section-head,
+html body .collab-page .collab-value .collab-section-head,
+html body .matrix-explorer .atlas-directory-header,
+html body .resource-provider-heading {
+  margin-bottom: var(--space-heading-content);
+}
+
+/* The intro is the first content block; do not add both margins together. */
+html body .home-theme.research-home .section-top:has(+ .section-intro) {
+  margin-bottom: 0;
+}
+html body .home-theme.research-home .section-intro {
+  margin-top: var(--space-heading-intro);
+  margin-bottom: var(--space-heading-content);
+}
+html body .collab-page .collab-section-head,
+html body .collab-page .collab-value .collab-section-head {
+  gap: var(--space-heading-intro);
+}
+html body .resource-provider-heading div > p:last-child,
+html body .company-map-heading p {
+  margin-top: var(--space-heading-intro);
+}
+html body .hot-method h2 { margin-bottom: var(--space-heading-intro); }
+html body .hot-hero-description { margin-top: var(--space-content); }
+
+html body .hot-hero { padding-bottom: var(--space-heading-content); }
+
+@media (max-width: 720px) {
+  :root {
+    --space-heading-intro: 12px;
+    --space-heading-content: 20px;
+  }
+}

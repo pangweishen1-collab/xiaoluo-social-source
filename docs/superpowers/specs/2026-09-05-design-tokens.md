@@ -32,7 +32,7 @@
   --color-highlight-border: #cfe8dc;
   --color-selection-bg: #cfe8dc;
   --color-selection-text: #17614f;
-  --color-overlay: rgba(12, 37, 29, .45);
+  --color-overlay: rgba(0, 0, 0, .62);
   --color-danger: #b42318;
   --color-danger-border: #f1c5c1;
 

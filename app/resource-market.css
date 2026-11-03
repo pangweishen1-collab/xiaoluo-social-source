@@ -1,0 +1,75 @@
+.resource-market [hidden] { display:none!important; }
+.resource-market-tab-shell { margin-bottom:34px; }
+.resource-market-tabs { display:grid; grid-template-columns:1fr 1fr; width:min(100%,480px); padding:6px; gap:6px; border:1px solid #e0e9e4; background:#f1f5f3; border-radius:14px; }
+.resource-market .resource-market-tabs button { min-height:52px; padding:12px 24px; background:transparent; border:0; border-radius:10px; color:var(--color-muted); font:500 16px var(--font-sans); cursor:pointer; }
+.resource-market .resource-market-tabs button:hover { background:#e5eee9; }
+.resource-market .resource-market-tabs button[aria-selected=true] { color:white; background:var(--color-brand); box-shadow:0 3px 8px #244c3c20; }
+.resource-market .resource-market-tabs button[aria-selected=true]:hover { background:var(--color-brand-strong); }
+.resource-market-tabs button:focus-visible { outline:2px solid var(--color-brand); outline-offset:4px; }
+.resource-market .talent-section { padding-top:0; }
+
+.resource-provider-panel { padding-bottom:80px; }
+.resource-provider-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:28px; }
+.resource-provider-eyebrow { margin:0 0 10px; color:var(--color-brand-strong); font-size:11px; font-weight:600; letter-spacing:.13em; }
+.resource-provider-heading h2 { margin:0; color:var(--color-text); font-size:clamp(24px,2.4vw,32px); font-weight:500; letter-spacing:-.025em; line-height:1.3; }
+.resource-provider-heading div > p:last-child { margin:12px 0 0; color:var(--color-muted); font-size:14px; line-height:1.75; }
+.resource-provider-count { flex:none; padding:10px 14px; border:1px solid #e1eae5; border-radius:99px; color:var(--color-brand-strong); background:#f5f9f6; font-size:12px; white-space:nowrap; }
+.resource-provider-count strong { margin:0 2px; font-size:16px; font-weight:600; font-variant-numeric:tabular-nums; }
+
+.resource-provider-card { position:relative; display:grid; grid-template-columns:minmax(0,1fr) minmax(265px,320px); gap:32px; padding:32px; overflow:hidden; background:#fff; border:1px solid var(--color-border); border-radius:20px; box-shadow:0 12px 32px rgba(25,56,43,.035); transition:border-color .25s ease,box-shadow .25s ease,transform .25s ease; }
+.resource-provider-card::before { content:""; position:absolute; top:0; left:32px; width:88px; height:3px; border-radius:0 0 4px 4px; background:var(--color-brand-strong); }
+.resource-provider-card:hover,.resource-provider-card:focus-within { border-color:#c5d8cc; box-shadow:0 20px 42px rgba(25,56,43,.075); transform:translateY(-2px); }
+.resource-provider-info { min-width:0; }
+.resource-provider-topline { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:28px; color:var(--color-muted); font-size:11px; font-weight:600; letter-spacing:.09em; }
+.resource-provider-topline span:last-child { color:var(--color-brand-strong); letter-spacing:0; }
+.resource-provider-brand { display:flex; align-items:center; gap:16px; }
+.resource-provider-brand img { width:64px; height:64px; object-fit:contain; border:1px solid var(--color-border); border-radius:14px; padding:6px; }
+.resource-provider-brand p { margin:0 0 5px; font-size:12px; color:var(--color-brand-strong); }
+.resource-provider-brand h3 { margin:0; font-size:24px; font-weight:550; line-height:1.2; }
+.resource-provider-lead { margin:24px 0 8px; color:var(--color-text); font-size:19px; font-weight:500; line-height:1.55; }
+.resource-provider-description { max-width:740px; margin:0; color:var(--color-muted); line-height:1.8; font-size:14px; }
+.resource-provider-services { margin-top:25px; }
+.resource-provider-services h4 { margin:0 0 12px; color:var(--color-text); font-size:13px; font-weight:600; }
+.resource-provider-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.resource-provider-tags span { padding:8px 11px; border:1px solid #e2ece6; border-radius:7px; background:#f5f9f6; font-size:12px; color:var(--color-brand-strong); }
+.resource-provider-info dl { margin:25px 0 24px; padding-top:21px; border-top:1px solid #e8eeea; display:grid; grid-template-columns:1fr 1.2fr; gap:24px; }
+.resource-provider-info dt { color:var(--color-text); font-size:13px; font-weight:600; margin-bottom:7px; }
+.resource-provider-info dd { margin:0; font-size:13px; color:var(--color-muted); line-height:1.75; }
+.resource-provider-actions { display:flex; align-items:center; flex-wrap:wrap; gap:12px 18px; }
+.resource-provider-actions > span { color:var(--color-muted); font-size:12px; }
+.resource-provider-link { display:inline-flex; align-items:center; gap:18px; padding:12px 18px; background:#f58a2e; color:white; border-radius:8px; font-size:14px; font-weight:600; text-decoration:none; box-shadow:0 6px 16px rgba(235,117,30,.16); transition:background-color .18s ease,box-shadow .18s ease,transform .18s ease; }
+.resource-provider-link::after { content:"↗"; font-size:17px; line-height:1; }
+.resource-provider-link:hover { background:#e8751e; box-shadow:0 8px 20px rgba(235,117,30,.25); transform:translateY(-1px); }
+.resource-provider-link:focus-visible,.resource-provider-invite a:focus-visible { outline:2px solid #f58a2e; outline-offset:3px; }
+
+.resource-provider-contact { display:flex; flex-direction:column; min-width:0; padding:22px; border:1px solid #e5ece7; border-radius:16px; background:linear-gradient(180deg,#f5f9f6 0%,#fff 60%); }
+.resource-provider-contact-heading { margin-bottom:16px; }
+.resource-provider-contact-heading span { display:block; margin-bottom:7px; color:var(--color-brand-strong); font-size:10px; font-weight:600; letter-spacing:.13em; }
+.resource-provider-contact-heading strong { display:block; color:var(--color-text); font-size:17px; font-weight:550; }
+.resource-provider-contact-heading p { margin:5px 0 0; color:var(--color-muted); font-size:12px; line-height:1.6; }
+.resource-provider-visual { display:grid; align-content:center; flex:1; margin:0; min-width:0; }
+.resource-provider-visual img { display:block; width:100%; height:auto; aspect-ratio:1; object-fit:contain; border-radius:11px; }
+.resource-provider-visual figcaption { margin-top:12px; font-size:12px; color:var(--color-brand-strong); text-align:center; }
+
+.resource-provider-benefits { grid-column:1/-1; display:grid; grid-template-columns:minmax(210px,1fr) minmax(0,3fr); align-items:center; gap:22px; margin-top:3px; padding:26px 0 0; border-top:1px solid var(--color-border); }
+.resource-benefits-heading > span { display:block; margin-bottom:7px; color:var(--color-brand-strong); font-size:10px; font-weight:600; letter-spacing:.13em; }
+.resource-benefits-heading h3 { margin:0 0 6px; font-size:19px; font-weight:550; }
+.resource-benefits-heading p { max-width:240px; margin:0; color:var(--color-muted); font-size:12px; line-height:1.65; }
+.resource-benefits-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); margin:0; }
+.resource-benefits-metrics > div { padding:0 20px; border-left:1px solid var(--color-border); }
+.resource-benefits-metrics dt { color:var(--color-muted); font-size:12px; margin-bottom:6px; }
+.resource-benefits-metrics dd { margin:0; color:var(--color-brand-strong); font-size:32px; font-weight:500; line-height:1.3; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.resource-benefits-metrics dd span { font-size:13px; margin-left:5px; font-weight:400; }
+
+.resource-provider-invite { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-top:22px; padding:28px 32px; border:1px solid #dfe9e2; border-radius:16px; background:linear-gradient(110deg,#f2f8f4 0%,#fff 78%); }
+.resource-provider-invite div > span { display:block; margin-bottom:7px; color:var(--color-brand-strong); font-size:10px; font-weight:600; letter-spacing:.13em; }
+.resource-provider-invite h3 { margin:0 0 6px; color:var(--color-text); font-size:19px; font-weight:550; }
+.resource-provider-invite p { max-width:730px; margin:0; color:var(--color-muted); font-size:13px; line-height:1.7; }
+.resource-provider-invite a { flex:none; display:inline-flex; align-items:center; gap:16px; padding:12px 16px; border:1px solid #c7d9ce; border-radius:8px; color:var(--color-brand-strong); background:#fff; font-size:13px; font-weight:600; text-decoration:none; transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease; }
+.resource-provider-invite a::after { content:"↗"; font-size:17px; line-height:1; }
+.resource-provider-invite a:hover { border-color:var(--color-brand-strong); box-shadow:0 5px 14px rgba(25,56,43,.08); transform:translateY(-1px); }
+
+@media(max-width:1000px) { .resource-provider-card { grid-template-columns:minmax(0,1fr) minmax(245px,290px); gap:24px; padding:26px; } .resource-provider-info dl { grid-template-columns:1fr; gap:12px; } .resource-provider-benefits { grid-template-columns:1fr; gap:18px; } .resource-benefits-heading p { max-width:none; } .resource-benefits-metrics > div:first-child { padding-left:0; border-left:0; } }
+@media(max-width:720px) { .resource-market-tab-shell { margin-bottom:28px; } .resource-market-tabs { width:100%; } .resource-provider-heading { align-items:flex-start; flex-direction:column; gap:14px; margin-bottom:22px; } .resource-provider-card { grid-template-columns:1fr; padding:22px; gap:25px; } .resource-provider-card::before { left:22px; } .resource-provider-topline { margin-bottom:22px; } .resource-provider-contact { width:min(100%,360px); box-sizing:border-box; justify-self:center; } .resource-provider-invite { align-items:flex-start; flex-direction:column; padding:24px; } }
+@media(max-width:480px) { .resource-provider-brand h3 { font-size:22px; } .resource-provider-lead { font-size:17px; } .resource-provider-count { font-size:11px; } .resource-benefits-metrics > div { padding:0 9px; } .resource-benefits-metrics dd { font-size:23px; } .resource-benefits-metrics dd span { font-size:11px; margin-left:2px; } .resource-benefits-metrics dt { font-size:11px; } }
+@media(prefers-reduced-motion:reduce) { .resource-provider-card,.resource-provider-link,.resource-provider-invite a { transition:none; } .resource-provider-card:hover,.resource-provider-card:focus-within,.resource-provider-link:hover,.resource-provider-invite a:hover { transform:none; } }

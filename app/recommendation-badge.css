@@ -1,0 +1,4 @@
+.recommendation-badge { display:inline-flex; align-items:center; gap:6px; box-sizing:border-box; min-height:29px; padding:4px 8px; border-radius:6px; background:linear-gradient(110deg,#ecd18b 0%,#f8e7b8 48%,#dfbb6b 100%); color:#171717; font:500 11px/1.4 var(--font-sans); letter-spacing:0; white-space:nowrap; flex-shrink:0; }
+.recommendation-badge img { display:block; width:21px; height:21px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,.72); }
+.recommendation-badge span { color:inherit; }
+.job-card .job-recommendation { position:absolute; top:18px; right:18px; }

@@ -1,0 +1,103 @@
+.collab-page { color: var(--color-text); }
+.collab-page button.collab-service-link { width:100%; text-align:left; background:none; border:0; cursor:pointer; }
+.business-contact-dialog { position:fixed; width:min(400px,calc(100vw - 32px)); max-height:90dvh; overflow:auto; padding:32px; border:1px solid var(--color-border); border-radius:20px; background:white; color:var(--color-text); text-align:center; }
+.business-contact-dialog::backdrop { background:rgba(20,35,28,.5); }
+.collab-page .business-contact-dialog h2 { font-size:24px; margin:8px 0 12px; }
+.business-contact-dialog > img { display:block; width:240px; max-width:100%; height:auto; margin:20px auto; }
+.business-contact-dialog .business-dialog-close { position:absolute; top:10px; right:12px; width:36px; height:36px; font-size:28px; border:0; background:none; cursor:pointer; }
+.business-contact-dialog strong { color:var(--color-brand-strong); font-weight:500; }
+.business-inquiry-dialog { position:fixed; width:min(720px,calc(100vw - 32px)); max-height:min(90dvh,850px); overflow:auto; box-sizing:border-box; padding:32px; border:1px solid var(--color-border); border-radius:20px; background:#fff; color:var(--color-text); box-shadow:0 24px 80px rgba(24,48,39,.16); }
+.business-inquiry-dialog::backdrop { background:rgba(20,35,28,.52); }
+.business-inquiry-head { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:24px; }
+.collab-page .business-inquiry-head h2 { margin:4px 0 8px; font-size:26px; line-height:1.35; }
+.collab-page .business-inquiry-head p { margin:0; font-size:14px; line-height:1.6; }
+.business-inquiry-head > button { flex:none; display:grid; place-items:center; width:36px; height:36px; border:0; background:none; color:var(--color-text); font-size:28px; line-height:1; cursor:pointer; }
+.business-inquiry-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.business-inquiry-fields label { display:flex; flex-direction:column; gap:7px; min-width:0; color:var(--color-text); font-size:14px; font-weight:500; }
+.business-inquiry-fields input,.business-inquiry-fields select,.business-inquiry-fields textarea { box-sizing:border-box; width:100%; min-height:44px; padding:10px 12px; border:1px solid var(--color-border); border-radius:var(--radius-control); outline:none; background:white; color:var(--color-text); font:400 15px/1.5 var(--font-sans); }
+.business-inquiry-fields textarea { min-height:116px; resize:vertical; }
+.business-inquiry-fields input:focus,.business-inquiry-fields select:focus,.business-inquiry-fields textarea:focus { border-color:var(--color-brand); box-shadow:0 0 0 3px color-mix(in srgb,var(--color-brand) 16%,transparent); }
+.business-inquiry-fields .business-inquiry-wide { grid-column:1/-1; }
+.business-inquiry-fields .business-inquiry-trap { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
+.collab-page .business-inquiry-privacy { margin:18px 0 0; color:var(--color-muted); font-size:13px; line-height:1.6; }
+.collab-page .business-inquiry-error { margin:12px 0 0; color:#a43129; font-size:14px; }
+.collab-page .business-inquiry-submit { width:100%; margin-top:20px; border:0; cursor:pointer; }
+.collab-page .business-inquiry-submit:disabled { opacity:.65; cursor:wait; }
+.business-inquiry-success { padding:28px 0 4px; }
+.business-inquiry-success strong { color:var(--color-brand-strong); font-size:20px; }
+.business-inquiry-success .collab-primary { margin-top:20px; min-width:120px; border:0; cursor:pointer; }
+@media(max-width:720px) { .business-inquiry-dialog { padding:24px 20px; } .business-inquiry-fields { grid-template-columns:minmax(0,1fr); gap:14px; } }
+.collab-page a { text-decoration: none !important; box-shadow: none !important; }
+.collab-page .collab-intro { display: flex; align-items: center; justify-content: space-between; gap: var(--space-section); padding-block: 48px; }
+.collab-page h1 { font-size: var(--font-size-display); line-height: var(--line-height-display); margin: 20px 0; }
+.collab-page h2 { font-size: var(--font-size-section-mobile); line-height: var(--line-height-section); margin: 0 0 24px; }
+.collab-page h3 { font-size: var(--font-size-card-mobile); line-height: 1.45; margin: 0; }
+.collab-page p { color: var(--color-muted); font-size: 16px; line-height: 1.8; }
+.collab-page .eyebrow { font-size: 12px; color: var(--color-brand-strong); }
+.collab-intro > div { max-width: 680px; }
+.collab-page .collab-primary { display: inline-flex; justify-content: center; align-items: center; flex-shrink: 0; min-height: 44px; padding: 12px 24px; border-radius: var(--radius-control); background: var(--color-brand); color: white !important; font-size: 16px; font-weight: 600; }
+.collab-page .collab-primary:hover { background: var(--color-brand-strong); }
+.collab-page a:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 5px; }
+.collab-page .collab-section { margin-block: 24px 64px; border: none; }
+.collab-page .collab-section + .collab-section:not(.collab-contact) { margin-top: 64px; }
+.collab-services { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: var(--space-component); }
+.collab-services.collab-business-types { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.collab-business-types .collab-type-brief { font-size:14px; background:var(--color-surface-subtle); border-radius:8px; padding:12px 14px; }
+.collab-type-brief strong { display:block; color:var(--color-text); font-weight:500; margin-bottom:4px; }
+@media(max-width:720px) { .collab-services.collab-business-types { grid-template-columns:minmax(0,1fr); } }
+.collab-services article { padding: 28px; border: 1px solid var(--color-border); border-radius: var(--radius-card); display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.collab-services p { margin: 0; }
+.collab-value-grid article { overflow-wrap: anywhere; }
+.collab-value-benefit { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--color-border); }
+.collab-value-benefit strong { display: block; margin-bottom: 6px; color: var(--color-text); font-size: 14px; font-weight: 500; }
+.collab-value-grid .collab-service-link { min-height: 44px; }
+.collab-number { color: var(--color-brand); font-size: 14px; }
+.collab-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 8px; }
+.collab-tags span { font-size: 13px; color: var(--color-muted); }
+.collab-tags span + span::before { content: "·"; margin-right: 8px; }
+.collab-page .collab-service-link { display:flex; align-items:center; justify-content:space-between; padding-top:12px; color:var(--color-brand-strong); font-size:14px; font-weight:600; }
+.collab-services article { gap:12px; padding:24px; }
+.collab-services h3 { font-size:20px; font-weight:600; }
+.collab-services p { font-size:15px; line-height:1.8; }
+.collab-brief { padding-left:20px; margin:16px 0 24px; color:var(--color-muted); font-size:15px; line-height:1.8; }
+.collab-brief li + li { margin-top:6px; }
+.collab-page .collab-contact h2 { font-size:var(--font-size-section); line-height:var(--line-height-section); }
+@media(min-width:721px) and (max-width:1000px) { .collab-services { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.collab-page .collab-section-head { display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: var(--space-tight); margin: 0 0 var(--space-component); padding: 0; border: none; }
+.collab-page .collab-section-head h2 { font-size: var(--font-size-section); line-height: var(--line-height-section); font-weight: 700; color: var(--color-text); margin: 0; }
+.collab-page .collab-section-head > p { font-size: 16px; line-height: 1.8; color: var(--color-muted); margin: 0; }
+.collab-section-head h2, .collab-section-head > p { margin: 0; }
+.collab-cases { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--space-component); }
+.collab-case { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0,1fr); padding: 20px; gap: 24px; border: 1px solid var(--color-border); border-radius: var(--radius-card); min-width: 0; }
+.collab-cover { align-self: start; aspect-ratio: 3/4; background: var(--color-surface); overflow: hidden; border-radius: var(--radius-control); }
+.collab-cover img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+.collab-case-body { display: flex; flex-direction: column; align-items: start; gap: 16px; min-width: 0; padding-block: 8px; }
+.collab-case-company { display: flex; flex-direction: column; gap: 8px; }
+.collab-case-company strong { color: var(--color-brand-strong); font-size: 18px; }
+.collab-case-company span { color: var(--color-muted); font-size: 13px; }
+.collab-case-body p { margin: 0; font-size: 14px; }
+.collab-case-body > a { margin-top: auto; padding-top: 12px; font-size: 14px; color: var(--color-brand-strong); }
+.collab-page .collab-partner { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.collab-partner h2, .collab-partner p { margin: 0; }
+.collab-partner h3 { display: flex; align-items: center; gap: 12px; }
+.collab-partner h3 img { width: 40px; height: 40px; object-fit: contain; }
+.collab-page .collab-contact { padding: 40px; background: color-mix(in srgb,var(--color-surface-subtle) 50%,var(--color-surface)); border-radius: var(--radius-card); display: grid; grid-template-columns: minmax(0,1fr) 220px; gap: 48px; scroll-margin-top: 96px; }
+.collab-contact h2 { margin-bottom: 16px; }
+.collab-email { display: block; margin-top: 16px; overflow-wrap: anywhere; }
+.collab-page .collab-note { font-size: 13px; margin-top: 24px; }
+.collab-qr { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; font-size: 14px; }
+.collab-qr img { width: 180px; height: 180px; object-fit: contain; }
+.collab-qr span { color: var(--color-muted); }
+@media(max-width: 1100px) { .collab-case { grid-template-columns: minmax(0,1fr); } .collab-cover { width: 100%; height: 280px; aspect-ratio: auto; } }
+@media(max-width: 720px) {
+  .collab-page .collab-section + .collab-section:not(.collab-contact) { margin-top: calc(var(--space-section) * 2); }
+  .collab-page .collab-section-head h2 { font-size: var(--font-size-section-mobile); }
+  .collab-page .collab-intro { align-items: start; flex-direction: column; gap: 16px; padding-block: 32px; }
+  .collab-page h1 { font-size: var(--font-size-display-mobile); }
+  .collab-services, .collab-cases { grid-template-columns: minmax(0,1fr); gap: 16px; }
+  .collab-section-head, .collab-page .collab-partner { align-items: start; flex-direction: column; }
+  .collab-page .collab-section { margin-bottom: 40px; }
+  .collab-page .collab-contact { grid-template-columns: minmax(0,1fr); padding: 24px; gap: 24px; }
+  .collab-page .collab-contact h2 { font-size: var(--font-size-card); }
+  .collab-cover { height: 300px; }
+}

@@ -25,5 +25,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "worker", "worker-runtime.d.ts", "worker-env.d.ts", "db/index.ts", "examples"]
 }
